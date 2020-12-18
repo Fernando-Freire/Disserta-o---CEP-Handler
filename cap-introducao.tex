@@ -1,0 +1,208 @@
+%% ------------------------------------------------------------------------- %%
+\chapter{Introdução}
+\label{cap:introducao}
+\index{Introdução}
+%por que estudar CEP e Cidades Inteligentes?
+%por que combinar medidas?
+%De acordo com \cite{Gartner}, até 2020 existirão 20,8 bilhões de dispositivos eletrônicos conectados entre si e utilizados para captar e enviar dados, além de atuar no ambiente. Esses dispositivos formam a Internet das Coisas (IoT – Internet of Things), que é definida pela \cite{IEEEIOT} como dispositivos unicamente identificáveis (por um código alfa-numérico ou sequência de dígitos) 
+%que se conectam à internet. O exemplo mais comum desses dispositivos são sensores. Eles são utilizados para medir vários tipos de informações, podendo ser fixos (temperatura, pressão atmosférica, câmeras de trânsito, etc.) ou móveis (câmeras, celulares, etc.), e se conectam para enviar dados a diferentes sistemas em tempo real \citep{7489440}.
+%arrumar etc
+%\todo[inline]{Fernando, eu já havia dito isso a você. Esse ``milhares'' que aparece na primeira frase do texto não parece correto. É muito mais do que isso. Além disso, essa citação feita no finainvestimentosl no parágrafo parece desnecessária porque ela está embasando uma afirmação que é óbvia. Além disso, ela não é uma referência suficientemente nova para o contexto em que está sendo usada. Tente refrasear o parágrafo, para fornecer informações mais atualizadas ou não se comprometer com quantidades para as quais não temos referências seguras.}
+
+%Uma medição de temperatura feita por um sensor em um local e momento específicos pode ser uma informação relevante para pessoas próximas. Porém, conseguir captar medições de lugares e momentos distintos e as analisar juntamente com dados históricos abre novas possibilidades de detecção de padrões temporais e espaciais, além de permitir a descoberta de vários tipos de associações entre medidas de diversos sensores e outros dados coletados. De acordo com \cite{Steven}, a investigação da relação entre dados de diferentes tipos de sensores, além dos coletados de cidadãos comuns por páginas na internet, possibilita o entendimento das causas de problemas ligados a diversos setores de uma cidade.
+%\todo[inline]{Dados de cidadãos também podem ser coletados da sua interação com sites e aplicativos de órgãos governamentais. }
+
+
+
+
+
+%Uma cidade pode ser considerada inteligente se os investimentos feitos em capital humano e social e em infraestrutura de trasporte e comunicação resultarem em crescimento econômico sustentável e no aumento na qualidade de vida dos cidadãos, com uma boa administração dos recursos naturais por governança participativa~\citep{doi:10.1080/10630732.2011.601117}. 
+
+
+%pq estudar cidades inteligentes?
+Ao longo dos últimos anos, o conceito de Cidades Inteligentes vem ganhando popularidade, sendo promovido com os propósitos de aumentar a sustentabilidade e melhorar a qualidade de vida para os residentes de centros urbanos~\citep{kon2016cidades}. Cidades Inteligentes podem ser definidas como cidades que usam uma infraestrutura de tecnologia da informação para otimizar o uso de recursos municipais e melhorá-los, com o objetivo de aumentar a qualidade de vida de seus cidadãos~\citep{doi:10.1080/10630732.2011.601117}. Os investimentos feitos em infraestrutura física estão usualmente associados à implementação de tecnologias da informação e comunicação nos diferentes setores de uma cidade (transporte, saúde, educação, comércio, etc.), feita por meio de dispositivos eletrônicos, como sensores e atuadores. 
+O uso desses sensores gera uma grande quantidade de dados a todo momento, com os quais é possível melhorar a gestão da cidade, aprimorar os serviços públicos e privados ou oferecer novos serviços.
+Tem-se um exemplo disso na empresa de transporte público da cidade de São Paulo (SPTrans), que possui sensores em toda a sua frota de ônibus e gera cerca de dez mil dados por minuto sobre posições de ônibus. %Esses enviam dados sobre a posição dos ônibus em tempo real, e 
+Tais informações são disponibilizadas publicamente por meio do site \cite{Olhovivo}, permitindo que os cidadãos melhor planejem suas viagens.
+%\todo{colocar números, para dar ideia do volume dos dados envolvidos!}
+%para cidadãos e desenvolvedores por meio do site \cite{Olhovivo} , para que possam melhor planejar suas viagens. 
+
+
+
+
+
+%Como são integradas as Cidades Inteligentes? 
+% não relevante a este trabalho ^
+%Vários serviços para habitantes de grandes centros urbanos já utilizam tecnologias de informação e comunicação para disponibilizar dados aos cidadãos \citep{Olhovivo}. Porém, cada um deles tende a ser implementado separadamente, o que leva a uma baixa integração tanto de serviços públicos quanto privados. \cite{DBLP:journals/corr/SantanaCGKM16} afirma que uma cidade inteligente deve oferecer um método de coordenação e comunicação entre os diferentes serviços, no qual os dados poderiam ser compartilhados entre as partes interessadas.
+
+%\todo[inline]{%Essa definição de Cidade Inteligente que você apresenta no parágrafo acima não está nada legal (a da frase: ``Basicamente, uma Cidade Inteligente se propõe a melhorar a qualidade de vida de seus habitantes a partir de medidas coletadas por sensores fixos e móveis disponíveis na cidade, além de dados informados pelos próprios cidadãos. ''). Não são apenas dados de sensores e de cidadãos que fazem uma cidade inteligente. Há ainda uma grande variedade de dados governamentais, relacionados à saúde, educação, segurança, habitação, etc., que não necessariamente são coletados de cidadãos nem de sensores. Você deve, primeiro, apresentar uma definição mais geral de Cidade Inteligente.
+%Depois disso, pode dizer que o processamento de dados coletados em %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%tempo real%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% tem um papel muito importante no contexto de cidades inteligentes e citar alguns exemplos disso (como no caso da mobilidade urbana, controle de desastres, segurança, etc.}
+
+%A partir da coleta dos dados, pq como eles serão analisados?
+%em lote
+ 
+Os dados dos diferentes serviços de uma cidade podem ter um volume massivo, ser coletados em tempo real e ter uma grande variedade de informações, além de distintas representações dessas informações, de forma que são classificados como Big Data pela comunidade científica \citep{DBLP:journals/corr/WardB13a}.
+%\todo[inline]{Por que a frase acima está no futuro do pretérito? Isso não faz sentido!}
+É possível realizar o processamento desses dados usando ferramentas que trabalham com dados de forma discreta, ou seja, que processam os dados em lotes após coletá-los e armazená-los. Esse tipo de abordagem de processamento já foi bastante estudado e documentado na literatura da área \citep{Dean:2010:MFD:1629175.1629198, DBLP:journals/corr/MoniruzzamanH13,computers3040117}.
+Mas em cenários nos quais o valor que a informação tem é dado em função do tempo,
+o atraso que esse tipo de abordagem gera (a depender da quantidade de processamento e do volume de dados que está sendo processado) pode causar perda de relevância da informação derivada.
+
+%A importância de processar os dados em tempo real vem do valor que a informação tem em função do tempo. 
+Um acidente de trânsito que ocorreu momentos atrás, um princípio de incêndio ou um assalto em andamento são algumas das situações para as quais existem mais formas de tratamento quanto mais rapidamente forem identificadas. Essas situações podem ser descobertas utilizando dados de diferentes fontes, tanto de sensores como de pessoas. 
+Nesses casos, são necessárias ferramentas que processem os dados de toda a cidade em tempo real, idealmente com mínima latência e máxima vazão. Para conseguir detectar e reagir a situações em tempo real, é necessário que se saiba quais padrões as medições mostrarão quando as situações de interesse ocorrerem e quais ações devem ser realizadas em resposta. Com o suporte de especialistas de diferentes setores da cidade, é possível reconhecê-las e modelar as respostas apropriadas para cada uma delas.
+
+
+
+
+Uma das técnicas mais adequadas para detectar essas situações é o Processamento de Eventos Complexos (CEP – \textit{Complex Event Processing}), visto que ferramentas de CEP fornecem modos de declarar eventos que são definidos a partir da ocorrência de um padrão de chegada de dados. O CEP considera cada dado coletado como um evento e utiliza operadores sobre esses eventos, como filtros e detecção de padrões, para disparar a detecção de outros eventos \citep{Etzion:2010:EPA:1894960}.
+O CEP pode ser utilizado para modelar a detecção de situações de interesse a partir de quaisquer fluxo de dados contínuo. 
+%Quando alguma situação específica ocorre, é possível detectar um evento de forma indireta, a partir de um padrão dos dados das medições coletadas.\todo[inline]{O parágrafo acima está repetitivo. A última frase, em particular, parece que já foi dita no início do parágrafo.}
+%\todo[inline]{No parágrafo acima, você exemplifica onde o CEP pode ser usado, mas não define o que é CEP. Além disso, está faltando a referência bibliográfica para o CEP. Na verdade, na sua introdução toda falta mais referências bibliográficas.}
+
+Para a execução de sistemas de processamento em tempo real em cidades inteligentes é necessário que o sistema utilizado seja escalável, para lidar a grande variação do volume de dados, e implemente métodos de recuperação de falhas de execução, para manter um nível mínimo de disponibilidade. O uso de plataformas de nuvem facilita o cumprimento destes requisitos, pois os recursos em uma plataforma podem ser requisitados automaticamente caso a carga de processamento aumente e a manutenção física do ambiente de execução passa a ser de responsabilidade do provedor de nuvem. Sistemas que cumprem estes requisitos, auto-escalabilidade horizontal e tolerância a falhas, são caracterizados como sistemas nativos de nuvem~\citep{garrison2017cloud}
+
+%Para extrair o máximo valor de ambientes de computação em nuvem é necessários que os sistemas em execução nestes ambientes sejam desenvolvidos com o objetivo de minimizar a necessidade de administração manual para seu funcionamento, para conseguirem reagir mais rapidamente possível a falhas e alterações no seu funcionamento, de forma a não desperdiçar recursos computacionais durante a ocorrência de falhas de execução ou variação de carga de entrada para o processamento. Para atingir este objetivo, os sistemas devem ser desenvolvidos nativamente com mecanismos de tolerância a falhas no ambiente de execução que permitam a re-instanciação de qualquer parte do sistema, e de auto-escalabilidade, para que o sistema tenha a habilidade de requisitar automaticamente mais ou menos recursos computacionais de acordo com o monitoramento de sobrecarga e sub-carga próprios.
+
+%Para um sistema ser escalável nesse tipo de ambiente têm a capacidade de serem escalados horizontalmente, ou seja, a partir da instanciação de mais nós de processamento, o sistema tem a habilidade de dividir a carga a ser processada entre os nós~\citep{smartgreens17}. 
+
+%as cidades gastem recursos financeiros com sensores e atuadores, espalhando os ao longo dos pontos de maior interesse da administração local e compre recursos computacionais para a execução contínua de sistemas de detecção em tempo real. Como a quantidades de dados coletados pelos sensores sofreria uma grande variação entre as horas do dia e possivelmente entre as épocas do ano, caso uma escolha fosse feita para a compra de máquinas físicas para a execução de tais sistemas no seu pico de uso, os recursos computacionais adquiridos estariam sub-utilizados na maior parte do tempo\citep{yeboah2014factors}\todo{Fernando, toda essa parte inicial deste parágrafo se baseia em ``achismo''. Por mais que eu ache que isso faça sentido, você não pode colocar afirmações desse tipo na sua dissertação sem embasá-las por estudos feitos por você ou por outros autores. :( }
+%. Uma abordagem que muitas organizações estão adotando atualmente é o uso de computação em nuvem, onde aluga-se recursos computacionais de um provedor de nuvem de acordo com a quantidade de recursos e tempo de uso. Este tipo de abordagem para aquisição de infraestrutura de ambientes de execução permite que somente a quantidade necessária de recursos em cada momento seja adquirida, reduzindo custos com sub-utilização de máquinas e manutenção física.
+
+
+
+Atualmente, a maioria da pesquisa em distribuição do processamento de eventos foca nos métodos de balanceamento dos tipos de eventos alocados a cada nó de processamento e as ferramentas de código aberto disponíveis não oferecem nativamente métodos de distribuição e auto-escalabilidade. Trabalhos como os de~\cite{Isoyama:2012:SCE:2335484.2335498}, \cite{6906776} e \cite{Balkesen:2013:RRI:2488222.2488257} propuseram diferentes tipos de abordagens para tratar esse problema. As principais técnicas já apresentadas para a distribuição do processamento de eventos se resumem a reunir o processamento de tipos de eventos com dependências similares ou separá-los com base no uso de recursos que cada processamento de tipo de evento usa. Além disto, uso de arquiteturas orquestradas, em que uma parte central executa todas as ações principais do sistema, foi escolhido por todos os trabalhos pesquisados. Esse estilo organizacional pode levar a um sistema no qual a ocorrência de uma falha no ponto central afeta todo o sistema~\citep{Newman:2015:BM:2904388}. 
+
+
+
+
+
+%a distribuição e escalabilidade das ferramentas de CEP de código aberto não fornecem nativamente métodos para 
+
+
+
+%porque CEP atualmente não consegue lidar com isso?
+
+
+%As ferramentas de CEP de código aberto atuais utilizam arquiteturas de distribuição com o estilo de orquestração\todo{Essa nomenclatura -- "estilo de orquestração" ou "Estilo de coreografia" é usada em referências bibliográficas em português? Achei ela um pouco estranha.} para distribuir seu processamento, onde uma parte central do sistema é essencial para o funcionamento dele todo\todo{Dizer que uma parte do sistema é essencial ao todo, na minha opinião, não deixa claro os problemas de escalabilidade e resiliência decorrentes. Acho que vale a pena explicar isso em mais detalhes.}. 
+%Além disso, essas ferramentas  não oferecem suporte nativo para ferramentas de escalonamento na nuvem.  -- Isso já é dito mais adiante no texto
+%Já que serviços de tempo real para cidades inteligentes devem priorizar a disponibilidade – pois diferentes aplicações da cidade podem depender desses serviços para funcionar –, eles precisam ter mecanismos para lidar com falhas locais sem afetar a execução do restante do sistema.  --- [Kelly] Isso está dito no parágrafo abaixo, que eu trouxe da seção 1.2 para cá.
+
+%Serviços feitos para uma plataforma de cidades inteligentes devem priorizar a escalabilidade,  Também devem priorizar a disponibilidade, pois quanto mais aplicações forem feitas sobre a plataforma, mais os serviços que os habitantes irão utilizar dependerão do processamento realizado pelo serviço de CEP. 
+%Nesse contexto, arquiteturas de estilo de coreografia são uma alternativa conveniente, por diminuir o acoplamento das diferentes partes do sistema, o que resulta em um sistema mais tolerante a falhas e no qual a disponibilidade de diferentes funções é mais independente\todo{dá pra incluir aqui a facilidade de escalar na nuvem?}. \todo{Acima, não é explicado o que a coreografia é, não dá pra saber porque ela traz os benefícios. }
+
+
+%Além disto, como o uso do serviço tende a aumentar conforme o número de habitantes da cidade cresce, e a previsão da \cite{/content/publication/527e5125-en} é de que esse número de habitantes c crescendo nos próximos anos.
+
+%Atualmente, não há uma arquitetura consolidada como a melhor solução para processar dados em tempo real 
+%\todo[inline]{Reescrever parágrafo acima levando em conta: código aberto, ferramentas nativas de CEP, e uma boa justificativa do porque a escalabilidade natural do ESPER e Siddhi não são suficientes. fernando}
+%\todo[inline]{No parágrafo acima, parece que você está criticando CEP (a técnica) enquanto deveria criticar as arquiteturas e ferramentas de CEP atuais. Não é o CEP que não escala, são as ferramentas de CEP existentes atualmente que têm esse problema. No seu trabalho, você não vai propor uma técnica nova, mas sim uma arquitetura e ferramenta novas. É preciso deixar isso mais claro no texto}
+
+%% ------------------------------------------------------------------------- %%
+%\section{Considerações Preliminares}
+%\label{sec:consideracoes}
+%\todo{Fernando, acho melhor mesclar o conteúdo desta subseção ao da anterior. Esse título dela parece não ter relação com o conteúdo. Além disso, parte dela repete coisas sobre as ferramentas de CEP que acabaram de ser ditas na seção anterior.}
+
+%Considerações preliminares\footnote{Nota de rodapé (não abuse).}
+% index permite acrescentar um item no indice remissivo
+%O uso de CEP em Cidades Inteligentes ainda não é um assunto muito explorado na literatura\todo{Fernando, essa afirmação de forma alguma se sustenta. Uma busca rápida por "complex event processing" + "smart cities" no Scholar mostra vários trabalhos sobre o assunto. Além disso, a menção particular ao uso de CEP em transporte (que aparece na frase seguinte) está injustificada. O trecho precisa ser revisto.}. Porém, alguns estudos, como os de \cite{Diniz:2015:RAC:2814058.2814074} e \cite{7916235}, tentam aplicá-lo, principalmente no setor de transporte.
+%A maior parte dos trabalhos cita a escalabilidade e a qualidade de serviço como principais requisitos de uso de um sistema de CEP. No entanto, os experimentos realizados neles não são feitos em escalas que realmente representam a quantidade de dados que uma verdadeira metrópole produz. 
+
+
+%O processamento de eventos de uma cidade grande tem alto custo computacional, sendo necessário distribuí-lo em várias máquinas. 
+
+%Além destes fatores, sistemas de código aberto em CEP atualmente não oferecem soluções prontas que sejam nativas de nuvem. De acordo com \cite{garrison2017cloud}, para um sistema ser nativo de nuvem, ele precisa ser desenvolvido de acordo com os padrões de funcionamento dos provedores de nuvem. Alguns dos principais requisitos referenciados são: auto-escalabilidade, tolerância a falhas e infraestrutura como código. Atualmente a pesquisa em sistemas nativos de nuvem em CEP é pouco explorada, enquanto outras áreas já estão bem avançadas em se adaptarem a este novo tipo de ambiente de execução.
+
+%Dos trabalhos pesquisados, nenhum apresenta uma arquitetura de organização coreografada – onde as diferentes partes do sistema interagem para executar uma ação – , sendo todos sistemas orquestrados – onde uma parte central do sistema toma todas as principais decisões – , com pontos de falha visíveis.
+%Este trabalho se propõe a analisar o uso de uma arquitetura coreografada, nativa de nuvem, em que cada parte do sistema é mais independente para realizar suas funções específicas. \todo{Essa não é uma boa descrição da sua proposta. Além disso, os objetivos do trabalho devem ser descritos dentro da seção "Objetivos".}
+%para a distribuição de processamento de eventos e a relatar os efeitos dessa escolha.
+%\todo[inline]{Fernando, achei que o parágrafo acima, que descreve o problema a ser abordado no seu trabalho, ficou ótimo. Entretanto, creio que um leitor que não conheça os conceitos de orquestração e coreografia de serviços, não será capaz de entender a parte final. Por favor, tente definir (de maneira bem breve) esses conceitos na frase. Não se esqueça de colocar referências bibliográficas.}
+
+
+%Este trabalho se propõe a criar uma arquitetura de microsserviços para detecção de eventos complexos nativa de nuvem e realizar experimento em um cenário de cidades inteligentes para demonstrar o desempenho do sistema em relação a latência e custo computacional no uso contínuo do sistema. Como exemplos podemos citar a detecção de acidentes no transito, a danificação de infraestrutura na cidade, como semáforos, buracos nas vias de alta circulação, canos de envio de água e esgoto, entre outros. Os mais severos dentre estes tipos de acontecimentos normalmente requerem uma resposta rápida a partir da sua ocorrência e com um sistema de notificação em tempo real, o tempo entre a ocorrência do problema e sua detecção é minimizado a segundos ou milisegundos, diminuindo tempo total entre a ocorrência do problema e sua solução. Consequentemente, os custos e ocasionalmente vidas, são poupados pela resposta rápida dos agentes responsáveis.
+
+
+
+%% ------------------------------------------------------------------------- %%
+\section{Objetivos}
+\label{sec:objetivo}
+\index{objetivos}
+%\todo[inline]{Não coloquei anotações nesta subseção porque acho melhor conversarmos por vídeo sobre ela. Ela está cheia de problemas.  }
+
+O objetivo principal deste trabalho é a criação de uma arquitetura de Processamento de Eventos Complexos para a execução nativa de nuvem, que implemente os requisitos necessários de sistemas nativos de nuvem: auto-escalabilidade, tolerância a falhas no ambiente de execução e uso de especificação de infraestrutura computacional como código~\citep{garrison2017cloud}. O sistema desenvolvido a partir da implementação desta arquitetura deve utilizar o mínimo de recursos computacionais e físicos para detecção de eventos em tempo real.
+
+Ao criar esta arquitetura distribuída, foi escolhido usar o padrão de microsserviços para o seu desenho. Microsserviços são descritos como serviços pequenos e autônomos que trabalham juntos para a execução de tarefas~\citep{Newman:2015:BM:2904388}. O uso de microsserviços facilita o desenvolvimento de uma arquitetura escalável, pois é possível criar mais instâncias do mesmo microsserviço que executa funções que estão em sobrecarga. Além disto, foi decidido usar o estilo de coreografia para o desenho da arquitetura, onde os microsserviços se coordenam para a realizam das funções do sistema. Isto resulta em um melhor funcionamento do sistema em caso de falhas pontuais, pois somente o microsserviço que encontrou a falha em execução é afetado.
+
+A partir da pesquisa realizada nos trabalhos relacionados de distribuição de processamento de eventos complexos, foram  criados dois algoritmos de balanceamento de carga entre os microsserviços que contem nós de processamento de eventos. Um destes algoritmos seleciona os tipos de eventos a serem realocados de acordo com o tempo necessário para reconstruir seu estado de detecção, enquanto o outro seleciona os tipos de eventos de acordo com a similaridade dos seus tipos de eventos de entrada, procurando agrupar o processamento de tipos de eventos com a mesma entrada no mesmo nó de processamento e consequentemente minimizando a transmissão de eventos entre nós de processamento de eventos.
+
+Foi desenhado um experimento para avaliar o sistema proposto aqui em relação a sua auto-escalabilidade em situação de sobrecarga. O propósito foi verificar se o sistema realmente atingia a auto-escalabilidade, requisitando e integrando mais nós de processamento de acordo com o aumento de dados entrando no sistema continuamente em tempo real. A avaliação foi realizada separadamente para ambos os algoritmos de balanceamento de carga, com o intuito de verificar o impacto do uso de cada um deles.
+
+ 
+
+
+%O objetivo principal deste trabalho foi a construção de uma arquitetura de microsserviços de distribuição de processamento de eventos nativa de nuvem, de forma que diferentes instâncias de um mesmo microsserviço possam processar diferentes tipos de eventos e que elas interajam para que exista um consenso sobre qual instância deve processar cada evento, levando a uma organização coreografada da divisão de processamento de eventos. 
+%\todo[inline]{Ué, acima você diz que a organização será ``orquestrada''. Não deveria ser coreografada? Além disso, você tem que explicar um pouco porque está propondo o uso de microsserviços e falar algo sobre a coreografia também (para justificar essa estratégia que você está propondo).}
+
+%O propósito da construção desse sistema é avaliar diferentes algoritmos de distribuição de carga relacionados ao processamento de eventos complexos, para que se descubra qual deles possibilita a menor latência de processamento, a maior vazão de eventos por segundo e o menor uso de recursos computacionais. A partir da aplicação e combinação de técnicas já estudadas na literatura espera-se mostrar, a partir de experimentos em larga escala, qual técnica obtém o melhor resultado. \todo{Os experimentos que você fez não permitem }
+
+%O uso de uma arquitetura coreografada também permite estudar os diferentes resultados que esta escolha apresenta em relação à disponibilidade do sistema e sua suscetibilidade a falhas. Os testes foram realizados em larga escala para demonstrar que o sistema tem a capacidade de lidar com a quantidades de dados que uma metrópole pode gerar. O uso final deste trabalho é destinado a desenvolvedores que criam aplicações para cidades inteligentes sobre o sistema, de forma que este deve operar integrado a uma plataforma de cidades inteligentes.
+
+
+
+
+
+%\todo[inline]{Essa descrição dos objetivos nesta seção está boa de forma geral, mas está faltando nela a menção às Cidades Inteligentes (senão fica injustificado o que você falou sobre cidades inteligentes antes). É preciso deixar claro que esse sistema que você pretende construir tem que ser feito de tal forma que possa ser integrado a uma plataforma de cidades inteligentes, uma vez que ele deverá atender aplicações nesse domínio.}
+
+
+%A avaliação dos algoritmos de balanceamento de carga foi feita com o propósito de projetar um sistema de CEP eficaz\todo{???? O projeto do sistema antecedeu a avaliação! Você não está implementando melhorias no sistema depois de considerar os resultados dos experimentos... }, que economize no uso de recursos computacionais e consequentemente, recursos financeiros em sua execução contínua. Para o estudo de caso foram selecionados ocorrências específicas a serem detectados no transporte público da cidade de São Paulo. Utilizando os dados fornecidos pela SPTrans, foi possível simular o processamento destes dados em tempo real e analisar o desempenho da arquitetura e do protótipo desenvolvidos.
+
+%% ------------------------------------------------------------------------- %%
+\section{Contribuições}
+\label{sec:contribucoes}
+As contribuições deste trabalho são as seguintes:
+
+\begin{itemize}
+  \item[1.] Criação de uma arquitetura de microsserviços coreografada para a distribuição de processamento de eventos complexos nativa de nuvem, ou seja, que possui um mecanismo de tolerância a falhas no ambiente de execução, é auto-escalável horizontalmente e cujo uso de recursos computacionais por cada parte é referenciado em código de infraestrutura computacional.
+
+  
+  \item[2.] Implementação de um protótipo, com a arquitetura proposta, para o processamento de dados em tempo real por CEP com base em ferramentas de código aberto. Este sistema foi desenvolvido para funcionar juntamente com a plataforma de software livre para cidades inteligentes InterSCity~\citep{del2019design}, do Instituto Nacional de Ciência e Tecnologia (INCT) da Internet do Futuro para Cidades Inteligentes~\citep{Interscitysite}.
+  
+  %O sistema utiliza diferentes bibliotecas e ferramentas para ter suporte nativo de nuvem\todo{"suporte nativo de nuvem" não faz sentido. Reescrever o trecho}, as quais facilitam a instanciação em qualquer provedor de nuvem privada.
+  
+  \item[3.] Desenho e execução de experimentos relacionados a cidades inteligentes, utilizando a simulação de dados reais do transporte público na cidade de São Paulo, para determinar o desempenho do sistema durante uma situação de sobrecarga, avaliado as seguintes métricas: capacidade de auto-escalabilidade, custo computacional de processamento, latência  durante período de sobrecarga do sistema, e vazão do sistema para a detecção de possíveis perdas de eventos.
+  
+  \item[4.] Uma publicação sobre o presente trabalho em 2018 no \textit{The 1st Workshop on the Distributed Smart City (WDSC'2018)} durante a \textit{37th IEEE International Symposium on Reliable Distributed Systems}, entítulada : \textit{A Microservices Architecture for Distributed Complex Event Processing in Smart Cities} ~\citep{8615650}.
+  
+  \item[5.] Uma publicação sobre o presente trabalho em 2020 na \textit{Escola Regional de Alto Desempenho - São Paulo}, entítulada : \textit{Processamento Distribuído de Eventos Complexos Aplicado à Detecção de Eventos no Trânsito em Tempo Real} ~\citep{scattone2020cep}.
+
+  %\item[3.] Comparação de algoritmos de balanceamento de carga para a realocação do processamento de eventos complexos, utilizando experimentos de grande escala para validar os resultados obtidos e verificar o desempenho do sistema em relação à latência e custo computacional de todo o sistema. A partir dos resultados obtidos, foi possível deduzir\todo{não foi dedução, foi simplesmente observação} que o algoritmo que realoca tipos de eventos de acordo com o uso de estado de cada um obteve um custo computacional menor de execução que o outro algoritmo, que realocava tipos de eventos de acordo com a similaridade dos tipos de eventos de entrada de cada um.
+  %\todo[inline]{Nessa terceira contribuição, é melhor você destacar os experimentos envolvendo dados reais feitos para validar e avaliar o desempenho da arquitetura proposta, e não a comparação dos algoritmos. Somente a partir dos experimentos que você fez, não dá para afirmar que um algoritmo é melhor que o outro sempre. Esse resultado só poderia ser generalizado se você provasse matematicamente isso ou se tivesse feito experimentos com diferentes aplicações e ambientes computacionais. }
+  
+  %\todo[inline]{Acima, você não vai comparar técnicas de escalabilidade (a técnica de escalabilidade que usará são os microsserviços). O quê será comparado são as técnicas de balanceamento de carga, certo?}
+
+
+%A principal contribuição para fins não científicos é o uso deste trabalho para o processamento de dados em tempo real para serviços urbanos públicos e privados. A solução desenvolvida poderá ser usada na detecção de diferentes eventos de grandes centros urbanos. Com a detecção desses eventos em tempo real, as partes interessadas em cada ocorrência podem ser notificadas e uma atuação na cidade poderá ser feita com menor tempo entre a aparição de um problema e sua remediação. Como é possível definir tipos de eventos em função de outros tipos de eventos, os desenvolvedores podem definir tipos de eventos a partir de tipos de eventos previamente cadastrados, economizando o uso de recursos de processamento.
+%------------mudar isso
+
+
+
+\end{itemize}
+
+
+%O sistema proposto aqui % Este trabalho se dedica a desenvolver novos mecanismos para gerenciamento e análise do grande volume de dados gerado nas cidades, que é um dos principais focos de pesquisa do InterSCity. 
+
+
+
+
+%Uma aplicação para cidades inteligentes, ligada ao setor de transporte, será usada como caso de estudo, e, por meio de sua implementação e execução, será possível avaliar a arquitetura e o sistema desenvolvido.
+
+%\todo[inline]{Fernando, a frase ``Dessa forma, espera-se que aplicações desenvolvidas sobre a plataforma do InterSCity possam se beneficiar da eficiência no processamento dos dados fornecida pelas ferramentas de Big Data, sem o ônus de ter de lidar com elas diretamente'' não tem nada a ver com o seu trabalho. Isso veio do trabalho da Fernanda e só faz sentido no dela. Substitua por outra coisa. Além disso, no final, você deveria mencionar a avaliação das técnicas de balanceamento.}
+
+%% ------------------------------------------------------------------------- %%
+
+\section{Organização do Trabalho}
+\label{sec:organizacao_trabalho}
+
+
+No Capítulo~\ref{cap:conceitos}, apresenta-se os principais conceitos relacionados a Processamento de Eventos Complexos, Arquitetura de Microsserviços e técnicas de distribuição de processamento com estado. O Capítulo \ref{cap:trabalhos} apresenta artigos que estudam a escalabilidade em CEP a partir de diferentes técnicas, uso de CEP nativo de nuvem, e compara as conclusões sobre a pesquisa na área. No Capítulo \ref{cap:arquitetura}, apresenta-se com detalhes a arquitetura de microsserviços criada neste trabalho. O protótipo e as ferramentas utilizadas no sistema  são apresentados em \ref{cap:prototype} . O desenho do experimento utilizado para avaliar o sistema é apresentado em \ref{cap:experimento} e os resultados do experimento em si são apresentados em \ref{cap:resultados}. Finalmente, o Capítulo~\ref{cap:conclusoes} faz uma reflexão sobre o resultado e sobre possíveis contribuições futuras.
+
+%As sequências testadas no trabalho estão disponíveis no Apêndice \ref{ape:sequencias}.

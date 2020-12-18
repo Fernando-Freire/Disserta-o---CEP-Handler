@@ -1,0 +1,808 @@
+%\headheight=13. 0pt
+%% ------------------------------------------------------------------------- %%
+\chapter{Conceitos}
+\label{cap:conceitos}
+
+%numero sugerido de paginas: 15
+%Conceitos:
+%
+%CEP:
+%%definição de evento check
+%%EPA check
+%%EPN check
+%%Exemplos de engines check. 
+%%explicação das engines ??
+%%Operadores(com exemplos) check
+%%Diferenças de Stream check
+%%
+%%Escalabilidade
+%%Mensageiro assincrono
+%%microsserviços e Arquitetura de microsserviços
+%%Operating-system-level virtualization, also known as containerization
+%-----------------------%
+
+%CEP
+%Operadores de CEP
+%Contexto em CEP
+%Estado em relação a operadores e contexto em CEP
+%principais ferramentas e como podem ser distribuídas
+%%tipo usando o apache storm
+%arquiteturas distribuidas orquestração vs coreografia
+%arquiteturas de microsserviços
+%Escalabilidade para microsserviços sem estado
+%Escalabilidade para microsserviços com estado baseado em BD e citando o teorema CAP.
+%conclusão
+
+
+
+
+
+%%------------------------------------------------------------------------- %%
+
+Este capítulo apresenta as principais definições e fundamentos relacionados ao processamento de eventos complexos e às arquiteturas de distribuição desse tipo de processamento. Além disso, o capítulo introduz conceitos fundamentais das arquiteturas de microsserviços, 
+%como estilo de arquitetura e tipos de comunicação entre microsserviços. Ao longo do capítulo, 
+abordando os seus diferentes estilos e tipos de escalabilidade, bem como técnicas de comunicação e organização de dados. Ao final, discute-se a relação entre microsserviços e contêineres e soluções de instanciação de contêineres na nuvem.%, separando entre os que mantem\todo[inline]{Fabio não gostou} estado e os que não mantem\todo[inline]{Fabio não gostou}. Para os microsserviços que não mantem\todo[inline]{Fabio não gostou} estado é discutido as possíveis técnicas para escala-los\todo[inline]{Fabio não gostou}, baseando-se em técnicas utilizadas por sistemas gerenciadores de bancos de dados distribuídos.
+%. Por último, considerações finais são feitas sobre como estes conceitos se relacionam.
+
+\section{Processamento de Eventos Complexos}\index{CEP}
+\label{sec:cep}
+
+O Processamento de Eventos Complexos (CEP, do inglês \textit{Complex Event Processing}) foi primeiramente introduzido por \cite{Luckham:2001:PEI:515781}. É uma técnica para tratar dados vindos de várias fontes diferentes e extrair novas informações, em tempo real, das combinações dos diferentes dados. 
+%\subsection{Eventos}
+%\label{sec:Eventos}
+Existem três tipos de entidades principais relacionados a CEP: \\
+
+\textbf{Produtores de Eventos} \index{EventProducer}são responsáveis por introduzir novos eventos no sistema a partir do mundo exterior. Cada produtor de eventos pode estar associado a um sensor que envia dados em tempo real, a um aplicativo ou rede social que recebe eventos diretamente de pessoas ou a qualquer sistema que envie informações de forma contínua. \\
+%\todo[inline]{Somente dados de sensores são processados com CEP? Dados gerados de forma não periódica, por pessoas ou sistemas, não podem ser usados também? }
+
+\textbf{Consumidores de Eventos} \index{EventConsumer}são responsáveis por receber eventos do sistema e repassar os dados sobre tais eventos para as partes interessadas no mundo exterior. Esses dados podem ser repassados na forma de notificações a usuários ou atuadores no mundo real. Consumidores e produtores de eventos não fazem parte do sistema de CEP em si, mas são abstrações para entidades externas que interagem com o sistema. \\
+
+\textbf{Processadores de Eventos} \index{EPA-EventProcessingAgent} (EPAs, do inglês \textit{Event Processing Agents}) são as entidades que realmente compõem o sistema de CEP. Cada EPA é responsável por aplicar um ou mais operadores nos eventos recebidos e emitir novos eventos ou repassar eventos que foram filtrados. Quando vários EPAs são conectados, de forma que os eventos resultantes do processamento de um EPA são enviados diretamente a outro, forma-se uma \textbf{Rede de Processamento de Eventos} \label{EPN} (\textit{EPN}, do inglês \textit{Event Processing Network}).\index{EPN-EventProcessingNetwork} \\
+
+%\todo[inline]{Sempre que possível, traduza os termos para o português: Produtores de Eventos, Consumidores de Eventos, Processadores de Eventos e Rede de Processamento de Eventos me parecem boas traduções para as definições acima.}
+%Concordo plenamente com a tradução dos termos, mas mantive as siglas em inglês.
+% 
+É essencial destacar a diferença entre \textit{tipo de evento} e \textit{evento}. Todo evento que entra no sistema de CEP pertence a um tipo específico, que possui uma estrutura estática bem definida dentro do sistema. Um evento que entra no sistema é apenas uma instância de um tipo de evento. Qualquer outro evento que possua a mesma estrutura é classificado como sendo do mesmo tipo de evento. Por exemplo, um sensor captando dados de temperatura e pressão envia as medidas para o sistema. Cada medida é um evento distinto, enquanto que o formato e a estrutura dos dados enviados fazem parte do mesmo tipo de evento. % da mesma forma como um número inteiro é uma instância de um tipo inteiro em uma linguagem de programação tipada. \\
+
+O Exemplo \ref{exemploEvento} apresenta um exemplo de dois eventos de um mesmo tipo (\textit{Posição}) que será usado a seguir para ilustrar o funcionamento dos operadores, não representando nenhuma implementação específica de CEP em uso.
+
+%explicar mais sobre as ferramentas?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+\begin{evento}[t]
+
+\begin{verbatim} 
+{ "TipoDeEvento" : "Posição",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "lat" : "-23. 559092",
+    "lon" : "-46. 731563",
+    "timestamp" : "23:35:35 05/04/2020" } ]
+}
+
+{ "TipoDeEvento" : "Posição",
+  "Campos" : [ {
+    "id" : "2",
+    "veículo" : "Ônibus",
+    "lat" : "-23. 558633",
+    "lon" : "-46. 731241",
+    "timestamp" : "10:35:35 05/04/2020" } ]
+}
+\end{verbatim}
+\caption{Eventos de posição.}
+\label{exemploEvento}
+\end{evento}
+
+%\todo[inline]{Acima, acho que o nome Evento 1 não ficou muito legal, porque há mais de um evento dentro dele. Não seria melhor colocar Exemplo 1?} 
+
+%\todo[inline]{No exemplo acima, acho que seria bom incluir um atributo ``id'' em Campos. Também seria bom trocar ``nome'' por ``veículo''.}
+
+\subsection{Operadores de CEP}
+
+%\todo[inline]{Por que só no operador "Detectar padrão" o nome é um verbo? Os demais são todos substantivos ("Filtragem", "Divisão", ...). É melhor usar "Detecção de padrão", para padronizar (faça uma busca no texto todo). }
+\label{sec:CEPoperators}
+Os principais operadores que um EPA pode implementar são: Filtragem, Projeção, Tradução, Enriquecimento, Agregação, Composição, Divisão e Detectar Padrão~\citep{Etzion:2010:EPA:1894960}. Normalmente, eles são separados em três grupos -- Filtrar, Detectar Padrão e Transformar -- sendo que este último grupo contém todos os outros operadores. Esta distinção é feita pelo fato de a aplicação de um filtro não precisar alterar a definição do tipo de evento, enquanto que a transformação e a detecção de padrões inevitavelmente necessitam de uma nova definição. A seguir, as operações são explicadas brevemente e têm seu uso ilustrado com base no Exemplo~\ref{exemploEvento}.%\todo{Na detecção de padrões é mesmo sempre necessário detectar um tipo diferente do(s) de entrada?---Eu acredito que sim, pois com estes operadores de agregação se a agregação está sendo realizada, por definição não é o mesmo tipo de definição, e se ela não esta sendo realizada, então o operador não esta sendo utilizado. Todas as descrições aqui são bem teoricas e não refletem exatamente como as engines de CEP funionam, servem mais para dar uma ideia do poder das engines} %
+% esta é uma referencia bem forte, então citam dá uma impressão que eles só passam por cima. Listam fica melhor. Achei melhor trocar o nome dos operadores para substantivos mesmo.
+
+
+
+\begin{itemize}
+\item \textbf{Filtragem:} um EPA pode filtrar eventos baseando-se no valor de seus atributos. 
+Por exemplo, ao aplicar um filtro que seleciona apenas eventos que ocorreram após às 11 horas da noite do dia 5 de abril de 2020 no Exemplo \ref{exemploEvento}, somente o evento cujo campo \textit{veículo} contém o valor \textit{Carro} estará no resultado, como mostrado no Exemplo \ref{eventoFiltrado}. Um evento que passa por uma filtragem não tem sua estrutura modificada, então o evento de saída pode ser considerado do mesmo tipo que o evento de entrada. 
+\begin{evento}[h]
+\begin{verbatim}
+{ "TipoDeEvento" : "Posição",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "lat" : "-23. 559092",
+    "lon" : "-46. 731563",
+    "timestamp" : "23:35:35 05/04/2020 } ]
+}
+\end{verbatim}
+\caption{Uma filtragem sobre os eventos do Exemplo~\ref{exemploEvento}.}
+\label{eventoFiltrado}
+\end{evento}
+
+
+\item \textbf{Projeção:} ao fazer a projeção de eventos, apenas alguns dos atributos do evento original são mantidos, de forma que o tipo do evento de saída é diferente. Por exemplo, no processamento dos eventos do Exemplo~\ref{exemploEvento}, caso os únicos atributos de interesse sejam a posição geográfica e temporal dos veículos, uma projeção para eliminar os outros atributos teria como resultado os eventos mostrados no Exemplo~\ref{eventoProjetado}. 
+\begin{evento}[h]
+\begin{verbatim}
+{ "TipoDeEvento" : "Localização",
+  "Campos" : [ {
+    "lat" : "-23. 559092",
+    "lon" : "-46. 731563",
+    "timestamp" : "23:35:35 05/04/2020"} ]
+}
+
+{ "TipoDeEvento" : "Localização",
+  "Campos" : [ {
+    "lat" : "-23. 558633",
+    "lon" : "-46. 731241",
+    "timestamp" : "10:35:35 05/04/2020" } ]
+}
+\end{verbatim}
+\caption{Uma projeção sobre os eventos do Exemplo~\ref{exemploEvento}.}
+\label{eventoProjetado}
+\end{evento}
+
+
+\item \textbf{Tradução}: a tradução pode manter atributos do evento original e também pode adicionar novos atributos, além de modificar os valores de atributos já definidos. No exemplo~\ref{exemploEvento}, é possível usar uma tradução para alterar o valor de \textit{timestamp} para quantos minutos se passaram no dia da detecção do evento, retirando a latitude e a longitude.
+O Exemplo~\ref{eventoTraduzido} mostra uma tradução. A tradução só pode utilizar valores já presentes nos atributos de cada evento para modificá-lo.
+
+\begin{evento}[h]
+\begin{verbatim}
+{ "TipoDeEvento" : "Identificação",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "timestamp" : "1415" } ]
+}
+
+{ "TipoDeEvento" : "Identificação",
+  "Campos" : [ {
+    "id" : "2",
+    "veículo" : "Ônibus",
+    "timestamp" : "635" } ]
+}
+\end{verbatim}
+\caption{Uma tradução sobre os eventos do Exemplo~\ref{exemploEvento}.}
+\label{eventoTraduzido}
+\end{evento}
+
+\item \textbf{Enriquecimento:} 
+%Um evento pode ser enriquecido adicionando-se novos atributos à sua definição, sendo que os valores desses atributos vêm de alguma operação feita sobre os outros atributos já presentes no evento, ou de uma consulta a um estado exterior ao processamento.
+o operador de enriquecimento pode retirar atributos do evento, adicionar novos atributos ou modificar os valores de atributos existentes, assim como a tradução. A diferença entre os dois é o fato de que o enriquecimento pode consultar um estado externo à aplicação para adquirir informações e utilizá-las no processamento.
+Por exemplo, ao adicionar nos eventos do Exemplo~\ref{exemploEvento} um campo para indicar o bairro onde o veículo está, os eventos estão sendo enriquecidos, pois é necessário consultar a latitude e a longitude de cada novo evento em uma aplicação externa que retorna o bairro da localização. O resultado é mostrado no Exemplo~\ref{eventoEnriquecido}. 
+\begin{evento}[h]
+\begin{verbatim}
+{ "TipoDeEvento" : "PosiçãoPorBairro",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "lat" : "-23. 559092",
+    "lon" : "-46. 731563",
+    "bairro" : "Butantã",
+    "timestamp" : "23:35:35 05/04/2020" } ]
+}
+
+{ "TipoDeEvento" : "PosiçãoPorBairro",
+  "Campos" : [ {
+    "id"  : "2",
+    "veículo" : "Ônibus",
+    "lat" : "-23. 558633",
+    "lon" : "-46. 731241",
+    "bairro" : "Butantã",
+    "timestamp" : "10:35:35 05/04/2020" } ]
+}
+\end{verbatim}
+\caption{Um enriquecimento dos eventos do Exemplo~\ref{exemploEvento}.}
+\label{eventoEnriquecido}
+\end{evento}
+
+\item \textbf{Divisão:} na divisão, a entrada de um único evento gera a criação de um conjunto de eventos, sendo que os eventos de saída podem ser igual ao original ou uma transformação dele. Por exemplo, a detecção de um evento do tipo \textit{Posição} perto do IME-USP tarde da noite pode gerar dois novos eventos por divisão, um de veículo próximo e um de alerta de número de veículos circulando à noite, como mostrado no Exemplo~\ref{eventoDivisao}.
+%\todo[inline]{Todas as operações com exceção da Cisão têm nomes que são verbos no infinitivo. Esse nome Cisão parece injustificado. Porque não ``Dividir''? Vem de Split, certo? Outra coisa estranha é que, nas demais operações, você diz que o nome é, por exemplo, Agregar, mas depois, na hora de explicar, diz: ``A agregagação blá, blá...''. Sendo assim, não seria melhor colocar todos os nomes como substantivos mesmo?}
+%concordo em deixar todos como substantivos.
+
+%\todo[inline]{Não entendi por que você escolheu o nome ``ToqueDeRecolher'' acima. Achei estranho. Troquei o CCSL dos seus exemplos por IME-USP, senão, acho que seria bom vc dizer o que CCSL significa. Lembre-se que quem vai ler o seu texto não necessariamente é do IME.}
+%não tinha considerado isto mesmo do CCSL. Escolhi ToqueDeRecolher para dar um contexto de pq a circulação de um veículo em um horario específico levaria a um alerta. Porém, realmente não é auto explicativo.
+A divisão pode ser estática, de forma que a entrada de um evento sempre gera o mesmo número de eventos na saída, ou iterativa, de forma que o número de eventos gerados pela divisão é definido a partir dos atributos do evento de entrada a cada nova chegada de evento. 
+
+\begin{evento}[h]
+\begin{verbatim}
+{ "TipoDeEvento" : "VeículoPróximo",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "local" : "IME-USP",
+    "timestamp" : "23:35:35 05/04/2020" } ]
+}
+
+{ "TipoDeEvento" : "AlertaCirculaçãoNoturna",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "timestamp" : "23:35:35 05/04/2020"  } ]
+}
+\end{verbatim}
+\caption{Divisão sobre os eventos do Exemplo~\ref{exemploEvento}.}
+\label{eventoDivisao}
+\end{evento}
+
+
+
+\item \textbf{Agregação:} a agregação define que um cálculo seja feito a partir dos valores numéricos de um dado atributo em vários eventos do mesmo tipo, e o resultado é convertido em um novo evento. As agregações mais comuns são as operações: \emph{first} (primeiro valor), \emph{last} (último valor), \emph{any} (qualquer valor), \emph{min} (menor valor), \emph{max} (maior valor), \emph{sum} (soma dos valores), \emph{avg} (média dos valores), \emph{stdev} (desvio padrão dos valores) e \emph{distinct} (valores sem repetição). Cada agregação é definida juntamente com o contexto que será considerado para o agrupamento dos eventos. Considerando o Exemplo~\ref{EventoAgregação}, se a agregação \emph{avg} for utilizada no campo \textit{altura} e os eventos forem agrupados por dia, será calculada a altura média entre todos eventos detectados naquele dia. É possível agregar eventos em contextos temporais e espaciais, como será explicado na Seção \ref{sec:CEPcontext}.
+
+
+\begin{evento}[t]
+
+\begin{verbatim} 
+{ "TipoDeEvento" : "Posição",
+  "Campos" : [ {
+    "id"  : "1",
+    "veículo" : "Carro",
+    "lat" : "-23. 559092",
+    "lon" : "-46. 731563",
+    "altura" : "1,5",
+    "timestamp" : "23:35:35 05/04/2020" } ]
+}
+
+{ "TipoDeEvento" : "Posição",
+  "Campos" : [ {
+    "id" : "2",
+    "veículo" : "Ônibus",
+    "lat" : "-23. 558633",
+    "lon" : "-46. 731241",
+    "altura" : "3",
+    "timestamp" : "10:35:35 05/04/2020" } ]
+}
+---------------------------------------------------------
+{ "TipoDeEvento" : "Agregação",
+  "Campos" : [ {
+    "altura" : "2,25",
+   } ]
+}
+\end{verbatim}
+\caption{Agregação de eventos (cálculo da média das alturas).}
+\label{EventoAgregação}
+\end{evento}
+
+
+\item \textbf{Composição:} um EPA de composição junta eventos vindos de duas fontes diferentes, verifica se o critério de junção se aplica a eles e cria eventos derivados a partir disso. A principal diferença entre a composição e a agregação é que a primeira é feita com eventos de tipos diferentes e a segunda, com eventos do mesmo tipo. Como exemplo, imagine que o sistema efetuou o enriquecimento dos eventos do Exemplo~\ref{exemploEvento} introduzindo o atributo de bairro da localização. Agora, considere que um Produtor de Eventos envia para o sistema de CEP o evento no Exemplo~\ref{exemploEventoChuva}, notificando que, no horário especificado, foi detectada chuva no bairro do Butantã, que terminou ao meio-dia e começou aproximadamente três horas antes.
+\begin{evento}[t]
+
+\begin{verbatim}
+{ "TipoDeEvento" : "Chuva",
+  "Campos" : [ {
+    "nome" : "ChuvaParou",
+    "Bairro" : "Butantã",
+    "timestamp" : "12:10:09 05/04/2020,
+    "duração" : "03:04:32" } ]
+}
+\end{verbatim}
+\caption{Evento de detecção de chuva. \label{exemploEventoChuva}}
+\end{evento}
+Um operador de composição pode receber os eventos de \emph{Chuva} e de \emph{Posição}  e verificar se algum veículo ficou na chuva naquele dia. No caso, é possível verificar que o \textit{Ônibus} tomou chuva, pois estava lá naquele dia e horário, mas o \textit{Carro} não, pois o evento \textit{Chuva} mostra que ela já havia parado quando o \textit{Carro} foi detectado. 
+
+\begin{evento}[t]
+
+\begin{verbatim}
+{ "TipoDeEvento" : "VeículoTomouChuva",
+  "Campos" : [ {
+    "id" : "2",
+    "veículo" : "Ônibus",
+    "Bairro" : "Butantã",
+    "timestamp" : "12:10:09 05/04/2020 } ]
+}
+\end{verbatim}
+\caption{Composição dos eventos dos exemplos~\ref{exemploEvento} e~\ref{exemploEventoChuva}.}
+\end{evento}
+
+Operadores de composição precisam especificar algumas políticas de tratamento de eventos de entrada:
+\begin{itemize}
+\item Política de \textit{buffer}: define quantos eventos de cada tipo devem ser armazenados até que sejam pareados com eventos de outros tipos. Usando o Exemplo~\ref{exemploEventoChuva}, poderia ser necessário esperar que três eventos de posição mostrassem o veículo dentro da região atingida.
+\item Política de evento não pareado: define o que o sistema deve fazer caso um evento não se pareie com nenhum outro para fazer uma composição. Citando o Exemplo~\ref{exemploEventoChuva}, se a composição fosse definida para ocorrer somente com veículos automotores e um evento de \textit{Posição} de carroça fosse enviado, esta política seria utilizada.
+\item Condição de composição: define como os eventos devem ser pareados, ou seja, qual critério deve ser usado para identificar quais pares ou conjuntos de eventos formam uma composição. No caso do Exemplo~\ref{exemploEventoChuva}, a condição é que os \textit{timestamps} dos dois eventos coincidam e que o veículo seja automotivo. 
+\end{itemize}
+
+
+\item \textbf{Detecção de Padrão:} é o principal operador de CEP. Ele diferencia CEP de outras ferramentas de processamento de dados em tempo real. Um EPA com esta operação detecta se os eventos (possivelmente de tipos diferentes) seguiram um padrão ao passarem no sistema. Um detector de padrão de eventos tem seis propriedades que devem ser definidas para que ele possa atuar de forma correta: 
+%Lista de tipos de eventos relevantes, Eventos participantes, Conjunto de combinação do padrão, Parâmetros do padrão, Politicas do padrão e Tipo de padrão. 
+\begin{itemize}
+\item \textbf{Lista de tipos de evento relevantes}: lista quais tipos de eventos precisam ser enviados para o EPA para que o padrão seja detectado. % ou seja, lista os tipos dos eventos de entrada que compõe o padrão. 
+Por exemplo, caso o único tipo de evento relevante fosse o do tipo \textit{Posição} (Exemplo \ref{exemploEvento}), eventos do tipo \textit{Chuva} (Exemplo \ref{exemploEventoChuva}) não entrariam no processamento do padrão. 
+
+%\todo[inline]{Fernando, você está tentando referenciar os exemplos usando o comando ref do latex, mas isso não está funcionando direito, porque a referência está na seção (e não no exemplo). Você precisa encapsular os exemplos em um ambiente com floating do Latex (como o figure), assim eles ficarão numerados e poderão ser referenciados.}
+%Criei um novo floating: evento e coloquei os labels dentro do caption para não referenciar a seção quando for fazer referencias.
+
+\item \textbf{Eventos participantes}: são um conjunto de eventos de entrada reconhecidos pelo padrão de acordo com o valor dos campos. Por exemplo, se sete eventos forem introduzidos no sistema, mas apenas os cinco primeiros satisfizerem o padrão, somente estes cinco farão parte dos eventos participantes. 
+\item \textbf{Conjunto de reconhecimento do padrão}: é um subconjunto dos eventos participantes que são enviados como resposta quando o padrão é detectado. 
+\item \textbf{Políticas do padrão}: determinam quais ações tomar caso vários subconjuntos de eventos de entrada satisfaçam o padrão. 
+%Cinco políticas devem ser decididas:
+%\begin{itemize}
+%\item política de avaliação: define quando o conjunto de eventos de entrada é aceito, qual o valores dos campos e em qual ordem eles devem chegar. 
+%\item política de cardinalidade: define quantos conjuntos de eventos são aceitos em um mesmo contexto. 
+%\item política de tipo repetido: define quais ações tomar se vários eventos do mesmo tipo forem encontrados. 
+%\item política de consumo: define o que deve acontecer a um evento depois de ele for detectado como evento participante.
+%\item política de ordem: se houver mais que um \textit{timestamp} por evento, define qual deve ser utilizado para ordenar os eventos.
+%\end{itemize}
+\item \textbf{Tipo de padrão}: define que comportamento dos eventos de entrada se deseja detectar. São divididos em dois tipos principais, Básicos e Dimensionais, e cada um deles tem vários subtipos. 
+\begin{itemize}
+\item \textbf{Padrões Básicos}: são os que não dependem da ordem dos eventos de entrada. Podem ser de quatro subtipos:
+\begin{itemize}
+\item \textbf{Padrões de Operadores Lógicos} \emph{(ALL, ANY, ABSENCE)} verificam se existem eventos de cada tipo da lista de tipos de eventos relevantes no conjunto de Eventos Participantes. \emph{ALL} verifica se há um de cada tipo, \emph{ANY} verifica se há eventos de pelo menos um tipo e \emph{ABSENCE} verifica se não há nenhum evento dos tipos da lista. O conjunto de reconhecimento é composto por todos os eventos que respeitam o padrão, ou seja, todos os eventos em \emph{ALL}, apenas os eventos que foram detectados em \emph{ANY} e nenhum evento em \emph{ABSENCE}.
+Utilizando os Exemplos \ref{exemploEvento} e \ref{exemploEventoChuva}, caso a lista de eventos relevantes contivesse os tipos de eventos dos dois exemplos, mas os eventos relevantes fossem somente os do Exemplo \ref{exemploEventoChuva}, poderia se detecar um evento de \textit{CarroSeco} caso utilizasse o operador \emph{ABSENCE} num fluxo que recebesse eventos dos dois tipos
+%~\todo{Esse exemplo não parece correto. O evento CarroSeco de saída deveria ser gerado em resposta à entrada de um evento de localização de carro, certo? Mas com ABSENCE, isso nunca aconteceria. --- Se a lista de eventos participantes contivesse somente os eventos de chuva e não os eventos de veiculos, então a chegada de um evento de veiculo sem a presença de um evento de chuva no periodo de agregação poderia disparar um evento de carro seco }.
+
+
+%\todo[inline]{Para mim, não ficou muito claro o tipo de padrão acima. Primeiro vc diz que o padrão deve ser respeitado pelo conjunto inteiro dos participantes. Mas depois, diz que somente os participantes que respeitam o padrão vão para o conjunto de reconhecimento. Isso está inconsistente!}
+\item \textbf{Padrões de Limiar}, como valor máximo, valor mínimo, valor médio e contagem são padrões que são satisfeitos quando todo o conjunto de eventos participantes não ultrapassa o limiar definido. Neste caso, o conjunto inteiro de eventos participantes é o mesmo de reconhecimento do padrão. Caso fosse definido um tipo de evento com este tipo de padrão que recebesse como entrada eventos do Exemplo \ref{EventoAgregação}, ele poderia detectar se em todo o conjunto nenhum veículo ultrapassou 3 metros de altura.
+\item \textbf{Padrões de Subconjunto} selecionam um subconjunto dos eventos participantes, normalmente aqueles com os maiores ou menores valores para um atributo específico, e somente estes eventos compõem o conjunto de reconhecimento do padrão. Esse tipo de seleção é conhecida como \textit{top-k}. Usando o Exemplo \ref{EventoAgregação}, poderia-se detectar o subconjunto de veículos com os maiores valores no campo \textit{altura}.
+\item \textbf{Padrões Modais} detectam se todos os eventos participantes respeitam uma dada regra. Se o padrão modal for do tipo \emph{always}, todo o conjunto de eventos participantes deve respeitar a regra. Se for \emph{sometimes}, só alguns eventos participantes devem respeitá-la. Sempre que o padrão é detectado, todo o conjunto de eventos participantes se torna o conjunto de reconhecimento do padrão. No caso do Exemplo \ref{exemploEvento}, este padrão poderia detectar se todos eventos entrando no sistema são de veículos automotivos.
+\end{itemize}
+\end{itemize}
+
+%\todo[inline]{Fábio: A Descrição está muito vaga. Ficaria mais clara se para cada tipo de processamento fosse apresentado um exemplo logo em seguida}
+\begin{itemize}
+\item \textbf{Padrões Dimensionais} são caracterizados por se relacionarem com a dimensão temporal e/ou espacial, quando os eventos tem esses atributos. 
+Assim como os padrões básicos, podem ser divididos em quatro subtipos:
+\begin{itemize}
+\item \textbf{Padrões de Ordem Temporal} são definidos de forma que o conjunto de reconhecimento do padrão seja composto seguindo a ordem temporal dos \textit{timestamps} dos eventos, com os primeiros \textit{n} eventos, os últimos \textit{n} eventos ou todos os eventos participantes em sequência temporal. Com base no Exemplo \ref{exemploEvento}, poderia-se definir um tipo de evento que gera eventos a partir dos eventos de \textit{Posição} que tem os \textit{timestamps} mais próximos do horário atual.
+\item \textbf{Padrões de Tendência} ocorrem quando eventos participantes chegam em uma ordem temporal e um atributo apresenta uma dada característica, como se manter estável ou aumentar ou diminuir de valor ao longo do tempo. 
+Um possível uso deste padrão seria detectar se eventos de \textit{Posição} do Exemplo \ref{exemploEvento} chegam no mesmo horário, no mesmo local, em vários dias distintos.
+\item \textbf{Padrões Espaciais} são um subtipo de padrão que lida com o comportamento da posição dos eventos ao longo do tempo. Como exemplo deste padrão, pode-se citar a detecção de eventos com a maior distância, menor distância ou a distância média relativa a um ponto fixo ou a um outro evento. Se dois eventos de  \textit{Posição} \emph{Ônibus} do Exemplo \ref{exemploEvento} forem detectados com os campos \textit{latitude} e \textit{longitude} sempre próximos, poderia ser gerado um evento de \emph{Agrupamento de Ônibus} com este padrão.%\todo{Não entendi esse exemplo}. 
+\item \textbf{Padrões Espaço-Temporais}, assim como os Padrões Espaciais, lidam com a posição dos eventos em relação ao tempo, porém com foco na velocidade do movimento ao invés da posição relativa. Poderiam detectar se um \emph{Veículo} do Exemplo \ref{exemploEvento} está parado, se movendo em um sentido fixo ou em direção a outro produtor de eventos, por exemplo. 
+\end{itemize}
+\end{itemize}
+\item \textbf{Parâmetros do padrão}: consistem nos demais parâmetros que o padrão precisa ter para ser detectado.
+\end{itemize}
+\end{itemize}
+
+
+\subsection{Contexto em CEP}
+\label{sec:CEPcontext}
+
+%\todo{Não há nenhuma referência bibliográfica citada nesta seção. É preciso incluir referências.}
+
+Em alguns casos, a detecção de eventos é feita de acordo com o contexto no qual o evento está sendo avaliado. Processar os eventos por contexto ajuda a avaliar as informações que cada evento traz ao sistema ao ser inserido. Contexto é definido em CEP como a característica que diferencia eventos do mesmo tipo~\citep{Etzion:2010:EPA:1894960}. Tecnicamente, significa separar o eventos de entrada de um mesmo tipo em partições que possuem atributos similares.   %\todo{Mas o que é um contexto? Você não definiu!}
+A partir do Exemplo~\ref{exemploEvento}, é possível usar contexto para separar os eventos do tipo \textit{Posição} utilizando o atributo \textit{veículo} como característica de separação, onde cada valor distinto de \textit{veículo} leva à criação de uma partição de contexto diferente, na qual todos os eventos com o mesmo valor para esse atributo são inseridos. Neste caso, existem dois possíveis valores de \textit{veículo} (\textit{Carro} e \textit{Ônibus}), o que leva à criação de uma partição apenas para eventos \textit{Posição} de carros e outra apenas para eventos \textit{Posição} de ônibus.  Qualquer operador que use contexto é aplicado a cada partição separadamente, de forma que eventos de entrada em uma partição não influenciam o processamento em outras partições%\todo{essa última frase está mesmo correta? um mesmo evento pode ser entrada de mais de uma partição, como descrito mais adiante no texto, em Intervalo Fixo Deslizante. - sim, este é basicamente como funciona o termo group by em EPL do ESPER}.
+
+%Cada contexto cria partições onde eventos que estão naquela partição só são agregados com eventos da mesma partição \todo{frase horrível}.
+Alguns operadores, como agregação e composição, lidam com mais de um evento de entrada por detecção. Dessa forma, eles necessariamente usam um contexto para separar os eventos de entrada que serão considerados para realizar cada detecção.
+Cada partição usa um ou mais atributos do evento como dimensões de separação, onde os possíveis valores podem ser divididos em intervalos. Cada evento também pode estar contido em diferentes contextos ao mesmo tempo. 
+%Utilizando os eventos do Exemplo~\ref{exemploEvento}, um contexto que processasse eventos de Posição por dia formaria uma partição para cada dia, sendo que a partição do dia 5 de abril receberia os 2 eventos do exemplo. 
+Um contexto  é classificado de acordo com as dimensões que utiliza para criar as partições, podendo ser:
+\begin{itemize}
+\item \textbf{Temporal}: cria partições para os eventos em intervalos de acordo com o \textit{timestamp} do evento. É usado principalmente em agregações e composições. O contexto temporal pode ser empregado de quatro maneiras:
+\begin{itemize}
+\item \textbf{Intervalo fixo}: 
+%O conjunto de eventos de entrada participantes na detecção, chamado a partir deste ponto de conjunto de entrada não pode conter eventos de outro conjunto.
+utiliza uma janela temporal fixa para a partição (por exemplo, de 23:50:00 até 23:54:59) para definir se o evento de entrada será inserido na partição ou não. 
+Neste caso, é possível criar outras partições para intervalos de tempo no futuro, como de 23:55:00 até 23:59:59, porém sem a sobreposição de janelas temporais.
+\item \textbf{Intervalo de eventos}: similar ao intervalo fixo, mas cada partição é criada a partir da entrada de um evento de um tipo específico e terminada a partir do recebimento de um outro evento de tipo específico ou após um certo período de tempo, similar a uma sessão temporal. Um exemplo possível seria criar uma agregação com a criação de uma partição para cada evento de entrada do tipo \textit{Chuva}, a qual agregaria toda a duração presente nos eventos até 12 horas depois da chegada do evento inicial, gerando ao final um evento com o nível médio de precipitação durante a sessão.%\todo{O exemplo não está claro. O que significa "agregar toda a duração presente nos eventos"? - Um agregação que utiliza os dados de todos os eventos de entrada que chegaram durante a sessão }.
+
+\item \textbf{Intervalo fixo deslizante}: 
+Neste caso, assim como no Intervalo fixo, as janelas de detecção tem uma duração predeterminada, porém são iniciadas periodicamente. Estas janelas só são sobrepostas se o intervalo de abertura de uma nova janela $y$ for menor que o intervalo de duração da janela $x$
+%a cada novo intervalo de tempo $X$, uma nova janela temporal é iniciada, de duração e recebe os eventos que chegarão no intervalo de tempo de duração $y$ %, sendo $y > x$.
+%. Dessa forma, um intervalo fixo deslizante permite a sobreposição de janelas temporais e que um evento faça parte de múltiplas detecções. Utilizando eventos do tipo \textit{Posição}, seria possível criar uma nova partição com os eventos dos últimos 10 minutos para calcular a distância média entre todos os veículos detectados.%\todo{Nesse exemplo, aparece só um intervalo. O que é x e o que é y nele? - x é o horario de chegada de cada novo evento de entrada e y é 10 minutos}. 
+\item \textbf{Intervalo de eventos deslizante}: semelhante ao intervalo fixo deslizante, mas em vez de usar um intervalo de tempo $y$ para cada nova janela temporal, faz essa decisão a partir da chegada de um número específico $n$ de eventos de um tipo. Como exemplo, a cada 3 eventos de \emph{Posição} é iniciada uma nova janela que usa as posições e \textit{timestamps} para calcular a velocidade media dos veículos. Neste tipo de partição não há sobreposição de janelas. %\todo{E quanto ao y? Esse tipo de intervalo tem y também?}. 
+%exemplo
+\end{itemize}
+\item \textbf{Espacial}: cria partições para os eventos por intervalos geográficos, utilizando latitude e longitude para separar as partições. O contexto espacial pode ser utilizado de três maneiras:
+\begin{itemize}
+\item \textbf{Local fixo}: cada área geográfica constitui uma partição diferente, seja ela um país, um estado, uma cidade, um bairro, uma rua, uma casa ou qualquer outra área.
+\item \textbf{Distância da entidade ao local}: cada partição é definida por intervalos fixos de raios de distância entre um local específico e a posição especificada no evento.
+\item \textbf{Distância do evento ao local}: uma nova partição é iniciada a partir da entrada de um evento de um tipo específico. Eventos subsequentes só entram na partição caso suas localizações estejam suficientemente perto do evento inicial, ou seja, até uma certa distância máxima especificada.
+\end{itemize}
+\item \textbf{Orientado a segmentação}: %dependendo dos atributos que um evento tem, pode-se 
+cria uma partição para cada valor que um ou mais atributos venham a receber. Normalmente, é utilizado quando o atributo tem um número pequeno de valores possíveis.
+\item \textbf{Orientado a estado}: neste caso, só existe uma única partição por contexto. Um valor de estado, que é externo aos eventos, é consultado a cada chegada de eventos novos e controla quais eventos serão inseridos na partição e quais não serão. 
+\end{itemize}
+É possível criar contextos compostos, que dividem as partições a partir de duas ou mais dimensões. Considerando os eventos do Exemplo \ref{exemploEvento} novamente, caso um contexto fosse criado para separar as partições por hora de detecção e por bairro, cada um dos eventos seria processado por uma partição diferente, pois, mesmo com a posição no mesmo bairro, eles foram detectados em horas diferentes. 
+
+%operações que um EPA pode realizar
+% contextos temporais e espaciais
+%
+
+\subsection{Estado em CEP}
+\label{sec:CEPstate}
+
+%\todo{Não há nenhuma referência bibliográfica citada nesta seção. É preciso incluir referências.}
+
+O uso de estado na detecção de eventos está fortemente ligado ao contexto escolhido para detectá-los. Com a exceção do operador de Enriquecimento, que utiliza um estado externo à ferramenta, a quantidade de memória usada para armazenar estado depende do número de partições do contexto escolhido, da quantidade de eventos por partição e da velocidade de chegada de eventos~\citep{Etzion:2010:EPA:1894960}. Operadores mais simples, como Filtragem, Projeção, Divisão e Tradução, podem não usar estado algum para detectar eventos quando não separam a detecção por contextos específicos. Em contraste, os operadores Agregação, Composição e Detectar Padrão devem inevitavelmente usar estado, pois sempre lidam com mais de um evento de entrada. Sejam os eventos de entrada do mesmo tipo, como em Agregação, ou de tipos diferentes, como em Composição, é preciso armazenar o estado do processamento, de forma que exista pelo menos uma partição de um contexto em que os eventos de entrada são agrupados. 
+
+%no caso de estudo existem os seguintes operadores: filtragem, enriquecimento, composição, agregação, detectar padrão. Isso significa que todos os operadores que mais usam estado estão representados lá e alguns que não usam.
+
+
+
+%É possível distinguir os operadores de CEP em relação ao seu uso de estado para realizar o processamento. Os operadores Filtrar e Projetar só guardam estado quando utilizados em diferentes contextos, Enriquecer guarda estado utilizando contexto e pode usar um estado global fora do operador para o enriquecimento. Agregar e Compor forçam o uso de estado por natureza. Detectar Padrões sempre utiliza estado pois é definido para um conjunto de eventos participantes, o qual é composto por mais de um evento necessariamente. Caso o operador fosse utilizado com um só evento por conjunto de eventos participantes não haveria um padrão a ser detectado e poderia ser substituído por outros operadores.
+%O tamanho do estado que cada operador utiliza depende de vários fatores: 
+%da definição da dimensão da janela que é usada pelo operador, do tipo de janela (deslizante, distinta, \emph{fading},etc.) 
+%no caso da agragação, composição e detectar padrões também depende da quantidade de eventos de entrada para serem usados na detecção. 
+%\todo[inline]{Explicar melhor como todos os operadores podem usar contexto para guardar estado, sendo que agregação e composição tem que usar}
+%% ------------------------------------------------------------------------- %%
+
+
+\subsection{Principais Ferramentas}
+\label{sec:mainsoftwares}
+
+Existem várias implementações de sistemas de processamento de eventos complexos disponíveis. As ferramentas mais populares na atualidade são: a WSO2 Siddhi CEP ~\citep{WSO2}, a TIBCO~\citep{TIBCO},  a Esper~\citep{ESPER}, a Red Hat Drools Fusion~\citep{DroolsFusion}, a Informatica RulePoint~\citep{Informatica} e a Apache Flink~\citep{Flink}, sendo que a principal diferença entre elas é o tipo de linguagem utilizado para a definição dos eventos. Segundo \cite{Margara:2011:PFI:2002259.2002307}, as linguagens para CEP podem ser classificadas como \textit{linguagens orientadas a fluxos} ou \textit{linguagens orientadas a regras}. 
+
+Eventos definidos em linguagens orientadas a regras, também chamadas de regras Evento-Condição-Ação (ECA), devem necessariamente conter três informações:
+
+\begin{itemize}
+\item \textbf{Evento}: nome da regra que define o evento. 
+\item \textbf{Condição}: operadores que devem ser utilizados para detectar o evento. 
+\item \textbf{Ação}: o que deve ser feito caso o evento seja detectado. 
+\end{itemize} 
+
+
+
+Em contraste, eventos definidos em linguagens orientadas a fluxos se baseiam fortemente na sintaxe SQL utilizada por sistemas gerenciadores de banco de dados  relacionais, com a principal diferença de que, como os tipos de eventos ficam continuamente produzindo novos resultados, a saída de um tipo de evento pode ser usada diretamente como entrada em outro tipo de evento, o que não é comum em SQL.
+
+
+
+%a partir do momento que um evento é definido, ele pode ser utilizado na definição de outros eventos, o que não é possível em SQL.\todo[inline]{Qual é a referência bibliográfica que embasa essa afirmação? É bom citá-la, porque é uma afirmação forte. } 
+%\todo[inline]{Você fala de stream nos parágrafos acima, mas  não define o que é isso.}
+
+O Exemplo~\ref{ECAruleexample} mostra como uma regra ECA pode ser definida na ferramenta Drools Fusion e o Exemplo \ref{EPLexample} mostra uma definição de evento feita em \textit{Event Processing Language} (EPL) pela ferramenta Esper. Ambos definem que, na ocorrência de um evento do tipo \textit{Posição}, deve-se  verificar se as coordenadas do evento se encontram perto do prédio do Centro de Competência em Software Livre (CCSL) do IME-USP. Assim, os eventos VeículosPertoDoCCSL só serão enviados caso essa condição seja satisfeita.
+Além da ESPER, a Siddhi CEP e TIBCO também utilizam linguagens orientadas a fluxos para a definição de eventos em seus respectivos sistemas. Já Drools Fusion e RulePoint utilizam linguagens orientadas a regras. 
+O Apache Flink, em contraste com as outras abordagens apresentadas, implementa os operadores como funções diretamente na linguagem de programação suportadas como cliente pelo programa (Java e Scala). %\todo{Faltou falar qual é o tipo de linguagem do Flink  }.
+%\todo[inline]{Fernando, no exemplo 7, VeículosPertoDoCCSL é o nome da regra; a ação da regra é apenas um print. Toda regra cuja ação é satisfeita gera um evento que tem como tipo o nome da regra? Se não for assim, então, no lugar do print, não deveria haver alguma ação que cria um novo evento do tipo VeículosPertoDoCCSL?}
+%Chequei e realmente é preciso colocar um Insert no Then para que o evento seja enviado como "VeículoPertodoCCSL"
+
+
+\begin{evento}[t]
+\begin{verbatim}
+RULE "VeículosPertoDoCCSL"
+WHEN 
+      Position ( lat < -23. 558050 AND lon < -46. 730460 AND
+                 lat > -23. 560580 AND lon > -46. 732850 )
+THEN
+    print("veículo próximo ao CCSL")
+    Insert "VeículoPertoDoCCSL"
+END                
+\end{verbatim}
+\caption{Exemplo de regra ECA definida na ferramenta Drools Fusion. }
+\label{ECAruleexample}
+\end{evento}
+
+\begin{evento}[b]
+\begin{verbatim}
+SELECT * as VeículosPertoDoCCSL
+FROM Posição
+WHERE lat < -23. 558050 AND lon < -46. 730460 AND
+      lat > -23. 560580 AND lon > -46. 732850
+\end{verbatim}
+\caption{Definição de evento feita em \textit{Event Processing Language} (EPL) na ferramenta Esper.}
+\label{EPLexample}
+\end{evento}
+
+Processamento de Fluxos de Dados Contínuos (do termo inglês \textit{Stream Processing}) é uma outra caracterização de ferramentas para processar dados em tempo real, mas que não têm o conceito de eventos definido dentro delas. No processamento de fluxos de dados contínuos, os dados são processados de acordo com \textit{workflows} especificados pelo usuário, onde é possível utilizar filtros, junções, agregações e outros tipos de operadores nos dados. Normalmente, as ferramentas de processamento de fluxos têm um grande foco em  paralelizar o processamento e usam técnicas avançadas para fazer isso em grande escala. Mas, diferentemente das ferramentas de CEP, não costumam fornecer linguagens específicas para a definição dos dados a serem detectados \citep{Margara:2011:PFI:2002259.2002307}.
+
+\subsection{Distribuição de Processamento das Ferramentas de \textit{software} livre}
+\label{sub-sec:opensourcetoolsdistribution}
+
+As ferramentas de CEP de \textit{software} livre -- Apache Flink, Drools Fusion, Esper e Siddhi -- possuem organização, arquitetura e origens distintas. O Apache Flink é uma ferramenta criada para processar fluxos de dados contínuos em tempo real em ambientes distribuídos. Sua capacidade de processar eventos vem do fato de a ferramenta disponibilizar o uso de todos os operadores de CEP. Porém, isso só pode ser feito utilizando os operadores de CEP como funções das linguagems de programação suportadas (Java e Scala)%\todo{Aqui, dá para explicar melhor. Para um leitor que não conhece o Flink, não está claro o que significa "usar a API no código". Que código?}
+, e a ferramenta não disponibiliza nenhuma das linguagens mencionadas anteriormente para definição de eventos~\citep{FlinkCEP}.
+
+A ferramenta Drools Fusion foi imaginada inicialmente como um Sistema para Processamento de Regras de Negócio, que é utilizado por companhias para administrar o funcionamento correto de processos internos empresariais. O processamento de eventos complexos foi uma característica adicionada tempos depois, com o propósito de tornar a aplicação Drools um sistema completo para modelagem de comportamento. A ferramenta em si é uma aplicação monolítica que não fornece meios para distribuir seu processamento nativamente~\citep{DroolsFusion} %\todo{Incluir referência bibliográfica}.
+
+A Esper é uma das ferramentas de CEP que oferecem linguagens orientadas a fluxo para a definição de eventos. Ele é utilizado por meio de bibliotecas próprias, e as funções oferecidas pelas bibliotecas são usadas na definição, detecção e resposta dos eventos detectados. A Esper tem uma versão com suporte a escalabilidade horizontal e balanceamento de carga, porém essa versão é de código fechado~\citep{ESPERMatrix}.
+
+O Siddhi CEP é o motor de processamento de eventos usado
+%pelo WSO2 Complex Event Processor
+por duas ferramentas distintas: WSO2 Complex Event Processor e WSO2 Stream Processor~\citep{WSO2vsSiddhi}.
+O WSO2 Complex Event Processor \citep{WSO2CEP} utiliza oficialmente o Apache Storm para distribuir o processamento de eventos. Apache~\cite{Storm} é uma ferramenta de processamento de fluxos de dados contínuos que opera em ambientes distribuídos. Ela utiliza grafos dirigidos acíclicos para representar os fluxos de dados, onde cada nó representa uma operação e cada aresta, um caminho que o dado deve percorrer. O Apache Storm é usado juntamente com ferramentas de CEP para distribuir o processamento de eventos, com as ferramentas de CEP sendo usadas nos nós. Uma grande desvantagem de uso do Storm é que qualquer reorganização na topologia do grafo requer que todo o sistema seja parado para a implementação de mudanças, ou seja, sempre que o sistema é reorganizado, os estados dos operadores são perdidos. Portanto, a distribuição não é dinâmica.
+
+O WSO Stream Processor \citep{WSO2SP}, por sua vez, tem recursos nativos para a execução de um sistema com várias instâncias de processamento. Ele utiliza uma arquitetura orquestrada para coordenar a alocação de eventos, com a ferramenta de mensagens Apache \cite{Kafka} para comunicação assíncrona entre instâncias e o banco de dados MySQL para armazenar metadados dos tipos de eventos. O WSO Stream Processor usa anotações feitas pelo usuário na definição dos tipos de eventos para decidir como distribuir e paralelizar o processamento dos eventos. Essa abordagem pode levar a desperdício de recursos, visto que o usuário tem que saber sobre o funcionamento interno do sistema para configurar uma boa distribuição do processamento de eventos.
+
+
+
+%Apache storm é uma ferramenta com topologia fixa a partir da criação e microsserviços tem topologia móvel? - arq de mic.
+
+%Apache storm é uma plataforma de stream orquestrada e microsserviços podem ter uma arquitetura coreografada - coreo vs orque
+
+%\todo[inline]{O texto diz que as ferramentas se diferenciam entre si principalmente pelo tipo de linguagem que usam, mas você não disse quais ferramentas usam cada um dos dois tipos de linguagens que você explicou. Além disso, as ferramentas devem ter outras diferenças arquiteturais importantes também, mas você não falou nada sobre elas. :( }
+
+%Algumas ferramentas que criaram novas funcionalidades são:\\
+%\textbf{Widihum} feito por \cite{JAYASEKARA201542} que distribui o processamento de CEP e utiliza 3 técnicas principais para escalar queries: pipelining, particionamento e distribuição de operadores. Se baseia na plataforma Siddhi da WSO2. \\
+%\textbf{D3CEP} desenvolvido por
+%\cite{2016_05_baptista}, distribui o processamento de eventos diferentemente dos outros. Utiliza um espaço de dados compartilhado, onde é armazenada a estrutura e conteúdo dos eventos, de forma que novos EPAs podem ser definidos e instanciados em tempo de execução. 
+
+%\textbf{ Stream Processing }\index{Stream!Processing}\\
+
+
+%Uma EPN em funcionamento pode ser vista como um workflow de dados, onde os dados seguem caminhos especificados, porém uma característica que não pode ser representada em um dataflow é o conceito de evento vindo de CEP, onde é possível saber a causa de cada ocorrência de cada evento. Esta relação de causa e consequência, que é explícita em CEP, não é normalmente levada em conta em um sistema que só utiliza stream processing. 
+
+%As principais ferramentas de stream processing, que possuem \textit{software} livre e tem um comunidade de desenvolvedores ativa são da fundação Apache\footnote{\{storm,spark\}. apache. org}, principalmente Storm e Spark. Assim, como em CEP, elas tem a capacidade de armazenar o estado do processamento internamente ou se comunicar com uma base de dados externa. O Apache Flink, já citado como ferramenta de CEP, é primáriamente uma ferramenta de stream processing que permite que os dados como eventos e utilizar os mesmos operadores de CEP. 
+%modelo baseado em DAG
+
+
+\section{Isolamento de Ambiente e Processamento em Nuvem}
+\label{sec:cloudtools}
+
+Para executar as ferramentas de CEP em plataformas de computação em nuvem, o uso de provedores de nuvem é necessário. Serviços de computação em nuvem (como o Google Cloud Platform - GCP, o Microsoft Azure e o Amazon Web Services - AWS), são definidos como um modelo para permissão de acesso sob-demanda e configurável de recursos computacionais, que podem ser provisionados ou descartados rapidamente~\citep{CLoudComputing}. 
+
+
+
+%Em comparação a aquisição de servidores físicos, onde a entidade administradora do serviço deve comprar a quantidade de recursos computacionais para o funcionamento de cada sistema em sua máxima carga prevista e sub-utilizar os recursos adquiridos no resto do tempo, o uso de provedores de nuvem permitem que o gasto com recursos computacionais seja escalável, se ajustando com a carga necessária para processamento. Desta forma, a maioria das instituições que migram suas plataformas de servidores físicos para provedores de nuvem reportam uma economia de custos~\citep{yeboah2014factors}.
+
+
+
+%\subsection{Processamento de Eventos Complexos nativo de nuvem}
+%\label{sec:cloud-native-cep}
+
+
+
+
+%normalmente são mais baratos que comprar e manter um ou mais servidores por conta própria para qualquer situação onde o uso do servidor não é contínuo.\todo[inline]{Acima, incluir referência bibliográfica pra essa afirmação. Incluir as refs para os sites dos provedores de nuvem citados.
+%Definir o que é computação em nuvem (de acordo com a definição do NIST \url{https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-145.pdf}. }
+
+A instanciação de serviços em ambientes de nuvem pode ser feita de várias maneiras. Uma das técnicas mais utilizadas é o isolamento de ambiente de execução. Isolar o ambiente de execução de cada instância de qualquer ferramenta é importante para garantir que não haja uma interação inesperada entre os processos rodando concomitantemente.
+Atualmente dois tipos de técnicas se destacam para garantir esse isolamento:
+\begin{itemize}
+    \item \textbf{Máquinas Virtuais}: Quando todo um sistema operacional é emulado para cada ferramenta ou conjunto de ferramentas que se deseja rodar concomitantemente. 
+    \item \textbf{Contêineres}: Quando a instância da ferramenta usa o mesmo sistema operacional, porém com uma camada de isolamento que garante separação de variáveis de ambiente e bibliotecas necessárias para seu funcionamento.
+\end{itemize}
+
+O uso de máquinas virtuais gasta mais recursos do sistema simplesmente por ter que rodar todo um outro sistema operacional sobre o da máquina hospedeira. Em comparação, a instanciação de contêineres em um máquina hospedeira gasta bem menos recursos e garante o mesmo nível de isolamento. De acordo com  \cite{7095802}, os contêineres pode atingir e até superar o desempenho de máquinas virtuais em relação a economia do uso de CPU e memória. %\todo{desempenho em termos do que? velocidade? Essa última frase está estranha, o "qualquer em ocasião" não faz sentido nela.}.
+
+Para fazer a interface entre o desenvolvedor de contêineres e os recursos disponíveis na nuvem, existem vários tipos de sistemas de orquestração de contêineres~\citep{Kubernetes,Mesos,Swarm}. Esses sistemas fornecem várias operações que facilitam a administração das aplicações, sendo algumas delas:
+\begin{itemize}
+    \item Fácil visualização de \textit{logs} e descrição do uso de recursos de cada contêiner.
+    \item Configuração individual do uso de recursos por cada contêiner.
+    \item Instanciação automática de contêineres sem estado para escalabilidade horizontal.
+    \item Balanceamento de carga automático %\todo{não seria melhor chamar de "balanceamento de carga automático"?} 
+    entre contêineres provendo o mesmo serviço externo.
+    \item Uso de nuvens de diferentes provedores para o mesmo sistema.
+\end{itemize}
+
+
+%\todo[inline]{Inserir este artigo em alguma parte do capítulo \url{https://www.infoq.com/articles/distributed-stream-processor-container/}}
+
+
+\subsection{Sistemas nativos de nuvem}
+\label{sec:cloud-native-systems}
+Sistemas nativos de nuvem podem ser definidos como sistemas que cumprem os  requisitos de auto-escalabilidade, ou seja, o sistema é capaz de regular seu próprio uso de recursos computacionais, e tolerância a falhas no ambiente de execução, ou seja, o sistema é capaz de se recuperar de quaisquer falhas a um estado de funcionamento normal~\citep{garrison2017cloud,gilbert2018cloud}. Estes dois requisitos são fundamentais para o aproveitamento do ambiente de nuvem. A tolerância a falhas é necessária pois nenhuma nuvem garante um ambiente de execução sem falhas de processamento ou comunicação a qualquer momento, logo os sistemas devem ser construídos com mecanismos de recuperação para estes tipos de falhas. A auto-escalabilidade é necessária para a modulação do uso de recursos computacionais a somente o necessário para o correto funcionamento do sistema, reduzindo custos computacionais. Como a maioria dos ambientes de nuvem cobram por quantidade e tempo de uso de cada recurso, uma economia de recursos computacionais normalmente significa um economia financeira.
+
+Para satisfazer estes dois requisitos, é importante que a especificação da infraestrutura do ambiente de execução seja descrita em código, capaz de ser lido por ferramentas que realizam a orquestração de recursos computacionais da nuvem, como é o caso dos sistemas de orquestração de contêineres. Dessa forma, um serviço em falha pode ser removido e re-instanciado automaticamente utilizando a mesma quantidade de recursos computacionais de forma automatizada ou um serviço em sobrecarga pode ter uma segunda instância criada com as mesmas especificações de infraestrutura de ambiente. 
+
+Outras práticas normalmente associadas ao desenvolvimento de sistemas nativos de nuvem é o uso de ferramentas de isolamento de ambiente de execução, como contêineres, para o desenvolvimento de cada um dos serviços que compõe o sistema. Dessa forma, cada parte do sistema pode ser desenvolvida na linguagem de programação mais apropriada para o serviço proposto. Além disso, sistemas nativos de nuvem também são caracterizados por serem desenvolvidos levando em conta o uso, nos casos apropriados, dos serviços providos pela própria plataforma de nuvem, como FaaS.
+
+\subsection{Comparação de CEP com FaaS}
+\label{sub-sec:Faas}
+FaaS - (\textit{Function as a Service}) é um tipo de serviço oferecido pela maioria dos provedores de nuvem. Em FaaS, o desenvolvedor escreve o código e especifica suas dependências e é responsabilidade do provedor instanciar e administrar a infraestrutura para a execução do código e expor os serviços oferecidos, ou seja, toda a infraestrutura da operação é de responsabilidade do provedor de nuvem~\citep{garrison2017cloud}. Este tipo de serviço permite que desenvolvedores escrevam pequenos trechos de código para serem disparados assim que um \textit{web-hook} for acionado ou alguma outra situação for detectada. Apesar de conseguir realizar muitas das funções que CEP oferece, os objetivos e principais usos de cada um são bem distintos. Como o usuário de FaaS utiliza linguagens de programação para definir o processamento a ser feito, a chegada de um novo evento pode servir para o disparo da realização de vários tipos de ações, como a criação ou remoção de outros processamento de FaaS, o processamento em lote de algum conjunto de dados ou até a instanciação de novos sistemas no provedor de nuvem. Apesar da grande variedade de operações disponíveis, os serviços de FaaS oferecidos nativamente pelo provedores tem um custo mais alto de uso, que é cobrado pelo tempo de execução do trecho de código e também são limitados em relação ao tempo de processamento que uma função de FaaS pode continuar em execução~\citep{AWSLambda,AzureCloudServices,GoogleAppEngine}.
+
+Para a detecção contínua e constante de eventos o uso da nuvem para a execução de serviços de CEP resulta em uma economia financeira quanto mais eventos são processados. Apesar de existirem serviços de FaaS de código aberto desenvolvidos para prover as mesmas funcionalidades que os serviços proprietários dos provedores de nuvens~\citep{Knative,Kubeless,OpenFaaS,Serverless}, eles não oferecem uma linguagem de CEP, com operadores próprios para a definição de tipos de evento desenvolvidos especificamente para o processamento de dados em tempo real.
+
+
+\section{Arquitetura de Microsserviços}
+\label{sec:microservicearquitecture}
+
+O desenvolvimento de sistemas nativos de nuvem é caracterizado por normalmente usar os conceitos relacionados a microsserviços para o desenho de suas arquiteturas~\citep{garrison2017cloud}. %Atualmente, sistemas nativos de nuvem estão migrando ou sendo implementados diretamente por meio de arquiteturas de microsserviços.%\todo{Começo de seção ruim. Do jeito que está escrito, parece que o projetista primeiro decide a estratégia de deploy do sistema (no caso, contêineres) para depois definir a arquitetura dele (microsserviços). E, na verdade, a ordem correta desse processo é a inversa. De qualquer forma, para sustentar que as arquiteturas de microsserviços são as melhores para a execução em nuvem na atualidade, você precisa citar referências bibliográficas sobre isso.}.%definição de microsserviço
+ \cite{Newman:2015:BM:2904388} define microsserviços como serviços pequenos e autônomos que trabalham bem como um conjunto. Pequenos pois devem ter uma função e escopo bem definidos, de forma que um microsserviço só deve oferecer operações de um mesmo domínio, assim como uma classe só contem métodos de um mesmo domínio dentro de uma aplicação. Autônomos pois um microsserviço deve ser claramente separado dos outros componentes do sistema, de forma que possa ter uma instância sozinha em uma máquina, sem a necessidade de nenhum outro componente do sistema ser executado concomitantemente. Uma aplicação pode usar a arquitetura de microsserviços para separar suas operações internas, de forma que cada componente possua um alto grau de modularidade. \\
+%definição de  arquitetura de microsserviços
+Os principais requisitos que uma arquitetura de microsserviços atende são:
+\begin{itemize}
+\item \textbf{Heterogeneidade de tecnologias}: como cada microsserviço é separado do restante do sistema, não há necessidade de escolher uma tecnologia ou linguagem específica que seja compatível com todo ele. 
+\item \textbf{Resiliência}: em contraste com serviços monolíticos, nos quais uma falha em uma função resulta em uma falha no sistema inteiro, uma falha em um microsserviço não afeta a execução correta de outros microsserviços. O fato dos microsserviços poderem ser instanciados sem depender de outros possibilita que o sistema ainda possa exercer funções não relacionadas a um microsserviço específico que falhou, enquanto este não é instanciado novamente. 
+\item \textbf{Fácil versionamento}: cada mudança feita no código de um sistema monolítico requer que uma nova versão do sistema inteiro seja lançada. O uso de microsserviços permite que cada microsserviço tenha sua própria versão, diminuindo o impacto que alterações feitas em um ponto específico tem em todo o sistema. 
+\item \textbf{Composicionalidade}: como cada microsserviço tem uma função separada, é possível reutilizar microsserviços em diferentes contextos. A função que cada um executa é agnóstica em relação ao propósito pelo qual foi chamada. Logo, um microsserviço pode executar a mesma função para entradas diferentes que serão utilizadas por entidades diferentes no sistema, sem a necessidade de criar um microsserviço novo para entradas e funções similares. 
+\item \textbf{Substituição otimizada}: pelo fato de os microsserviços serem pequenos, qualquer mudança se torna mais fácil de ser realizada. Tarefas como a refatoração interna, a construção de um novo microsserviço para substituir um já existente ou a simples remoção de um único microsserviço podem ser feitas em um período relativamente curto, o que facilita a manutenção do sistema como um todo. 
+%como isto acima é relevante?
+\item \textbf{Escalabilidade}: para um sistema monolítico conseguir lidar com uma alta variação de uso, é necessário que ele seja modificado e instanciado novamente para cada nova escala que pretende atender. Em uma arquitetura de microsserviços, a escalabilidade de cada microsserviço é separada e permite que o desempenho de um microsserviço específico não seja afetado pelo estado de outros serviços. 
+\end{itemize}
+
+O uso de microsserviços permite a construção de aplicações distribuídas sem que exista uma relação fixa de integração entre as diferentes partes. Consequentemente, o sistema pode ser construído e utilizado de formas mais flexíveis, já que microsserviços desnecessários em certas ocasiões não precisam ser executados concomitantemente com o restante do sistema. 
+%microsserviços têm implementação flexível em tempo de execução, o que não pode ser dito do Apache Storm.
+
+%%comunicação entre os serviços
+\subsection{Comunicação}
+\label{sec:servicecom}
+%\todo[inline]{Faltam referências bibliográficas nesta seção.}
+
+O desacoplamento gerado pelo uso de uma arquitetura de microsserviços traz a vantagem da execução de cada um poder ser feita em ambientes separados. A interação entre microsserviços de um mesmo sistema, ou mesmo de sistemas distintos, pode ser feita de duas formas distintas e esperar ou não respostas dos microsserviços contatados. 
+
+%Em comunicação sincrona, uma chamada feita a um servidor remoto o bloqueia até que uma resposta seja retornada mostrando que a operação foi concluída. Em comunicação assincrona, o programa que fez a chamada não espera nenhuma resposta retornar para completar a operação. 
+%Comunicação sincrona tem a vantagem do serviço que requisitou a chamada saber se obteve sucesso ou não. Comunicação assincrona pode diminuir a latência, pois não existe nenhum tempo que a chamada fica bloqueada esperando resposta. Além disso, pode ser mais útil para comunicação entre serviços que rodam por longos períodos de tempo ininterruptos, quando manter uma conexão aberta entre cliente e servidor não é pratico. 
+
+
+\cite{Newman:2015:BM:2904388} descreve que os serviços podem se comunicar de forma síncrona ou assíncrona. Uma comunicação feita de forma síncrona requer que o serviço que faz a chamada externa tenha de esperar até que haja uma resposta. O uso dessa comunicação, se feito corretamente, garante uma resposta a um pedido remoto, seja ela de sucesso ou não, permitindo que o microsserviço que requisita a chamada saiba o que aconteceu. Na comunicação assíncrona, por outro lado, o serviço que faz a chamada não espera nenhuma resposta para completar a operação. O fato de não existir nenhum bloqueio enquanto uma resposta não é retornada diminui a latência, pois não há necessidade de manter a conexão aberta até que haja uma resposta. Além disso, a comunicação assíncrona pode ser mais viável para a comunicação entre serviços que rodam por longos períodos de tempo ininterruptos, caso em que manter uma conexão aberta não é prático. 
+
+Além dos modos de comunicação, uma aplicação também precisa decidir qual estilo de colaboração usar entre microsserviços.
+\cite{martinfowler} discute a diferença do estilo de comunicação pedido/resposta em comparação ao estilo baseado em eventos.
+Em pedido/resposta, o serviço que inicia a comunicação envia um pedido e espera por uma resposta. Este modelo se alinha muito bem com a comunicação síncrona, mas também pode funcionar para a comunicação assíncrona quando a resposta demora a ser enviada. Em uma colaboração baseada em eventos, o serviço envia uma informação sobre algo que aconteceu e espera que os receptores saibam o que fazer com esta informação, de forma que nenhum serviço recebe ordens diretas sobre o que fazer. A colaboração baseada em eventos é altamente desacoplada por natureza, e assim novos microsserviços podem ser adicionados para receber eventos de um outro microsserviço, sem este precisar de alterações em seu código. 
+%isto está explicado bem o suficiente?
+
+%Comunicação assíncrona normalmente é utilizada em uma arquitetura de microsserviços com a ajuda de mensageiros assíncronos. Estes são aplicações especialmente desenvolvidas para 
+A comunicação assíncrona baseada em eventos é o tipo de comunicação que as ferramentas de CEP descritas na Seção \ref{sec:mainsoftwares} realizam internamente. Cada nó de processamento recebe um evento e o utiliza para detectar outros eventos por conta própria, sem a necessidade de uma chamada externa para realizar esta operação. Dessa forma, o uso desse estilo de comunicação é o mais apropriado para a transferência de eventos entre diferentes instâncias de ferramentas de CEP.
+
+%esta conectado com a baixa latencia e a justificativa de se usar comunicação de forma assíncrona, pórem isto não precisa ser justificado, pois sistemas de CEP já funcionam assim e ferramentas de stream também.
+
+
+\subsection{Orquestração e Coreografia}
+\label{sec:orquestrationvscoreography}
+
+%porque trabalho está com aspas?
+\cite{Newman:2015:BM:2904388} também discute como a separação e a organização das funções 
+%A coordenação do ``trabalho''
+de diversos microsserviços em um sistema podem ser feitas de duas formas diferentes: com um agente comandando o que cada microsserviço faz, o que é chamado de \textit{orquestração}, ou esperando que cada microsserviço saiba o que fazer por conta própria, chamado de \textit{coreografia}. 
+
+\subsubsection{\textbf{Orquestração}} Assim como uma orquestra é regida por um maestro, um sistema de microsserviços pode ter um serviço no comando das operações principais do sistema. Um sistema com este tipo de arquitetura pode mudar sua ordem de funcionamento mais rapidamente se preciso, apenas alterando o microsserviço que está no comando. Porém, este microsserviço comandante pode se tornar um gargalo no sistema se todas as ações precisarem de sua intervenção. Além disso, por ser essencial ao funcionamento do sistema inteiro, torna-se um ponto fraco, de forma que uma falha nele pode deixar o sistema sem funcionar por inteiro. 
+Esse tipo de arquitura permite o uso dos dois estilos de comunicação mencionados previamente na Seção \ref{sec:servicecom}, sendo que o uso da comunicação síncrona no estilo pedido/resposta pode ser facilmente implementado quando se quer garantir que uma resposta seja recebida. 
+
+\subsubsection{\textbf{Coreografia}}
+Microsserviços em uma arquitetura coreografada sabem o que fazer por conta própria, de forma que o uso de uma comunicação baseada em eventos se encaixa melhor do que uma do tipo pedido/resposta. O uso de microsserviços coreografados pode reduzir a latência do sistema, pois não há a necessidade de se conectar para receber instruções ou responder todas as chamadas. Entretanto, como a lógica de ordem de processos está inserida dentro de cada um, o custo de trocar essa lógica aumenta em relação a uma arquitetura orquestrada, pois é necessário modificar todos os microsserviços do sistema. A verificação de que o sistema está funcionando corretamente também se torna mais difícil, visto que não há uma autoridade central à qual os microsserviços podem reportar. Uma consequência do uso de coreografia em microsserviços é a resiliência proporcionada. A independência das partes resulta na contenção de falhas pontuais a microsserviços específicos, diminuindo a interferência no uso do restante do sistema.
+
+%Ao comparar as duas abordagens ao estilo de organização é possível ver que a coreografia de microsserviços é a melhor opção quando se busca disponibilidade como requisito. O uso de coreografia permite que o sistema consiga se adaptar a ocorrência de falhas 
+
+
+
+%Uma comunicação direta requer que o microsserviço que recebe uma entrada esteja sempre pronto para recebe-la. Se uma função já esta em execução, isso requer que o microsserviço mantenha uma fila interna de próximas ações a tomar ou que cada entrada seja processada paralelamente. Uma abordagem como esta faz com que os recursos de processamento disponiveis ao serviço sejam utilizados para ações que não estão relacionadas as suas funções especificamente. 
+
+%É possível retirar a função de coordenar a comunição entre microsserviços deles próprios ao utilizar um serviço de troca de mensagens. Um serviço externo aos microsserviços da aplicação, cuja unica função é transmitir dados entre os serviços aumenta ainda mais a modularidade do sistema, de forma que não existem referencias de um microsserviço em outros. 
+ 
+
+
+%similaridades com CEP
+
+%desafios em adaptar/arquitetar sistemas para microsserviços?
+
+
+%\subsection{Teorema CAP}
+%\label{CAPtheorem}
+
+
+%\cite{Gilbert:2002:BCF:564585.564601} descrevem em seu artigo o teorema CAP (\emph{Consistency, Avaliability and Partition tolerance}), definido por Eric Brewer, o qual diz que qualquer sistema distribuído que lida com dados só consegue garantir simultaneamente no máximo duas das seguintes características: consistência, disponibilidade e tolerância a particionamento.% Mais especificamente, o teorema diz que só é possível manter duas destas características em caso de falha. 
+%\begin{itemize}
+%\item \textbf{Consistência} significa que todos os dados no sistema estão sincronizados e não há chance de se fazer uma leitura de um dado desatualizado. 
+%\item \textbf{Disponibilidade} significa que o sistema está sempre pronto para receber novas requisições e respondê-las. 
+%\item \textbf{Tolerância a Particionamento} significa que sempre que houver uma falha de comunicação entre duas partes separadas do sistema, o sistema continuará operando. 
+%\end{itemize}
+
+%Todo sistema distribuído é por natureza tolerante a particionamento, caso contrário ele não poderia ser executado de forma distribuída em um ambiente que falhas ocorrem. 
+
+%Logo, sistemas distribuídos devem escolher entre manter a disponibilidade e aceitar lidar com dados antigos ou manter a consistência e aceitar que, em certos períodos, o sistema estará indisponível. Todavia, esta não precisa ser uma escolha binária, visto que certos dados tem mais valor se forem consistentes e alguns serviços são importantes demais para ficarem indisponíveis. 
+
+% \subsection{Modelos de consistência para bancos de dados}
+
+% \cite{Robinson:2013:GD:2556013} discute sobre as diferenças entre os dois principais modelos usados para tratar consistência em sistemas de bancos de dados atualmente, o ACID e o BASE. 
+
+% \textbf{ACID} é um acrônimo para \textbf{A}tomicidade, \textbf{C}onsistência, \textbf{I}solamento e \textbf{D}urabilidade, que são as quatro propriedades que as transações nesse modelo devem possuir a fim de garantir a validade dos dados no caso da ocorrência de erros, falhas de sistema ou de hardware, etc.:
+% \begin{itemize}
+% \item \textbf{Atomicidade}: todas as operações em uma transação devem ser completadas com sucesso ou, no caso de ocorrência de algum erro em uma operação, toda a transação deve ser desfeita. 
+% \item \textbf{Consistência}: toda transação deve levar o banco de dados de um estado consistente para outro estado consistente. %A não ser durante uma transação, o banco de dados está sempre consistente. 
+% \item \textbf{Isolamento}: cada transação deve ser executada de forma a não interferir na execução de outras transações. 
+% \item \textbf{Durabilidade}: as mudanças aplicadas por uma transação completada com sucesso devem ser permanentes, mesmo quando ocorra falhas de software ou hardware logo após o término da transação. 
+% \end{itemize}
+
+% \textbf{BASE} é outro acrônimo que significa \textbf{B}asic \textbf{A}valiability (Disponibilidade Básica), \textbf{S}oft State (Estado Fraco) e \textbf{E}ventual consistency (Consistência Eventual). 
+% \begin{itemize}
+% \item \textbf{Disponibilidade Básica}: o sistema está disponível a maior parte do tempo. 
+% \item \textbf{Estado Fraco}: diferentes réplicas dos dados não precisam ser consistentes o tempo todo. 
+% \item \textbf{Consistência Eventual}: Em algum momento do tempo, todas as réplicas dos dados estarão consistentes. 
+% \end{itemize}
+
+
+% Sistemas gerenciadores de bancos de dados relacionais normalmente garantem que o modelo de consistência ACID será respeitado. É importante notar que o conceito de consistência utilizado em ACID se refere a estrutura dos dados de uma transação, a estrutura do banco de dados em geral e é diferente do conceito utilizado em CAP, que se refere a diferentes cópias de bancos de dados manterem os mesmos dados.
+% \todo[inline]{Não entendi que o que a última frase quis dizer. ACID visa manter a validade do BD em operações de modificação de dados (ou seja, transações). Não tem nada a ver com a estrutura (esquema) do BD.}
+% Sistemas que usam o modelo ACID favorecem a consistência dos dados acima de disponibilidade e tolerância a particionamento e são principalmente utilizados por SGBDs monolíticos, de forma que a tolerância a partições é sacrificada. 
+
+% Sistemas BASE são mais novos que sistemas ACID e são a primeira escolha de modelo de consistência para bancos de dados não relacionais, pois valorizam mais a disponibilidade do que a consistência. Quando a garantia de consistência imediata não é um requisito, as diferentes partes de um banco de dados distribuído podem operar sem serem bloqueadas por novas transações em outras partes. 
+
+%\todo[inline]{Fernando, você falou sobre CAP e modelos de consistência dentro da seção sobre Microsserviços, mas não fez a conexão entre esses assuntos. O que o CAP e os modelos de consistência têm a ver com a arquitetura de microsserviços e o CEP, mais particularmente? Novamente, sem fazer essas ligações, esses tópicos parecem estar sobrando no seu texto.}
+
+
+
+\section{Escalabilidade}\index{scalability}
+\label{sec:scalability}
+
+%\cite{Etzion:2010:EPA:1894960} definem escalabilidade como a capacidade de um sistema de se adaptar prontamente a uma maior ou menor intensidade de uso,  \todo{de quê?} volume ou demanda, enquanto cumpre seus objetivos propostos.
+\cite{Bondi:2000:CSI:350391.350432} define escalabilidade como a habilidade de um sistema acomodar um número crescente de processos ou processar um volume crescente de carga com um mínimo aumento de uso de recursos computacionais.
+Existem diferentes razões para um sistema ter a escalabilidade como um de seus requisitos. \cite{Newman:2015:BM:2904388} observa que ela é usada principalmente para conseguir duas coisas: lidar com falhas ou lidar com problemas de desempenho, sejam eles aumentar a carga que um sistema suporta, diminuir a latência ou ambos ao mesmo tempo. 
+
+
+%\todo[inline]{``enquanto cumpre seus objetivos propostos'' é uma frase meio estranha. Por favor, reformule isso.}
+
+%\subsubsection{\textbf{Escalabilidade Vertical}}
+\cite{4228359} distinguem a escalabilidade entre vertical e horizontal. A escalabilidade vertical consiste em alocar mais recursos computacionais, sejam eles poder de processamento, memória, largura de banda ou qualquer outro, para o sistema. Esse tipo de escalabilidade pode ser uma solução fácil e rápida para diminuir a latência e aumentar a vazão de um sistema, mas caso a demanda por recursos continue a aumentar, o custo financeiro destes recursos aumenta em uma proporção maior. Além disso, nem todos os tipos de sistemas se beneficiam do aumento de certos recursos: um sistema que não consegue paralelizar seus processos internos possui um limite de quantidade de CPU que ele consegue usar por vez. 
+
+%\subsubsection{\textbf{Escalabilidade Horizontal}}
+
+A escalabilidade horizontal consiste em distribuir o processamento de um sistema em ambientes distintos, de modo que cada instância do sistema seja executada paralelamente a outra. Um sistema baseado em microsserviços se beneficia mais desse tipo de escalabilidade que um monolítico, pois é possível instanciar conjuntos de microsserviços distintos em diferentes máquinas, sem a necessidade de executar o sistema  inteiro em cada máquina. 
+%Além disso, é possível executar um número qualquer de instâncias de microsserviços em máquinas diferentes, dependendo da carga de trabalho que carga de processamento que cada instância recebe para distribuir os recursos da melhor forma possível. 
+%\todo[inline]{A última frase do parágrafo acima está incompreensível. :(  Além disso, observe a quantidade de vezes que vocês repete a palavra ``diferente''. }
+
+%\todo[inline]{As definições de escalabilidade vertical e horizontal (esta última principalmente) parecem estar muito informais no texto. Ora você fala de sistemas, ora de aplicações (são coisas diferentes?). Também falta referências bibliográficas nessa parte.}
+%  - aplicações e sistemas aqui eram usados para o mesmo sentido, mudei tudo para aplicação
+% - mudei a definição de escalabilidade e a referencia
+% - coloquei uma referencia sobre a comparação de escalabilidade horizontal vs vertical.
+
+O propósito de escalar um sistema para aumentar sua tolerância a falhas é alcançar um outro requisito não funcional, a disponibilidade. O intuito é replicar o processamento usando o mínimo de recursos adicionais para manter o sistema disponível pelo maior tempo possível. Porém, isso só é possível com o uso da escalabilidade horizontal, pois a escalabilidade vertical não modifica o número de instâncias do sistema sendo executadas, mantendo o processamento concentrado.
+
+%\subsubsection{Balanceamento de Carga}
+
+%Escalar horizontalmente um sistema de microsserviços de forma ideal levaria a cada instancia nova de cada microsserviço ser executada em uma máquina diferente, de forma que houvesse uma garantia que os microsserviço estivesssem fisicamente separados, de interferiria na execução de outros, porém o custo disso é muito alto. Normalmente, diferentes instancias são executadas na mesma máquina de forma que a organização disso requer um cuidado, pois é necessário levar em conta a quantidade de recursos que cada serviço irá utilizar na hora de escolher quais instancias serão agrupadas e quais tem que ficar separadas. 
+%autoscaling
+
+\subsection{Escalabilidade para Microsserviços sem Estado}
+\label{sec:stateless}
+
+%A facilidade e as técnicas utilizadas para escalar cada microsserviço podem variar dependendo se as funções que ele realiza necessitam guardar algum tipo de estado ou não. 
+%\todo[inline]{A frase acima está horrível. :(}
+
+Microsserviços que não precisam manter um estado de funcionamento enquanto estão em execução são mais fáceis de serem escalados, pois suas operações são idempotentes, ou seja, qualquer operação feita por uma instância pode ser feita por qualquer outra. O aumento do número de instâncias do mesmo microsserviço pode resolver problemas de desempenho, como alta latência ou baixa vazão. Além disso, caso a carga de trabalho diminua, é possível simplesmente remover as instâncias ociosas. O uso de balanceadores de carga para escalar aplicações baseadas em microsserviços sem estado já foi estudado em alguns trabalhos, inclusive na plataforma de cidades inteligentes InterSCity~\citep{smartgreens17,7958492,7333476}.
+  
+
+%microsserviços que guardam estado normalmente são bancos de dados, de forma que não é interessante que realizem a mesma operação e obtenham o mesmo resultado, pois estão mais interessados que operações iguais tenham resultados diferentes dependendo do estado atual do banco de dados. 
+
+
+
+
+ 
+
+
+
+\subsection{Escalabilidade para Microsserviços com Estado}
+\label{sec:stateful}
+%\todo[inline]{Novamente, faltam referências bibliográficas na seção - Escalabilidade.}
+% - CAP é referenciado e escalabilidade para leitura e escrita também são.
+
+ 
+Quando o microsserviço precisa guardar estado para realizar suas operações, criar uma nova instância não é suficiente, é preciso também replicar o estado se o objetivo for realizar a mesma operação e obter o mesmo resultado. A viabilidade de distribuir o processamento de sistemas que guardam estado é bastante estudada no contexto de bancos de dados distribuídos, nos quais cada operação deve poder alterar o estado do banco.
+
+Sistemas gerenciadores de bancos de dados distribuídos precisam utilizar técnicas para manter a consistência de seus dados. O teorema CAP, definido por Eric Brewer~\citep{Gilbert:2002:BCF:564585.564601}, descreve que qualquer sistema distribuído 
+%\cite{Gilbert:2002:BCF:564585.564601} descrevem em seu artigo o teorema CAP (\emph{Consistency, Avaliability and Partition tolerance}), definido por Eric Brewer, o qual diz que qualquer sistema distribuído
+que lida com dados só consegue garantir simultaneamente duas das seguintes características: consistência, disponibilidade e tolerância a particionamento.% Mais especificamente, o teorema diz que só é possível manter duas destas características em caso de falha. 
+\begin{itemize}
+\item \textbf{Consistência} significa que todos os dados no sistema estão sincronizados e não há chance de se fazer uma leitura de um dado desatualizado. 
+\item \textbf{Disponibilidade} significa que o sistema está sempre pronto para receber novas requisições e respondê-las. 
+\item \textbf{Tolerância a particionamento} significa que sempre que houver uma falha de comunicação entre duas partes separadas do sistema, este continuará operando. 
+\end{itemize}
+
+Todo sistema distribuído é por natureza tolerante a particionamento, caso contrário ele não poderia ser executado de forma distribuída em um ambiente no qual falhas podem ocorrer. Logo, sistemas distribuídos devem escolher entre manter a disponibilidade e aceitar lidar com dados antigos ou manter a consistência e aceitar que, em certos períodos, o sistema estará indisponível. 
+
+Um sistema baseado em uma arquitetura de microsserviços é por natureza distribuído. Portanto, o teorema CAP se aplica a todos os microsserviços que mantêm estado, resultando em uma escolha entre consistência e disponibilidade por parte do sistema. No entanto, esta não precisa ser uma escolha binária, visto que certos dados têm mais valor se forem consistentes e alguns serviços são importantes demais para ficarem indisponíveis. Sistemas Gerenciadores de Bancos de Dados são exemplos de serviços que precisam guardar estado. A partir do teorema CAP, duas maneiras de se distribuir um banco de dados foram desenvolvidas: utilizando escalabilidade para leituras ou escalabilidade para escritas~\citep{databasescalability}.
+
+
+\subsubsection{\textbf{Escalabilidade para Leituras}}
+Consiste em manter réplicas do banco de dados para fácil acesso. Esta opção é vantajosa quando vários serviços não escrevem no BD e só o utilizam para consultar informações. Se o número de serviços que escrevem no banco de dados é pequeno e as escritas são feitas em períodos específicos, o modo mais indicado de conseguir aumentar a escala (neste caso, o número de consultas que o BD realiza) é criar várias réplicas. As escritas devem ser feitas apenas no BD principal e eventualmente passadas para as réplicas, enquanto que as consultas podem ser direcionadas a qualquer uma das réplicas. Como o propósito da escalabilidade é aumentar o desempenho e garantir a disponibilidade, a consistência só ocorrerá eventualmente. 
+
+\subsubsection{\textbf{Escalabilidade para Escritas}}
+Outra forma de distribuir o BD é chamada de \textit{sharding}, na qual o conjunto total dos dados armazenados no BD é fisicamente separado. Vários algoritmos podem ser utilizados para decidir em qual local cada dado será armazenado, incluindo o uso de \textit{hashing} no dado ou a inserção de dados do tipo chave-valor, com chaves no mesmo intervalo da mesma partição.
+%\todo[inline]{Essa sua definição de sharding está bem fraquinha. Você tem que dizer que o sharding é um particionamento do banco de dados, onde cada partição é armazenada em um nó diferente do sistema. A distribuição dos objetos de dados nas diferentes partições pode ser feita por meio de hashing, mas essa não é a única estratégia possível. Uma outra estratégia possível é colocar dentro de uma mesma partição os objetos que têm o valor para a chave dentro de uma determinada faixa associada à participação; cada partição recebe uma faixa diferente de chaves.}
+Esta distribuição é vantajosa em sistemas que recebem escritas frequentes de vários serviços e nos quais consultas gerais são raras e normalmente feitas de modo a recuperar entradas específicas. O uso de \textit{sharding} é oneroso nos casos de consultas que precisam varrer todo o banco de dados, o que requer que todos os nós estejam disponíveis, ou quando é preciso adicionar ou remover nós, o que demanda um rebalanceamento dos dados armazenados. O uso de \textit{sharding} por si só consegue abrir mão de um pouco de disponibilidade para atingir a consistência, pois na ocorrência de uma escrita, apenas a partição que guarda o dado fica indisponível, enquanto dados de outras partições podem ser acessados concomitantemente.
+
+
+
+
+
+
+%As várias instâncias de um mesmo microsserviço  também podem utilizar uma única instância de banco de dados. Porém, isso deixa o funcionamento do microsserviço vulnerável a qualquer falha que possa acontecer no banco de dados. 
+
+
+%Ao lidar com escalabilidade, seja em CEP ou qualquer outro sistema é preciso ter em mente os três recursos principais que podem se tornar gargalos: Uso de CPU, Uso de memória e Largura de banda
+
+%\subsubsection{Escalabilidade em CEP}
+%Os fatores que mais podem causar problemas de processamento ao aumentarem em escala são dois:o número de eventos complexos definidos e a quantidade de eventos processados. 
+%%Operating-system-level virtualization, also known as containerization
+
+
+
+\section{Considerações do Capítulo}
+\label{sec:conclusions}
+
+A maioria das ferramentas de CEP de \textit{software} livre não oferecem escalabilidade horizontal dinâmica sem perda de estado. O uso de ferramentas de processamento de fluxo de dados para a distribuição do processamento, como descrito na Seção \ref{sec:mainsoftwares}, não permite que a topologia de transferência de dados seja alterada em tempo de execução, de forma que qualquer alteração faz com que a execução de todo o sistema seja parada. Além disso, todas as abordagens pesquisadas utilizam arquiteturas orquestradas, que podem não ser tão resilientes a falhas quanto arquiteturas coreografadas, como descrito na Seção \ref{sec:orquestrationvscoreography} e a maioria não leva em consideração a execução do sistema em um ambiente de nuvem, nem implementa mecanismos de auto-escalabilidade.
+
+A Seção \ref{sec:microservicearquitecture} mostra como uma arquitetura de microsserviços pode trazer várias vantagens, sendo a principal delas a flexibilidade de execução que ela proporciona. Pelo fato de serem executados separadamente, o uso de microsserviços para a distribuição de processamento de eventos podem resultar em uma economia de uso de recursos pelo sistema. Aliás, a adoção de uma comunicação assíncrona baseada em eventos é uma característica comum ao CEP e aos microsserviços. Porém, a distribuição dos processamento dos eventos complexos utilizando microsserviços depende fortemente do uso de recursos e estado por cada tipo de evento, como dito na Seção \ref{sec:CEPstate}.
+
+Como vários eventos precisam usar estado para serem processados, a distribuição do processamento destes eventos precisa ser bem balanceada, similarmente ao que acontece em SGBDs que distribuem seus dados por \textit{sharding}, como visto na Seção \ref{sec:stateful}. Um dos focos deste trabalho é desenvolver um sistema de processamento de eventos que tenha baixa latência e alta vazão de eventos e comparar o desempenho de algoritmos de balanceamento de carga para a distribuição no processamento de eventos. 
+
+%\todo[inline]{Faltou incluir aqui algo relacionado ao uso das plataformas de nuvem como ambiente de execução. - adicionei uma linha sobre considerar os ambientes de execução e não implementar auto-escalabilidade}

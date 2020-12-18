@@ -1,0 +1,181 @@
+\chapter{Trabalhos Relacionados}
+\label{cap:trabalhos}
+
+
+%Incluir todos os trabalhos e comentar sobre o porque de utilizar as técnicas ou não. 
+%numero sugerido de paginas: 5
+%algoritmos de balanceamento de carga??
+%%
+%%------------------------------------------------%%
+%%
+
+Neste capítulo são apresentados trabalhos relacionados as técnicas de distribuição de processamento de eventos complexos e relacionados as abordagens adotadas para a execução de processamento de eventos complexos nativos de nuvem. Ao final do capítulo são feitas considerações sobre as pesquisas apresentadas e as limitações das linhas de pesquisa discutidas.
+
+\section{Distribuição de Processamento de Eventos}
+
+Vários trabalhos se propuseram a pesquisar como melhorar a escalabilidade em CEP, estudando o balanceamento de carga do processamento de eventos. As contribuições deles se dividem em alguns em alguns tipos de distribuição de tipos de eventos adotadas, como a distribuição de acordo com a similaridade de suas dependências, distribuição da detecção de um único tipo de evento e distribuição dos tipos de evento baseada no uso de recursos computacionais. À seguir cada um destes tipos é apresentado e discutido.
+
+
+
+%\todo{Aqui seria melhor mencionar quais são as diferentes abordagens, em lugar de dizer ``tipos''}, que são descritos a seguir. 
+
+
+\subsection{{Distribuição de Tipos de Eventos com Dependências Similares}}
+\label{sec:similarDep}
+\cite{Isoyama:2012:SCE:2335484.2335498} agruparam o processamento de tipos de eventos que dependem dos mesmos tipos de eventos de entrada e utilizam estados compartilhados entre diferentes EPAs para distribuir o processamento de agregações. \cite{Kobayashi:2015:CEP:2675743.2776771} sugeriram a separação do processamento de cada tipo de evento com base nos atributos que cada um tem. A partir da determinação de atributos principais, a distribuição é feita agrupando o processamento de tipos de eventos que detectem os mesmos atributos%\todo{Explicação sobre o trabalho de \cite{Kobayashi:2015:CEP:2675743.2776771} está confusa}
+. Já \cite{7129184} utilizaram um mecanismo no qual cada nova definição de tipo de evento é verificado se o tipo de evento não foi cadastrado previamente, para evitar processamento duplicado, e fixam um limite de número de eventos processados por cada instância de CEP. Cada definição de tipo de evento \textit{X} é associada a um metadado que contém todos os tipos de eventos de entrada necessários para a detecção de \textit{X} e quais tipos de evento utilizam \textit{X} como entrada para seus próprios processamentos. No final, o metadado de cada evento é utilizado para definir em qual nó ele será processado, agrupando o processamento de tipos de eventos que utilizam os mesmos tipos de entrada.%\todo{Mas como é feita a distribuição? ?}. 
+%\todo[inline]{Fernando, em vários lugares aparece escrito algo como ``cado evento'' quando me parece que deveria aparecer ``cada tipo de evento''. É preciso revisar isso no texto todo.}
+
+
+
+
+%{{Separar o processamento de acordo com a localização do usuário}}
+%\cite{Ottenwalder:2014:MMC:2659232. 2633688} desenvolveu um sistema distribuído de CEP, baseando-se na localização do usuário e na suposição que o usuário estará mais interessado em eventos próximos a ele. A partir disso, implementa diversas técnicas de como utilizar os recursos de processamento do usuário de forma que só eventos relevantes para o usuário sejam processados. 
+% Contribuição não relevante ( não condiz com a arquitetura proposta)
+
+
+
+\subsection{{Distribuição da Detecção de um Único Tipo de Evento}}
+\label{sec:singleEvent}
+
+Um novo modelo de paralelização foi proposto por \cite{doi:10.1177/1550147717728626}, no qual a detecção de um tipo de evento que precisa de dois tipos diferentes de eventos de entrada, \textit{X} e \textit{Y}, é separada entre EPAs distintos. O fluxo de \textit{X} é seccionado em subfluxos que são enviados a EPAs paralelos e o fluxo de \textit{Y} é replicado para todos os mesmos EPAs. Esta técnica pode ser utilizada para mais de dois tipos de eventos de entrada, aplicando-a primeiramente em dois tipos e encaminhando o resultado para ser pareado com outros tipos de eventos  sucessivamente. Apenas os operadores Composição e Detectar Padrão podem utilizá-la, e somente para operações que não dependam de uma agregação de algum atributo do fluxo de eventos seccionado.
+
+
+
+%A utilização dessa técnica depende muito do operador sendo utilizado no EPA visto que caso o evento cujo fluxo fosse seccionado contivesse um atributo que fosse utilizado em uma agregação, este valor seria separado nos diferentes EPAs detectando o mesmo evento. 
+
+\cite{JAYASEKARA201542} desenvolveram diferentes operadores para que o usuário defina a paralelização e distribuição dos tipos de evento no sistema de CEP. Cada novo tipo de evento definido que utiliza vários operadores é reescrito de forma a separar o processamento de cada operador em um nó diferente, no qual o resultado do processamento de um é sucessivamente encaminhado para o outro. \cite{Schultz-Moller:2009:DCE:1619258.1619264} implementaram um sistema que não utiliza as definições diretas dos tipos de eventos para detectá-los, mas que divide o processamento dos diferentes operadores de forma que o processamento de um operador possa ser reutilizado em mais de um tipo de evento. 
+%melhorar parágrafo acima
+
+\cite{Balkesen:2013:RRI:2488222.2488257} usaram máquinas de estados finitos para estudar as diferenças entre dividir o processamento de tipos de eventos por etapa de detecção ou por conjunto de eventos participantes na detecção de um padrão. Na divisão por etapa de detecção, cada nó detecta se os eventos de entrada respeitam uma parte da condição e apenas passa adiante para outros nós as detecções que respeitam a condição anterior. Já na divisão por conjunto de eventos participantes na detecção de um padrão, cada conjunto formado por uma combinação diferente de eventos de entrada é enviado para um nó diferente. Os resultados mostram que a paralelização por separação de conjuntos de eventos de entrada é mais robusta e tem um desempenho melhor na detecção de diferentes eventos. 
+
+\subsection{Distribuição de Tipos de Eventos Baseada em Desempenho}
+\label{sec:performanceBased}
+
+O monitoramento da sobrecarga da consulta e a correlação com dados históricos em sistemas de CEP, como no operador de Enriquecimento, foram estudados por \cite{6906776}. Os autores apresentaram uma arquitetura de balanceamento de carga, chamada Audy, que distribui o processamento de tipos de eventos baseando-se na utilização de recursos por cada nó e introduz medidas de descarte de eventos se a sobrecarga for muito alta. Ela usa filas de eventos de entrada e saída para monitorar o desempenho dos nós de processamento. O próprio nó requisita a realocação da detecção de tipos de eventos se a fila atinge um limite \textit{n}, definido pelo usuário, e termina a detecção de algum tipo se atinge um outro limite superior \textit{m}, também definido pelo usuário. Além disso, se a detecção de um tipo de evento, mesmo depois de alocada para um nó que estava ocioso, levou o nó a atingir o limite \textit{m} da fila de eventos de entrada, a detecção do tipo de evento em questão é descartada. Isso é feito para tentar manter o sistema disponível pelo maior tempo possível, mesmo que nem todos os eventos inseridos possam ser processados. 
+
+Já \cite{shin2019cep} criaram um sistema de distribuição independente das ferramentas de detecção de CEP, chamado CEP-Wizard, onde o usuário passa informações sobre o uso de recursos do sistema e sobre o tipo de evento a ser detectado e o sistema define em qual nó este tipo de evento será alocado. O uso de informações como o tipo dos eventos de entrada e a taxa de fluxo dos eventos de entrada permite que o sistema consiga distribuir a alocação para que o uso de recursos em cada máquina seja igualmente distribuído%\todo{Fernando, essa descrição está correta? Dizer que a alocação é feita de modo que o uso de recursos em cada máquina seja o mínimo não parece fazer sentido.}
+. Porém, o CEP-Wizard não possui nenhum mecanismo de realocação de eventos em tempo de execução e assume que a taxa de fluxo de eventos de entrada é constante, o que não acontece para muitos sistemas em tempo real. O CEP-Wizard utiliza o Apache Storm para a distribuição de CEP e, como descrito em \ref{sub-sec:opensourcetoolsdistribution},
+o Apache Storm não permite a remoção de nós em tempo de execução, dificultando a administração do uso de recursos.
+
+\cite{randika2018gathika} propuseram um mecanismo, chamado Gathika, para a distribuição dinâmica de CEP, levando em conta o numero de nós e uso de recursos pelo sistema. No entanto, o Gathika não automatiza a instanciação de novos nós de processamento, só reage a inclusão ou exclusão externa de nós, de forma que este tipo de sistema não pode ser classificado como auto-escalável ou nativo a nuvem. Além disso, a arquitetura do sistema é orquestrada de forma que a distribuição de eventos depende de uma parte específica do sistema, o que diminui a tolerância a falhas, pois uma falha de execução em um só nó pode impactar todas as realocações de eventos.
+%\todo[inline]{No parágrafo acima, aparece ``distribuição dinâmica de processamento de CEP''. Como a sigla CEP já contém ``processamento'', isso parece redundância. Acho que seria melhor trocar por ``CEP distribuído dinamicamente'' ou por  ``processamento de eventos''. É preciso verificar ``processamento de CEP'' está aparecendo em outros lugares do texto.}
+
+
+
+%\item{{Agregações pré-calculadas}}
+%Se a detecção de um evento complexo precisa de um calculo que agregue os dados dos últimos eventos simples que chegaram, a cada novo evento simples que o sistema receber todo o cálculo deve ser refeito. \cite{Qi:2014:CEA:2588555. 2593684} desenvolveram uma técnica de como pré-calcular as contribuições dos eventos que já chegaram para agregações que serão calculadas futuramente, dessa forma, diminuindo o uso de CPU. 
+%contribuição irrelevante ( fora do escopo)
+
+
+%\item{{Monitoramento de CPU, memória e uso de banda}}
+%\cite{7815078} Montou um arcabouço de processamento de Big Data que se auto-repara onde  CEP é usado para processar dados entrando no sistema e para monitorar recursos utilizados (CPU, memória, etc). 
+%contribuição irrelevante ( nem é pesquisa em CEP)
+
+
+%\section{Monitoramento de definição e ordenação de eventos}
+
+
+
+
+%\subsection{{Garantia de ordenação dos eventos}}
+%\cite{Zacheilas:2017:MDS:3093742. 3093921} levaram em conta que eventos podem chegar não ordenados, ou seja, um evento mais novo pode chegar depois de um mais antigo por diferentes fatores, como problemas na conexão. A técnica proposta consiste de utilizar um buffer para armazenar eventos por um tempo específico para garantir que eles entrarão no sistema na ordem correta. 
+
+
+
+
+%\cite{Zacheilas:2017:MDS:3093742. 3093921} não vale a pensa pela latencia introduzida, mas não é relevante pois o foco do trabalho é corretude do processamento, levando em conta a ordem de chegada. 
+
+
+
+
+\section{CEP Nativo de Nuvem}
+%\todo[inline]{Fernando, depois de consultar a frequência de aparição desses termos no Google, decidi substituir o ``nativo à nuvem'' por ``nativo de nuvem''. ``nativo à nuvem'' não é usado em nenhum lugar. Os termos que aparecem são ``nativo de nuvem'', ``nativo da nuvem'' ou ``nativo em nuvem'', sendo o primeiro o mais comum. Ele até aparece num título de livro -- DevOps nativo de nuvem com Kubernetes
+%Como construir, implantar e escalar aplicações modernas na nuvem (\url{https://novatec.com.br/livros/devops-com-kubernetes/})}
+
+
+
+
+
+São poucos os trabalhos que citam CEP na pesquisa de sistemas nativos de nuvem~\citep{10.1145/2830013.2830016,10.1145/3401025.3401731,kritikos2019multi,10.1007/978-3-662-44879-3_7}. 
+Um sistema pode ser considerado nativo de nuvem se segue algumas das práticas colocadas por \cite{garrison2017cloud}, como escalabilidade e manutenção automatizadas, tolerância a falhas no ambiente de execução e infraestrutura como código.
+
+
+
+
+\cite{kritikos2019multi} propõe a criação de um sistema que utilize múltiplos provedores de nuvem para a execução de um sistema de processamento de regras de negócios (\textit{Bussiness Process}), utilizando um software de processamento de eventos complexos para realizar a detecção de eventos no sistema. No entanto, o sistema desenvolvido é voltado somente aos desenvolvedores de regras de negócio, oferendo só a linguagem de regras de negócio para a definição de processamentos a serem feitos. Além disso, como os próprios autores afirmam, não é oferecido suporte pelos provedores de nuvem para sistemas multi-nuvem, então sistemas construídos para utilizarem mais de uma nuvem necessitam de trabalho adicional extenso para seu desenvolvimento e implantação.
+
+
+\cite{10.1145/3401025.3401731} discute a criação de um sistema de orquestração de serviços de FaaS que atenda as demandas da comunidade de CEP e de outras comunidades que lidam com processamento de dados contínuos. Apesar de um grande esforço ter sido feito em criar sistemas usando as tecnologias de código aberto mais atuais de FaaS, não foi discutida a implementação ou suporte aos operadores de CEP. \cite{10.1145/2830013.2830016} e \cite{10.1007/978-3-662-44879-3_7} simplesmente mencionam o uso de CEP para realizar as mesmas funções que um sistema de FaaS oferece. A comparação de CEP com FaaS é discutida em \autoref{sub-sec:Faas}.
+
+
+
+
+
+%O trabalho de \cite{lima2018skipping}
+%\todo{Quando você diz ``alguns trabalhos blá, blá'', você precisa citar na sequência mais de um trabalho, senão o plural não se justifica.},
+%foca em tolerância a falhas em sistemas de CEP\todo{Mas esse trabalho trata da tolerância na execução em nuvem mesmo?}. Não foram encontrados trabalhos que descrevem sistemas de CEP nativos de nuvem. \todo[inline]{A última frase do parágrafo acima parece contradizer a  primeira frase: existem poucos trabalhos ou não existe nenhum? Ou ``executar CEP de forma nativa em nuvem'' é algo diferente ``sistema de CEP nativo de nuvem''? Se for esse caso, o parágrafo não deixa clara a diferença.}
+
+%Apesar de alguns trabalhos citarem o uso de nuvens privadas (como a AWS, GCP e Azure) para o processamento de eventos (como o de \cite{de2018distributed}\todo{É preciso citar pelo menos mais um trabalho aqui para justificar o ``alguns trabalhos''}), só são listadas as funcionalidades específicas proprietárias de cada provedor de nuvem utilizado, as quais as outros provadores de nuvem não oferecem suporte%\todo{não entendi o que quer dizer esse ``só são listadas as funcionalidades específicas de cada uma''}
+%. Eles não fazem uso de sistemas de administração de nuvem independentes (como o Kubernetes e o Swarm), os quais proveem um requisito essencial em sistemas cuja execução ocorre nesse ambiente: o desacoplamento do sistema das ferramentas específicas de cada nuvem. O desacoplamento garante que o sistema possa ser realocado em diferentes provedores de nuvens privadas, ou até ser executado em um ambiente multi-nuvem, sem muito esforço. 
+
+
+ \begin{comment}
+
+\subsection{Comparação de CEP com FaaS}
+
+FaaS - (\textit{Function as a Service}) é um tipo de serviço oferecido pela maioria dos provedores de nuvem. Em FaaS, o desenvolvedor escreve o código e especifica suas dependências e é responsabilidade do provedor instanciar e administrar a infraestrutura para a execução do código e expor os serviços oferecidos, ou seja, toda a infraestrutura da operação é de responsabilidade do provedor de nuvem~\citep{garrison2017cloud}. Este tipo de serviço permite que desenvolvedores escrevam pequenos trechos de código para serem disparados assim que um \textit{web-hook} for acionado ou alguma outra situação for detectada. Apesar de conseguir realizar muitas das funções que CEP oferece, os objetivos e principais usos de cada um são bem distintos. Como o usuário de FaaS utiliza linguagens de programação para definir o processamento a ser feito, a chegada de um novo evento pode servir para o disparo da realização de vários tipos de ações, como a criação ou remoção de outros processento de FaaS, o processamento em lote de algum conjunto de dados ou até a instanciação de novos sistemas no provedor de nuvem. Apesar da grande variedade de operações disponíveis, os serviços de FaaS oferecidos nativamente pelo provedores tem um custo mais alto de uso, que é cobrado pelo tempo de execução do trecho de código e também são limitados em relação ao tempo de processamento que uma função de FaaS pode continuar em execução~\citep{AWSLambda,AzureCloudServices,GoogleAppEngine}.
+
+Para a detecção contínua e constante de eventos o uso da nuvem para a execução de serviços de CEP resulta em uma economia financeira quanto mais eventos são processados. Apesar de existirem serviços de FaaS de código aberto desenvolvidos para prover as mesmas funcionalidades que os serviços proprietários dos provedores de nuvens~\citep{Knative,Kubeless,OpenFaaS,Serverless}, eles não oferecem uma linguagem de CEP, com operadores próprios para a definição de tipos de evento desenvolvidos especificamente para o processamento de dados em tempo real.
+\end{comment}
+
+% Vou retirar este artigo sobre CEP em névoa - Fernando
+
+%\cite{luthra2019progcep} distribuíram a execução de CEP em um ambiente de névoa, que consiste em máquinas espalhadas geograficamente e normalmente com desempenho mais baixo que o de máquinas de nuvem, porém que permite menor latência no recebimento e envio de eventos. Apesar de \cite{luthra2019progcep}, fazer o uso de ferramentas como Docker para o isolamento de ambiente de execução e facilitar a instanciação de novos nós de processamento\todo[inline]{Esta frase está incompleta.}. Atualmente, as grandes provedoras de computação em nuvem não proveem esse tipo de infraestrutura em seus serviços, ou seja, cada implantação é feita de forma individual.\todo[inline]{não está claro a que tipo de infraestrutura a frase se refere (névoa? isolamento de ambiente? tb não está claro o significado de ``implantar de forma individual''}
+
+%\cite{lopez2020triggerflow} implementa um sistema de disparo a partir de regras, similar a CEP, utilizando serviços de Função como Serviço (\textit{FaaS - Function as a Service}).  - não vale a pena mencionar FaaS
+
+
+%\todo[inline]{artigos relacionados ao uso de CEP junto de docker e kubernetes para execução escalavel em nuvem. }
+
+
+%falta colocar o D3CEP
+
+%\section{Arquiteturas coreografadas}
+%\todo[inline]{colocar um trabalho coreografado que não seja de CEP para comparação}
+%InterSCity??
+\section{Considerações}
+
+
+Os trabalhos apresentam diferentes técnicas para distribuir o processamento de eventos, que nem sempre têm resultados comparáveis, seja pela escala na qual os experimentos foram realizados, seja pelo foco do estudo. Dos trabalhos investigados, todos utilizam um sistema com organização orquestrada, portanto os nós de CEP têm pouca ou nenhuma autonomia em relação a quais eventos são designados a eles. 
+
+A pesquisa de \cite{Kobayashi:2015:CEP:2675743.2776771} é uma continuação da pesquisa de \cite{Isoyama:2012:SCE:2335484.2335498}, e ambas mostram ótimos resultados em uma escala de milhares de eventos por segundo, mas não levam em conta eventos que podem causar falhas no sistema, como fazem \cite{6906776}, de forma que o sistema fica vulnerável a definições de tipos de eventos que consomem muitos recursos.
+
+O trabalho de \cite{doi:10.1177/1550147717728626} é o único que tenta paralelizar a detecção de um mesmo tipo de evento sem alterar sua definição. A técnica pode ser utilizada somente por operadores de Composição e Detecção de Padrões, como visto na Seção \ref{sec:CEPoperators}, pois são os únicos que lidam com mais de um tipo de evento de entrada. Para todos os casos em que um atributo de um evento precisa ser agregado, há duas possibilidades: ou ele terá o mesmo valor em todos os EPAs – detectando o mesmo evento, pois seus eventos de entrada são encaminhados para todos os EPAs, desperdiçando recursos – ou terá um valor diferente para cada um dos EPAs – se for calculado a partir dos eventos cujo fluxo é seccionado, o que o torna inútil, pois nenhum dos diferentes valores é correto, já que ele não usou todos os eventos de entrada. Ou seja, o uso dessa abordagem só traz benefícios a composições e detecção de padrões que não usem agregação de nenhum atributo.
+
+\cite{JAYASEKARA201542}, \cite{Schultz-Moller:2009:DCE:1619258.1619264} e \cite{Balkesen:2013:RRI:2488222.2488257} utilizam técnicas diferentes para reescrever a definição dos eventos, usando \textit{pipelining} e particionamento de eventos de entrada para melhorar o desempenho da detecção. 
+%Esse tipo de trabalho pode ser utilizado para melhorar a eficiência da detecção de eventos como um todo, mas são técnicas que estão fora do escopo do trabalho aqui apresentado. 
+As ferramentas apresentadas nesses trabalhos foram desenvolvidas para serem utilizadas dentro de uma mesma instância de suas respectivas ferramentas de CEP, alterando como a definição do evento é interpretada ou como ele é processado internamente, enquanto este trabalho de mestrado se relaciona com a distribuição do processamento em diferentes instâncias de CEP.
+
+Algumas destas técnicas% \todo{Algumas o quê? Técnicas de distribuição? Técnicas de reescrita de eventos?}
+ estão intimamente ligadas à linguagem usada para a definição de eventos, de modo que o uso dessas técnicas requer um trabalho tão grande quanto a criação de uma nova ferramenta de CEP. Além disso, as detecções apresentam melhores resultados quanto mais operadores forem usados na definição do mesmo tipo de evento.
+Um sistema distribuído de CEP em que os tipos de eventos definidos utilizam o menor número de operadores por tipo possível pode naturalmente realizar o encadeamento de definições de tipos de eventos distintos. 
+
+A principal diferencial do trabalho de \cite{7129184} em relação aos demais trabalhos aqui discutidos é o seu foco em não repetir o processamento de um mesmo evento, o que certamente economiza recursos do sistema. Os resultados apresentados pelos autores mostram um desempenho melhor do que o do trabalho de \cite{Isoyama:2012:SCE:2335484.2335498}, com menor latência e maior vazão, mas os testes foram realizados em uma escala muito menor e não incluíram definições de eventos mais complicadas, que podem levar a um maior tempo de processamento e maior uso de recursos. 
+
+A arquitetura apresentada por \cite{6906776} usa uma abordagem para escalar a detecção de eventos que prioriza deixar o sistema em funcionamento pelo maior tempo possível, porém os resultados dela não são comparáveis aos de outros trabalhos exatamente por isso. O trabalho de \cite{Isoyama:2012:SCE:2335484.2335498} apresenta o melhor resultado em relação ao número de eventos processados por segundo. Contudo é importante levar em consideração que o trabalho de \cite{6906776} não tem como objetivo a escalabilidade e sim a tolerancia de funcionamento do sistema em situações de sobrecarga de eventos de entrada.
+
+%e tolerância a falhas\todo{Não entendi o que você quer dizer com o trecho a partir de ``não é uma opção de comparação justa...''. Rever a escrita.}. 
+
+
+A pesquisa em desenvolvimento de sistemas de CEP que escalam horizontalmente e são nativos de nuvem ainda foi pouco explorada. Os trabalhos apresentados que mencionam o uso de CEP em sistemas nativos de nuvem não propõe o desenvolvimento de sistemas que oferecem ao usuário a opção de definição de tipos de eventos utilizando os operadores de CEP. Atualmente, com o aumento do uso de computação em nuvem, esta deveria ser uma das considerações mais importantes no projeto de sistemas distribuídos, visto que a grande maioria dos sistemas que lidam com Big Data em tempo real estão migrando para nuvem. Sistemas que são construídos à partir do conhecimento de como a nuvem funciona e levando em conta as falhas e os métodos padronizados de recuperação automática, além da auto-escalabilidade, são reconhecidos como exemplos a serem seguidos, não só pela comunidade de sistemas nativos de nuvem, como por administradores e pesquisadores em geral.
+Neste trabalho de mestrado, desenvolvemos uma arquitetura de CEP que leva em consideração estes requisitos para a distribuição de processamento de eventos.
+
+
+%\todo{Esta última frase não ficou legal. Você precisa elaborá-la melhor e aproveitar este finalzinho de seção para posicionar a contribuição da sua pesquisa nesse contexto. }. 
+
+%Nenhum dos trabalhos encontrados discutiu a implantação e execução de CEP em sistemas nativos a nuvem, levando em conta o uso de ferramentas que automatizam a implantação dos sistemas em ambientes de nuvem de forma desacoplada dos serviços próprios de cada ambiente de processamento. 
+
+%Cada trabalho investigado utilizou escalabilidade para lidar com um problema diferente. Enquanto \cite{Isoyama:2012:SCE:2335484.2335498}, \cite{Kobayashi:2015:CEP:2675743.2776771} e \cite{7129184} estudaram escalabilidade para melhorar a performance do sistema
+%\todo[inline]{Faltou terminar a frase aqui}
+%Se a escalabilidade é usada para lidar com falhas e para aumentar a performance do sistema, \cite{6906776} utilizou para lidar com possíveis falhas que podem ocorrer e aumentar a garantia de disponibilidade do sistema. Assim como \cite{Newman:2015:BM:2904388} disse, os dois aspectos são usos de escalabilidade, mas um bom sistema levaria os dois em conta na formulação de sua arquitetura. 

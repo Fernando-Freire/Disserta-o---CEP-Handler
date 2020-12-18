@@ -1,0 +1,79 @@
+%% ------------------------------------------------------------------------- %%
+\chapter{Conclusões}
+\label{cap:conclusoes}
+
+
+
+As técnicas e ferramentas de Processamento de Eventos Complexos foram desenvolvidas com o propósito explícito de lidar com dados em contínuos\todo{"fluxos contínuos de dados"?}. A lista de operadores desenvolvida para a definição de tipos de eventos é extensa, mas necessária para que as linguagens de definição de consultas em tempo real sejam tão abrangentes em sua cobertura de possíveis tipos de eventos quanto as linguagens de consulta a bancos de dados relacionais são no campo de consultas por lote.
+\tod
+
+A partir da combinação de mecanismos de processamento de eventos complexos de código aberto com sistemas de mensageria em tempo real, de isolamento de ambiente de execução, armazenamento de dados em memória RAM e técnicas de orquestração de nuvem, foi criada neste trabalho uma arquitetura de microsserviços que trás\todo{"traz" ("trás" é de doer!)} a pesquisa de processamento de eventos complexos para o ambiente de desenvolvimento nativo de nuvem. Este é um passo importante, visto que o crescimento na popularidade e uso de plataformas de nuvens para o processamento em todas as áreas da computação está impulsionando a pesquisa de sistemas nativos de nuvem para o melhor aproveitamento dos recursos disponíveis nesse ambiente de execução.
+
+Uma dificuldade encontrada em utilizar Processamento de Eventos Complexos para a detecção de eventos em grande escala, como em aplicações de tempo real para cidades inteligente, é a implementação de um sistema que seja escalável, ou seja, que consiga aumentar sua capacidade de processamento de acordo com a carga atribuída a ele. Entretanto, se o aumento na capacidade de processamento requer um administrador humano para monitorar o sistema e a carga de entrada constantemente e aplicar as medidas necessárias de acordo com o incremento de carga, o desempenho do sistema fica limitado ao tempo de resposta do administrador. Para construir um sistema em tempo real para o monitoramento contínuo de um ambiente urbano, o próprio sistema deve conseguir aumentar e diminuir seu uso de recursos, ou seja, deve ser auto-escalável. Na arquitetura desenvolvida neste trabalho, a auto-escalabilidade foi atingida a partir de um mecanismo de detecção de sobrecarga de recursos e da distribuição do processamento de eventos entre múltiplas instâncias de um mesmo microsserviço.\todo{complementar o parágrafo falando sobre o uso da coreografia no balanceamento de carga entre as instâncias.} 
+
+Além da auto-escalabilidade, há outros dois requisitos que guiam o desenvolvimento de software nativo de nuvem: a tolerância a falhas do ambiente de execução e o uso de infraestrutura como código. Para atingir a tolerância a falhas no sistema inteiro, todos os microsserviços foram desenvolvidos com mecanismos de recuperação. Esses mecanismos, em caso da ocorrência de uma falha, retornam o microsserviço ao seu estado de antes da falha. Também foram levados em consideração na escolha do sistema de bancos de dados e do sistema de mensageria usados os seus mecanismos de recuperação de falhas. Complementar a isto, o uso de soluções de orquestração de nuvem permitiu que as especificações dos recursos computacionais utilizados por cada parte do sistema fossem escritas em código. Disso, resultou que a re-instanciação de qualquer uma das partes do sistema \texttt{CEP Handler} é feita automaticamente pelo sistema de orquestração de nuvem, utilizando a mesma quantidade de recursos computacionais. Estas três técnicas, auto-escalabilidade, infraestrutura como código e tolerância a falhas no ambiente de execução, se completam no desenvolvimento de qualquer sistema nativo de nuvem e servem para garantir um funcionamento contínuo e com altos níveis de disponibilidade para o usuário. 
+\todo[inline]{Você já fala sobre a implementação no parágrafo acima. Mas começa o parágrafo abaixo como se estivesse falando dela pela primeira vez. É preciso melhorar a coesão deles.}
+
+Para avaliar a arquitetura proposta, foi construído um protótipo do sistema, utilizando somente ferramentas de código aberto, como visto no Capítulo \ref{cap:prototype}, e desenvolvido um cenário experimental utilizando dados do transporte público do município de São Paulo, que está descrito em \autoref{cap:experimento}. O protótipo foi construído como um novo serviço para a plataforma de software livre para cidades inteligentes InterSCity~\citep{del2019design}, do Instituto Nacional de Ciência e Tecnologia (INCT) da Internet do Futuro para Cidades Inteligentes~\citep{Interscitysite}. Para o cenário experimental foram utilizados dados de três horas contínuas de todos os ônibus que servem a infraestrutura pública de transportes na capital paulista. Estas três hora compões um dos períodos de maior variação no número de veículos em circulação, e consequentemente, uma grande variação de número de eventos entrando no sistema. A rede de processamento utilizada no cenário do experimento utilizou tipos de eventos simples, que não utilizam janelas de agregação de eventos de entrada, bem como tipos de eventos que as utilizam. Um dos desafios na implementação do sistema foi a criação de um método para a realocação dos tipos de eventos entre nós de processamento com a garantia que nenhum evento seria descartado durante o processo de realocação. Isto foi atingido a partir do cálculo, utilizando dados da definição de cada tipos de evento, do tempo necessário para reconstruir o estado da janela de agregação em outro nó de processamento.
+
+
+A partir de pesquisa realizada nos trabalhos relacionados, detalhada em \autoref{cap:trabalhos}, a distribuição de processamento de eventos complexos, dois algoritmos de balanceamento de carga foram criados que servem para selecionar a ordem de realocação dos tipos de eventos entre um nó de processamento e outro. Um dos algoritmos seleciona os tipos de eventos a serem realocados a partir do tempo necessário para reconstruir seu estado em outro nó de processamento enquanto o outro algoritmo seleciona os tipos de evento a partir da similaridade dos tipos de eventos de entrada de cada um, tentando agrupar os tipos de evento que compartilham os mesmos tipos de evento de entrada, minimizando a transmissão de eventos entre os nós de processamento do sistema.
+
+O experimento foi executado com dez repetições ao total, cinco utilizando cada um dos algoritmos de balanceamento de carga. A partir dos resultados coletados, descritos em \autoref{cap:resultados}, pode-se verificas que o sistema apresenta uma latência condizente com o cenário apresentado, normalmente de menos de cem milissegundos, além de demonstrar que o sistema consegue automaticamente verificar uma sobrecarga no uso de recursos computacionais e requisitar recursos adicionais do provedor de nuvem utilizado. Para a rede de processamento de eventos utilizada no experimento, nenhum dos dois algoritmos de balanceamento de carga apresentou um desempenho superior significativo em relação ao outro. Dos tipos de eventos utilizados no cenários, os tipos de eventos que detectavam situações que são de interesse de engenheiros de tráfego municipais, especificamente a detecção de agrupamento próximo de ônibus da mesma linha e o monitoramento da velocidade média dos principais corredores de ônibus, realizaram suas respectivas detecções sem problemas, mesmo com o aumento da carga de eventos de entrada.
+
+
+
+
+%Falar sobre:
+
+
+%sobre a importancia de cep para tempo real em cidades inteligentes
+
+%sobre o uso de codigo aberto e nativo de nuvem. 
+
+
+
+
+%Falar sobre a arquitetura desenvolvida e comentar do prototipo
+
+
+%Falar sobre os resultados atingidos
+
+%Foi desenvolvido um protótipo, utilizando somente soluções de código aberto para implementar cada um dos mecanismos que compõe o sistema, sempre considerando sempre que seu ambiente de execução nativo seria a nuvem. Desta decisão resulta a implementação de alguns mecanismos de recuperação em caso de falha no ambiente de execução, as quais são comuns de acontecerem e esperadas pelos padrões adotados nesses tipos de sistemas. 
+
+%Para atingir este fim, dois mecanismos foram utilizados. Foi escolhido estilo arquitetural de coreografia para comunicação dos microsseviços, onde uma falha em um deles não impacta o funcionamento dos outros. Além disso, como a infraestrutura de nuvem é altamente configurável, foi escolhido o uso de ferramentas de orquestração de nuvem que provem nativamente mecanismos de monitoramento e requisição de recursos automáticos assim que erros de execução são detectados. todas as especificações sobre os recursos computacionais a serem utilizados por cada parte do sistema foram descritas em arquivos de configuração 
+
+
+
+
+
+
+
+
+%------------------------------------------------------
+\section{Considerações Finais} 
+
+A partir do estudo das pesquisas e técnicas de processamento em tempo real e de sistemas nativos a nuvem foi possível desenvolver um sistema que não depende de monitoramento ativo por parte de um administrador para se recuperar de falhas no ambiente de execução e se auto-escalar de acordo com a carga de entrada. Para a implantação de serviços que tornem as cidades inteligentes, sistemas que cumprem os requisitos para serem nativos de nuvem se fazem necessários para que o cidadão tenha uma experiência confortável usando serviços que se conectam com arcabouços de plataformas de cidades inteligentes. A combinação das tecnologias de processamento de eventos complexos e de sistemas nativos de nuvem se provou frutífera no desenvolvimento de uma arquitetura e protótipo que cumprem os requisitos mencionados anteriormente. A execução dos experimentos demonstrou que o sistema desenvolvido é auto-escalável sem impactar significativamente a latência de transmissão e detecção dos tipos de eventos definidos.
+
+
+
+%O que se pode concluir do trabalho como um todo.
+
+
+
+
+
+
+%------------------------------------------------------
+\section{Sugestões para Pesquisas Futuras} 
+
+O desenho do experimento foi limitado por vários fatores, que poderiam ser explorados individualmente para um melhor entendimento de como cada um afeta o desempenho geral do sistema. Como o intuito era criar um cenário relacionado a cidade inteligentes, foram utilizados dados do transporte público, porém seria interessante o uso de dados de qualquer área que se beneficie com processamento em tempo real. À seguir estão algumas das sugestões de como explorar ainda mais a arquitetura e o protótipo:
+
+\begin{itemize}
+    \item Uso de dados para o experimento com maior variação de fluxo, para testar melhor o tempo necessário para escalar o sistema.
+    \item Inclusão de suporte para outros operadores de janelas de CEP, além de janelas temporais externas e janelas de eventos. 
+    \item Experimento com tipos de eventos mais diversos, com mais tipos de operadores e uma rede de processadores de eventos mais complexa.
+    \item Paralelização do processo de realocação de eventos em \textit{threads}- para diminuir o tempo necessário para a redistribuição de tipos de eventos entre instancias do \texttt{CEP Worker}.
+    \item Comparação do uso de outros sistemas de mensageria além do Rabbitmq, que foi um dos fatores limitantes na definição do experimento.
+    \item Inclusão de um sistema de recuperação de falhas para reconstrução dos estados dos tipos de eventos a partir do re-envio dos eventos de entrada de acordo com as janelas definidas pelos tipos de eventos processados por cada \texttt{CEP Worker}.
+\end{itemize}

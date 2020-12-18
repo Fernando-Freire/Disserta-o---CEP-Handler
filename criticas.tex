@@ -1,0 +1,260 @@
+%
+%
+%
+%
+\newpage
+\textbf{\Huge{Problemas}}
+
+\section{Conversa com Francisco}
+\begin{enumerate}
+\item Como determinar o consumo de cada operador?
+\item definir explicitamente algoritmo para determinar como migrar o processamento de um operador para nós distintos
+\item Como fazer o deploy de uma EPN inteira ( todos os operadores de uma aplicação serão definidos de uma só vez ou dinamicamente)
+%\item Algoritmo de migração de estados (bom)
+\item Listas quais são os eventos primitivos e derivados possíveis de se gerar a partir do simulador (com trânsito) com a ideia de ter mais de uma aplicação (EPN), consumindo eventos interconectados, por exemplo , para controlar semáforos, desvio de rotas.
+\item Algoritmos de contração /expansão de nós para a distribuição do processamento
+\item Considerar deixar de lado balanceamento de carga sobre um único operador.
+\end{enumerate}
+
+\begin{enumerate}
+\item Sobre Escopo: achou ousado demais visar escalabilidade e disponibilidade (tolerancia a falhas)
+\item detectou 3 dimensão : esturtura do deployment distribuindo em nuvem
+\item sugeriu a escolha de 1 dos 3 aspectos para dar enfase
+\item Escalabilidade -> transferencia de estado é chave nessa questão. Francisco acha que essa discussão foi perdida quando a proposta foi apresentada. Faltou abordar isso com relação aos operadores de CEP
+\item Sugeriu procurar refêrencias sobre "elasticidade" em CEP, pois esses trabalhos tratam da questão do estado.
+\item abordagens para torelancia a falhas: 
+\begin{enumerate}
+\item replay dos eventos
+\item checkpoints
+\item replicação completa
+\end{enumerate}
+\item Seria melhor restringir os operadores que serão suportados na ferramenta
+\item Sobre a aplicação de exemplo: Francisco observou que tem operadores com janelas de tempo enormes. No estudo de caso, faltou detalhar a regra exata associada a cada evento.
+\item Francisco perguntou a que se refere o balanceamento de carga, preciso esclarecer o modelo, o grafo do deploy
+\item Deixar claro que um mesmo CEP-Worker pode processar mais de um operador
+\item Francisco sugeriu que poderia haver mais de um worker no mesmo nó
+\item Francisco sugeriu que um outro possivel foco do trabalho poderia ser na definição do reaproveitamento do processamento no deploy
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+\section{Anotações da Fernanda sobre a Quali}
+\subsection{Francisco}
+\begin{enumerate}
+\item Escopo: disponibilidade e escalabilidade, alta complexidade. Na proposta parece que acrescentou o deployment além do que foi citado anteriormente.
+\item Sobre transferencia de estado, importante discutir sobre isso. Sobre reconstrução de estado
+\item Buscar por elasticidade em CEP
+\item Ele falou sobre a abordagem para tolerância a falhas, para refletir qual será usada.
+\item Comentou sobre o deployment, que traz complexidades também
+\item Escolher menos requisitos para resolver no mestrado
+\item Discutir mais sobre os operadores
+\item Para balanceamento de carga: particionamento geográfico, por exemplo.
+\item Detalhar mais o modelo de balanceamento
+\item Deixar claro que mais de um operador está sendo processado pelo mesmo CEP Worker
+\item Ele disse que cada aplicação tem sua propria EPN
+\item Comentou que talvez seja melhor focar no deployment e em reaproveitar os operadores. 
+\end{enumerate}
+
+\subsection{Fábio}
+\begin{enumerate}
+\item Ele concordou sobre o tamanho do escopo, muito grande
+\item Para tomar cuidade com algumas afirmações, como citar gartner. Tercuidade na precisão em artigos, quando for publicar.
+\item Comentou que achou estranho usar o termo "Arquitetura coreografada". Substituir por "Arquitetura baseada em coreografia"
+\item "Este" trabalho é o seu trabalho, deixar claro se é o seu ou de outra pessoa
+\item Ele sentiu falta de exemplos na introdução sobre cidades inteligentes para motivar
+\item Falou que gostou da seção de conceitos. Só achou que na pag 10 ficou um pouco vago.
+\item Tirar a menção a empresas publicas e privadas
+\item Nos trabalhos relacionados engatizar pontos que se trabalho tem, mas falta nos relacionados
+\item Ver se é caso de estudo ou estudo de caso
+\item Notação usada nos disgramas, talvez usar um formato padrão ou explicar a notação usada
+\item Explicar melhor como é o algoritmo, quando a instancia sabe que precisa ser autodestruida.
+\item Arrumar o "reencia os dados para o CEP-manager" de forma mais clara
+\item detalhe do texto na pagina 27 sobre a citação do arthur. Artigo não cria plataforma.
+\item Evitar frases de 5 linhas.
+\item Sugestão para aplicação de transporte. Lelão entre diferentes serviços como uber, lyft e SPtaxi, para competição de preço
+\item cronograma apertado
+\item detalhe das referencias: eliminar informações desnecessárias como DOI e ISBN
+\item Versão antiga do Santana et al
+\item tirar sites das referências 
+\end{enumerate}
+
+\section{Minhas anotações da qualificação}
+\begin{enumerate}
+\item Escopo muito grande. Escolher Escalabilidade ou Disponibilidade.
+\item Rever operadores que terão suporte
+\item maior foco em elasticidade em CEP
+\item Técnica - cache de eventos para disponibilidade
+\item (Alguns detalhes no texto estão sendo alterados diretamente)
+\item discrever \cite{Diniz:2015:RAC:2814058.2814074} e \cite{7916235} como exemplo do uso de CEP em cidades inteligentes.
+\item Usar "Arquitetura baseada em coreografia" ao invés de "Arquitetura Coreografada".
+\item revisar o texto para não usar "Este trabalho ", mas "Em nosso trabalho ou "nesta proposta de metrado".
+\item focar nas EPNs
+\item reposicionar o problema
+\item Colocar exemplos do estudo de caso mais cedo para engajar o leitor
+\item colocar exemplos em todos os operadores e diferentes características
+\item Tolerancia a falhas: explicitar que são das ferramentas
+\item Mostrar a contribuição antes dos trabalhos relacionados para apontar neles como eles não resolvem o problema
+\item Usar padrões de figuras para represenatação do sistema e dos Eventos(da EPN)( ou explicar tudo no texto)
+\item mostrar a EPN de detecção dos eventos inteira.
+\item falar exatamente os operadores usados
+%\item Trocar a consulta a forma de cobrança distinta por consulta aos aplicativos ja existentes (uber, SPtaxi, lyft, 99, etc)
+\item Retirar dados em excesso de cada referência.
+\end{enumerate}
+
+%\section{Anotações da Kelly}
+%\subsection{Apresentação}
+%\begin{enumerate}
+%\item Faltou exemplos na definição de conceitos 
+%\item Ficou olhando só para o Francisco 
+%\item Falou rápido demais 
+%\item Exemplifica mais ou menos
+%\item Não falou direito sobre o InterSCity 
+%\item Falou Arthur Santana
+%\end{enumerate}
+
+\subsection{Francisco}
+
+
+
+
+\subsection{Fábio}
+\begin{enumerate}
+\item Reforçou que o trabalho está ambicioso, sugeriu focar na escalabilidade
+\item sobre o texto: Cuidado com o rigor; não citar Gartner (na precisão do número de dispositivos Iot)
+\item Não gostou de "Arquitetura coreografada"-> trocar por "arquitetura baseada em coreografia"
+\item Pronome demonstrativo "Este" confunde o leitor. Deixar mais claro o contexto, quando a frase se referir ao seu trabalho.
+\item Na introdução, faltou citar alguns exemplos de uso de CEP.
+\item Os exemplos nas seções 2 e 3 são muito simples. O exemplo interessante apareceu só no final do texto.
+\item Fabio elogiou a seção 2, mas faltou exemplos para ilustrar os conceitos
+\item Na definição de cidades inteligentes, não citar a distinção entre empresas publicas e privadas
+\item Nos trabalhos relacionados, faltou ressaltar as deficiencias e destacar as coisas que a sua pesquisa vai solucionar
+\item Fabio comentou que só teve uma ideia da proposta quando chegou na seção 4
+\item Mudar Caso de Estudo para Estudo de Caso
+\item Faltou definir a notação dos diagramas ou usar um formato padrão. Os elementos graficos tem que ter significado
+\item A parte da autodestruição do worker não está descrita de forma clara; é preciso definir isso de forma algoritma
+\item Na pag 27, a citação à plataforma ficou estranha. Basta falar sobre a plataforma e citar o paper. Não precisa mencionar o nome do desenvolvedor principal
+\item Fábio sugeriu outra ideia de aplicativo: leilão de corridas entre taxi, uber, 99, etc. -> avaliar viabilidade.
+\item Cronograma apertado, será preciso focar no escopo 
+\item Referencias estão muito sujas. DOI, ISBN, URLs não são necessários
+\item Fábio sugeriu colocar URLs como notas de rodapé ou no corpo do texto. Bibliografia deve ficar para papers, articles, white papers, etc.
+\end{enumerate}
+
+\section{Alfredo}
+
+\subsection{enviados}
+\begin{enumerate}
+
+\item Texto: O primeiro capítulo possui muitos erros, os outros menos. Tente na medida do possível evitar termos informais como "lidar com" e "levar em conta"
+
+
+\item Se desde o começo você tivesse um caso de uso que quer resolver o texto fluiria melhor. O caminho natural seria mostrar os problemas de escalabilidade da abordagem orquestrada, para aí sim, buscar uma solução. Logo, na sua qualificação eu esperava ter visto esse caso de uso implementado e uma situação em que ele não funciona. Parece que você está atrasado...
+
+
+\item Não me parece que arquitetutras coreografadas possuam menos acoplamento do que as orquestradas. - pág 2 Comente.
+
+\item Acho que faltou entrar em mais detalhes na Seção 2.1.5 - ferramentas para CEP em código aberto
+
+\item Faltou um pouco de contextualização no capítulo de trabalhos relacionados
+\item Faltou explicar bem melhor o capítulo de trabalhos relacionados e usá-lo para embasar a sua abordagem. Não basta descrever, é importante apontar as limitações e qualidades
+de cada trabalho. Uma tabela ao final também ajudaria.
+
+\item Como você encontrou os trabalhos relacionados?
+
+\item Seção 4.1.1 Por que se auto-destruir?
+
+\item Se há vários CEP-Manager, eles usam o mesmo BD? Isso pode ir contra as boas práticas de microsserviços
+
+\item Caso de uso: Faça primeiro o básico, só sofistique depois (avaliação), além do que as ideias propostas parecem arbitrárias (sistema de pontuação)
+
+
+\item Qual o seu conhecimento do InterSCSimulator?
+\end{enumerate}
+
+\subsection{No pdf}
+\begin{enumerate}
+\item Camel Case nos titulos das seções
+\item frases muito longas na introdução
+\end{enumerate}
+
+\section{Fábio. Comentários no pdf}
+
+\begin{enumerate}
+\item Resumo: Bom
+\item (alguns itens foram corrigidos diretamente no texto ou comentados diretamente)
+\item Trabalhos relacionados: E como entra seu trabalho? ficou faltando
+\item \ref{CEP-Processor} Fabio: Qual o significado das flechas? Qual o significado das cores? Qual o significado dos diferentes tipos de caixas?
+
+\item \ref{sec:tools} Fábio: Você falou duas vezes nesta frase sobre serviços públicos e privado sendo que não é tão importante assim.
+\item gostou do cenário do estudo de caso
+\item Cronograma: Parece apertado. Talvez demore um pouco mais...
+\item Remover ISBNs, doi e URl dos artigos
+\item "Muitas URLs na bibliografia. Fica Feio. Coloque as Urls no corpo do texto ou em notas de rodapé.
+\end{enumerate}
+
+\section{Resumo}
+
+\subsection{Problemas Conceituais}
+
+\begin{itemize}
+\item Introdução: Apresentar melhor o problema e a proposta na introdução, de forma a realmente mostrar o que será resolvido e para que nos Trabalhos Relacionados exista um ponto de referencia para comparação
+\item Conceitos: Criar um novo estudo de caso, com duas EPNs integradas, e utilizá-lo de exemplo na descrição dos operadores
+\item Proposta: Escrever Precisamente o algoritmo de criação de novas instancias e remoção.
+\item Proposta: 
+\end{itemize}
+
+
+
+
+\subsection{Problemas de Texto}
+\begin{itemize}
+\item Camel Case nos titulos das seções
+\item Frases muito longas
+\end{itemize}
+
+\subsubsection{Introdução}
+Reescrever quase tudo levando em conta:
+\begin{itemize}
+\item Frases muito longas
+\item afirmações muito fortes
+%\item não citar Gartner
+\item evitar termos informais como "lidar com" e "levar em conta"
+\end{itemize}
+\subsubsection{Conceitos}
+\begin{itemize}
+\item 
+\item todos os operadores devem ser exemplificados, com exemplos relacionados ao estudo de caso.
+\end{itemize}
+
+
+
+\subsubsection{Trabalhos Relacionados}
+Apresentar melhor a proposta antes de comparar com trabalhos relacionados para mostrar como eles não são suficientes para solucionar o problema
+\subsubsection{Proposta}
+
+\begin{itemize}
+\item Retirar Disponibilidade como requisito principal, ressaltando só quando a torelancia a falhas já for provida pelas ferramentas utilizadas.(5.2.1.1 ; 5.2.2.1 ; 5.3.1 ; 5.4.2.1 ; 5.2.1.4 ; 5.3.4 ; 5.3.13 ; 5.4.2.6)
+\item Reconstrução do estado só será possível caso o timestamp considerado venha na própria medida. Desta forma é possível replicar o estado da seguinte forma:
+\begin{enumerate}
+\item Criar o operador em outro ambiente
+\item repassar os mesmos eventos de entrada
+\item Os eventos detectados pela segunda instancia não são enviados para o sistema.
+\item a segunda instancia monitora os eventos gerados pela primeira até que os eventos gerados são os mesmos
+\item quando isto acontecer, um timestamp é determinado para que a partir dele, os eventos seriam enviados pela nova instancia
+\end{enumerate}
+(5.2.1.2)
+
+\item Procurar mais referencias a partir de "CEP elasticity" ou "Complex Event Processing Elasticity" (5.2.1.3; 5.3.3 ; 5.4.2.5)
+
+\item O deployment será complicado ( 5.2.1.5 ; 5.2.1.12 ; 5.4.2.9)
+\item O Estudo de Caso (5.2.2.9; 5.4.3.11) será refeito, levando em conta duas EPNs distintas de duas aplicações (5.1.5) e descrevendo seus operadores de forma explicíta ( 5.2.1.11 ; 5.3.9 ; 5.3.10 ; 5.3.16 ; 5.3.17). Uma das aplicações pode ser a já proposta, com a alteração na consulta de cobrança e dados do veículo para aplicativos já existentes (5.2.2.15 ; 5.3.18 ; 5.4.3.15) e outra sobre detecção de velocidades e acidentes, de forma que parte de cada uma usaria eventos da outra.
+\item Explicar cada parte da figura e procurar usar BPMN ou UML para representações.
+
+
+\end{itemize}
