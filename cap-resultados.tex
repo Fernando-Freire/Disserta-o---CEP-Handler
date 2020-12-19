@@ -69,7 +69,7 @@ O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bu
 A partir dos dados coletados de cada repetição do experimento, para os dois algoritmos de balanceamento de carga, foi possível observar que o sistema se auto-escala conforme o número de eventos de entrada aumenta. As figuras \ref{fig:workers_and_events_SU}  e \ref{fig:workers_and_events_IS} mostram o número de instâncias de \texttt{CEP Workers} no sistema ao longo do tempo para todas as execuções do experimento com o algoritmo de balanceamento por Uso de Estado e com o algoritmo de balanceamento por Similaridade de Entrada, respectivamente. 
 Em todas, observa-se que o número de instâncias aumenta mesmo antes do início do envio de eventos, enquanto o sistema ainda está cadastrando os tipos de eventos. Cada cadastro já ocupa um espaço na memória RAM, que cumulativamente gera o disparo da instanciação de novos \texttt{CEP Workers}.
 
-
+ \afterpage{\clearpage}
 \begin{figure}[h!]
 \begin{subfigure}{.5\textwidth}
   \centering
@@ -111,6 +111,7 @@ Em todas, observa-se que o número de instâncias aumenta mesmo antes do início
 \label{fig:workers_and_events_SU}
 \end{figure}
 
+ \afterpage{\clearpage}
 \begin{figure}[h!]
 \begin{subfigure}{.5\textwidth}
   \centering
@@ -194,7 +195,7 @@ No experimento, escolheu-se fazer o cadastro de todos os tipos de eventos antes 
 \caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia nas  execuções do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \label{fig:load_and_instances-time-SU}
 
-\todo[inline]{Fernando, esses gráficos da figura 7.5 não estão corretos. Todos eles são iguais, e não correspondem aos da Figura 7.3 (os quais eu tb acho que estão errados). :( }
+%\todo[inline]{Fernando, esses gráficos da figura 7.5 não estão corretos. Todos eles são iguais, e não correspondem aos da Figura 7.3 (os quais eu tb acho que estão errados). :( }
 \end{figure}
 
 
@@ -300,14 +301,13 @@ A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, s
 \label{Tab:time_and_avg}
 \end{table}
 
-Na rede de processamento desenvolvida para o experimento, os tipos de eventos de detecção de agrupamento de ônibus da mesma linha (\textbf{busB}) foram definidos um por ônibus e utilizaram como fonte os tipos de evento de filtro de velocidade (\textbf{vi}), os quais foram definidos um por linha. Com isso, era possível agrupar todos os tipos de eventos de detecção de agrupamento de ônibus da mesma linha para a execução numa mesma instância de \texttt{CEP Worker}, minimizando a carga de entrada em cada instância no sistema. Como descrito no Capítulo \ref{cap:experimento}, dos 15.729 tipos de eventos criados, 14.121 eram de detecção de agrupamento de ônibus. Esse cenário, teoricamente, favoreceria o uso do algoritmo de balanceamento por Similaridade de Entrada. Contudo, isso não foi observado nos experimentos, já que os dois algoritmos resultaram em tempos médios de uso de recursos similares. \todo{Não se esqueça de corrigir a primeira parte deste parágrafo, que explica errado o que algoritmo faz.}
+Na rede de processamento desenvolvida para o experimento, os tipos de eventos de detecção de agrupamento de ônibus de mesma linha (\textbf{busB}) foram definidos um por ônibus e utilizaram como fonte os tipos de evento de filtro de velocidade (\textbf{vi}), os quais foram definidos um por linha. Com isso, era possível agrupar todos os tipos de eventos de detecção de agrupamento de ônibus de uma mesma linha para a execução numa mesma instância de \texttt{CEP Worker}, minimizando a carga de entrada em cada instância no sistema. Como descrito no Capítulo \ref{cap:experimento}, dos 15.729 tipos de eventos criados, 14.121 eram de detecção de agrupamento de ônibus. Esse cenário, teoricamente, favoreceria o uso do algoritmo de balanceamento por Similaridade de Entrada. Contudo, isso não foi observado nos experimentos, já que os dois algoritmos resultaram em tempos médios de uso de recursos similares. \todo{Não se esqueça de corrigir a primeira parte deste parágrafo, que explica errado o que algoritmo faz. O alg não minimiza a carga de entrada de cada instância, ele tenta evitar a duplicação da transmissão de eventos para os nós. }
 %, com o desempenho do algoritmo de Similaridade de Entrada minimamente pior que o do algoritmo de Uso de Estado.
 
-A diferença no número de instâncias criadas por cada algoritmo pode ser atribuída à diferença de velocidade de realocação dos tipos de eventos. O algoritmo de balanceamento por Uso de Estado seleciona os tipos de eventos cujo estado pode ser mais rapidamente reconstruído e, consequentemente, mais rapidamente realocado. Para a rede de processamento do experimento, selecionar para a realocação tipos de eventos que podem ser mais rapidamente realocados foi tão eficiente quanto selecionar para realocação tipos de eventos de forma que a carga de eventos de entrada em cada \texttt{CEP Worker} fosse minimizada. Logo, a velocidade de realocação de tipos de eventos foi um dos principais fatores para determinar o número de instâncias usados no experimento, pois em nenhum momento foi detectado que havia mais de duas instâncias em sobrecarga forte ao mesmo tempo\todo{Mas onde o leitor pode verificar isso que você está falando? Qual gráfico mostra que não havia mais do que duas instâncias em sobrecarga? os gráficos da figura \ref{fig:workers_and_events_SU} o numero de workers nunca passa de 5, enquanto os gráficos da figura \ref{fig:workers_and_events_IS} dois chegam a seis workers}. Caso essa situação fosse detectada, uma nova instância seria criada para lidar com as três\todo{por que três? pq as três primeiras que estavam cadastrando os tipos de eventos antes do envio dos eventos de entrada são as mais propensas a atingirem sobregarga} em sobrecarga forte, como descrito na Seção \ref{sub-sec:cep-worker-func}\todo{essa seção citada diz que "quando o número de instâncias em sobrecarga forte é maior que o número de instâncias que não estão em nenhuma sobrecarga, uma nova instância de cep worker é requisitada". Então, a discussão depende tb de saber quantas instâncias não estão em sobrecarga. E isso você não menciona aqui. }. A realocação mais rápida de eventos pelo uso do algoritmo de balanceamento por Uso de Recursos minimizou o número de instâncias em sobrecarga forte em qualquer momento da execução. 
-\todo[inline]{Bom, continuo sem entender esse raciocínio que você desenvolveu no parágrafo acima. Acho que o jeito é você tentar me explicar por voz, para depois eu poder te ajudar a deixar o texto mais claro.}
-
+A diferença no número de instâncias criadas por cada algoritmo pode ser atribuída à diferença de velocidade de realocação dos tipos de eventos. O algoritmo de balanceamento por Uso de Estado seleciona os tipos de eventos cujo estado pode ser mais rapidamente reconstruído e, consequentemente, mais rapidamente realocado. Para a rede de processamento do experimento, selecionar para a realocação tipos de eventos que podem ser mais rapidamente realocados foi tão eficiente quanto selecionar para realocação tipos de eventos de forma que a carga de eventos de entrada em cada \texttt{CEP Worker} fosse minimizada\todo{O alg não minimiza carga de entrada!!!}. Logo, a velocidade de realocação de tipos de eventos foi um dos principais fatores para determinar o número de instâncias usados no experimento, pois em nenhum momento foi detectado que havia mais de duas instâncias em sobrecarga forte ao mesmo tempo\todo{Mas onde o leitor pode verificar isso que você está falando? Qual gráfico mostra que não havia mais do que duas instâncias em sobrecarga? os gráficos da figura \ref{fig:workers_and_events_SU} o numero de workers nunca passa de 5, enquanto os gráficos da figura \ref{fig:workers_and_events_IS} dois chegam a seis workers}. Caso essa situação fosse detectada, uma nova instância seria criada para lidar com as três\todo{por que três? pq as três primeiras que estavam cadastrando os tipos de eventos antes do envio dos eventos de entrada são as mais propensas a atingirem sobrecarga} em sobrecarga forte, como descrito na Seção \ref{sub-sec:cep-worker-func}\todo{essa seção citada diz que "quando o número de instâncias em sobrecarga forte é maior que o número de instâncias que não estão em nenhuma sobrecarga, uma nova instância de cep worker é requisitada". Então, a discussão depende tb de saber quantas instâncias não estão em sobrecarga. E isso você não menciona aqui. }. A realocação mais rápida de eventos pelo uso do algoritmo de balanceamento por Uso de Recursos minimizou o número de instâncias em sobrecarga forte em qualquer momento da execução. 
+\todo[inline]{Fernando, como conversamos por vídeo na sexta, essa explicação no parágrafo acima precisa ser revista, ou talvez retirada do texto mesmo. O raciocínio baseado na história das 3 instâncias em sobrecarga não está nada claro e não se apoia nos gráficos apresentados ao leitor. }
 %O algoritmo de Similaridade de Entrada, utilizando-se do fato de vários destes tipos de eventos terem como fonte o mesmo tipo de evento de filtro de velocidade, tentou aloca-los no mesmo cep worker, atingindo um desempenho similar ao de algoritmo de Uso de Estado em relação ao custo computacional do experimento.
-\newpage
+
 \section{Número de Eventos Detectados}
 \label{sec:number_of_detected_events}
 
@@ -400,6 +400,7 @@ Ao observar, como exemplo de tipo de evento que não utiliza janela temporal, a 
 A vazão do sistema pode ser definida como a quantidade de dados transmitidos por intervalo de tempo~\citep{bukh1992art}. Neste trabalho, a vazão do \textit{CEP Handler} é definida como a quantidade de eventos por minuto transmitidos pelas instâncias de \texttt{CEP Worker} para o sistema de mensageria, para serem utilizados como entrada na detecção de outros tipos de eventos ou para o consumo do usuário final. %\todo{aqui neste frase você misturou uma definição de vazão vinda da ref bibliográfica e a sua definição de vazão no seu sistema. você tem que separar essas duas definições em duas frases diferentes: primeiro a definição clássica, depois a sua definição. A vazão é uma quantidade por unidade de tempo; você precisa deixar isso claro na definição, precisa dizer qual é a unidade de tempo da sua vazão (minuto)}. 
 As figuras \ref{fig:histogram_full_IS} e \ref{fig:histogram_full_SU} mostram a vazão do sistema ao longo de uma execução do experimento para cada algoritmo de balanceamento. Na figuras, pode-se observar que existe um crescimento da vazão ao longo do tempo similar ao da carga de entrada. 
 
+ \afterpage{\clearpage}
 
 \begin{figure}[h!]
 \begin{subfigure}{.5\textwidth}
@@ -442,6 +443,7 @@ As figuras \ref{fig:histogram_full_IS} e \ref{fig:histogram_full_SU} mostram a v
 %\todo[inline]{Verificar se vai usar no capítulo nome do alg ou número do alg., para corrigir a legenda se necessário.}
 \end{figure}
 
+ \afterpage{\clearpage}
 
 \begin{figure}[h!]
 \begin{subfigure}{.5\textwidth}
@@ -491,16 +493,9 @@ As figuras que mostram a variação de vazão de todas as execuções do experim
 
 
 
-
-
-
-
-
 \newpage
 \section{Latência}
 \label{sec:latency}
-
-
 
 
 
@@ -512,7 +507,7 @@ As figuras que mostram a variação de vazão de todas as execuções do experim
 
 Em um sistema que lida com dados em tempo real, a latência da transmissão de eventos pelo sistema é a principal métrica de análise do desempenho. Para medir a latência no \texttt{CEP Handler}, foi usado o método descrito na Seção  \ref{sec:experiment_architecture}. Uma marca temporal foi gerada no momento em que o evento primário foi enviado do microsserviço do experimento para ser consumido pelas instâncias de \texttt{CEP Workers}. Outra marca temporal foi gerada quando o evento foi armazenado no banco de dados chave-valor, depois de sua detecção pelo sistema. A latência foi tomada como a diferença entre esses dois valores. O tempo utilizado para os intervalos no eixo x dos gráficos de latência vêm da marca temporal de quando o evento foi armazenado, depois da detecção. 
 
-Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} \ref{fig:boxplot_BusB_agg} mostra as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior.  % - \todo{Só para te avisar: expliquei aqui como ler os diagramas de caixa.}
+Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} mostram as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior.  % - \todo{Só para te avisar: expliquei aqui como ler os diagramas de caixa.}
 
 %A latência observada nos experimentos não foi afetada significativamente pela escolha de algoritmo de balanceamento de carga. 
 %Observando as figuras, é possível ver que o intervalo de latências foi similar entre todas as execuções e entre todos os tipos de eventos, ou seja, não houve uma diferença expressiva entre o uso de um algoritmo ou outro.
@@ -535,6 +530,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} \ref{fig:boxplot_BusB_agg} mo
 %Os gráficos de \textit{boxplot}  mostram a evolução da latência por tempo, ao longo de uma execução de um experimento, com a figura \ref{fig:boxplot_vf_su_1} representando uma execução utilizado o algoritmo de balanceamento de carga de Uso de Estado, enquanto que a figura \ref{fig:boxplot_vf_is_1} representa uma execução utilizando o algoritmo de balanceamento de carga de Similaridade de Entrada. Estas e as outras figuras mostrando a latência por tempo para cada execução podem ser encontradas no apêndice \ref{ape:graphics} .
 
 %Os dados de cada um dos tipos de eventos com definições similares para linhas ou corredores distintos foram agrupados no mesmo gráfico, sendo que os dois gráficos das figuras \ref{fig:boxplot_vf_is_1} e \ref{fig:boxplot_vf_su_1} representam as latências do tipo de evento de cálculo de velocidade instantânea.
+ \afterpage{\clearpage}
 
 \begin{figure}[ht]
 \centering
@@ -543,6 +539,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} \ref{fig:boxplot_BusB_agg} mo
  \label{fig:boxplot_vf_agg_1}
 \end{figure}
 
+\afterpage{\clearpage}
 
 \begin{figure}[ht]
   \centering
@@ -566,6 +563,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} \ref{fig:boxplot_BusB_agg} mo
 \end{figure}
 
 
+\afterpage{\clearpage}
 
 \begin{figure}[ht]
 
@@ -594,9 +592,12 @@ A análise dos resultados dos experimentos em relação a latência, vazão, nú
 Os tipos de eventos utilizados no experimento foram escolhidos para a detecção de um número suficiente de respostas, para a obtenção de mais dados de latência de forma que ainda detectassem ocorrências importantes para a administração da frota de ônibus municipal. O terceiro quartil das latências medidas durante todas as execuções ficou sempre abaixo de cem milissegundos, para todas as categorias de tipos de eventos e considerando o uso de ambos os algoritmos de balanceamento de carga. Para servir os serviços urbanos de transporte, como os do cenário experimental utilizado neste trabalho, essa latência não impacta significativamente o intervalo de tempo entre a  ocorrência de um problema nas vias de circulação urbanas e a chegada das autoridades para resolução do problema detectado. 
 
 
-A vazão e o número de eventos detectados pelo experimento são dependentes da latência no caso de tipos de eventos com janela temporal, como discutido na Seção \ref{sec:vazao}, pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados\todo{Explicação estranha. As suas janelas são deslizantes, então um mesmo evento pode entrar nas agregações de vários intervalos. Que tal trocar por: ", pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados"}. Para os eventos de outros tipos, a vazão e o número de eventos detectados não se alteram de uma execução para outra, ou seja, só dependem da velocidade de emissão de eventos pelo produtor de eventos em uso.\todo{O que vem depois do "ou seja",  está errado. Primeiro porque não diz a mesma coisa dita na primeira parte da frase. Segundo porque, se não tem janela, a qtde detectada NÃO muda com a velocidade de entrada. } 
+A vazão e o número de eventos detectados pelo experimento são dependentes da latência no caso de tipos de eventos com janela temporal, como discutido na Seção \ref{sec:vazao}, pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados%\todo{Explicação estranha. As suas janelas são deslizantes, então um mesmo evento pode entrar nas agregações de vários intervalos. Que tal trocar por: ", pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados"}
+. Para os eventos de outros tipos, a vazão e o número de eventos detectados não se alteram de uma execução para outra.
 
-A o tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator tão importante quanto a minimização da transmissão de eventos entre instâncias distintas.  O uso do Algoritmo \ref{alg:relocation_resource_usage} permite que os tipos de eventos sejam realocados mais rapidamente e este fator foi tão eficiente quanto o agrupamento de tipos de eventos que utilizam os mesmos tipos de entrada, como feito pelo Algoritmo \ref{alg:relocation_similarity}\todo{As duas últimas frases estão se repetindo. Mas uma delas compara a "importância de fatores", algo que não me parece pertinente, porque você não fez execuções do experimento em que os dois algoritmos são usados ao mesmo tempo, para avaliar qual "pesou" mais nos resultados. }.
+%ou seja, só dependem da velocidade de emissão de eventos pelo produtor de eventos em uso .\todo{O que vem depois do "ou seja",  está errado. Primeiro porque não diz a mesma coisa dita na primeira parte da frase. Segundo porque, se não tem janela, a qtde detectada NÃO muda com a velocidade de entrada. } 
+
+A o tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator tão importante quanto a minimização da transmissão de eventos entre instâncias distintas\todo{Conforme já conversamos, essa explicação é incorreta, porque o alg não faz essa minimização. O que ele faz é, na escolha do tipo de evento para realocação, privilegiar os tipos que não causam ou que causam menos a duplicação de fluxos de entrada}.  O uso do Algoritmo \ref{alg:relocation_resource_usage} permite que os tipos de eventos sejam realocados mais rapidamente e este fator foi tão eficiente quanto o agrupamento de tipos de eventos que utilizam os mesmos tipos de entrada, como feito pelo Algoritmo \ref{alg:relocation_similarity}\todo{As duas últimas frases estão se repetindo. Mas uma delas compara a "importância de fatores", algo que não me parece pertinente, porque você não fez execuções do experimento em que os dois algoritmos são usados ao mesmo tempo, para avaliar qual "pesou" mais nos resultados. }.
 
 %\todo[inline]{Ao longo do capítulo todo, você escreveu coisas como "expressivamente diferente" e "diferença expressiva". Anote aí que alguém da banca de defesa vai te perguntar o que significa "expressivo" nesse contexto.  ;)  Quando uma diferença seria considerada expressiva no contexto do seu experimento?  - Eu disse que nenhum é expressiva, pois é uma das unicas afirmações que eu posso fazer. Não Expressiva significando que não é intuitivamente e visivelvelmente diferente, ao contrario de uma diferença significativa que eu teria que provar usando os testes de estatista. Eu não sei que outro tipo de analise eu posso fazer sobre os resultados.}
 

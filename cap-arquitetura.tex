@@ -3,7 +3,7 @@
 \label{cap:arquitetura}
 
 Com o objetivo de criar um sistema para o processamento de dados de cidades inteligentes em tempo real, este trabalho de mestrado propõe a criação de uma arquitetura de microsserviços para a execução e distribuição do processamento de eventos complexos, representada na \autoref{fig:system_architecture}. Esta arquitetura é separada em quatro microsserviços que funcionam em conjunto para o executar todas as funções. A arquitetura foi desenhada com o intuito de complementar a Plataforma InterSCity de cidades inteligentes, recebendos dados em tempo real dela. %Estes dados são transformados em eventos, que podem ser usados como entrada para tipos de eventos definidos pelo usuário. Para um usuário ser notificado da ocorrência de um evento, ele pode cadastrar um \textit{webhooks}, uma URL para ser chamada por API REST, o sistema enviará o evento em formato JSON para o usuário por método POST
-. Esta arquitetura, chamada \texttt{CEP Handler} consiste em quatro microsserviços: \texttt{CEP Cataloger} (Seção \ref{sec:cepcataloger}), \texttt{Event Composer} (Seção \ref{sec:eventcomposer}), \texttt{Event Sender} (Seção  \ref{sec:eventsender}) e \texttt{CEP Worker} (Seção \ref{sec:cepworker}), e utiliza mais dois microsserviços prontos para realizar sua funções: um sistema gerenciador de bancos de dados chave-valor(Seção  \ref{sec:key-value-sgbd}) e um sistema de mensageria(Seção  \ref{sec:messaging-system}). Todos esses microsserviços operam sob um serviço de orquestração de ambientes de nuvem.
+Essa arquitetura, chamada \texttt{CEP Handler}, consiste em quatro microsserviços: \texttt{CEP Cataloger} (Seção \ref{sec:cepcataloger}), \texttt{Event Composer} (Seção \ref{sec:eventcomposer}), \texttt{Event Sender} (Seção  \ref{sec:eventsender}) e \texttt{CEP Worker} (Seção \ref{sec:cepworker}), e utiliza mais dois microsserviços prontos para realizar sua funções: um sistema gerenciador de bancos de dados chave-valor(Seção  \ref{sec:key-value-sgbd}) e um sistema de mensageria (Seção \ref{sec:messaging-system}). Todos esses microsserviços operam sob um serviço de orquestração de ambientes de nuvem.
 
 
 %\todo[inline]{Fernando, este é o capítulo no qual você começa a apresentar sua solução. Antes sair explicando cada microsserviços separadamente, você primeiro precisa retomar aqui qual é o problema alvo do seu trabalho e o seus objetivos quanto a ele, e depois dar uma visão geral (de alto nível) da solução que você está propondo. Só depois disso você pode começar a detalhar os microsserviços, caso contrário o leitor do texto já começará o capítulo 4 perdido! Sugiro que você apresente a figura da arquitetura aqui no começo do capítulo. E acho que dá pra aproveitar aqui trechos que foram escritos no artigo do ERAD.}
@@ -12,7 +12,7 @@ Com o objetivo de criar um sistema para o processamento de dados de cidades inte
 \begin{figure}[hb!]
       \centering
       \includegraphics[width=0.8\textwidth]{figuras/neopr.pdf}
-      \caption{Arquitetura do \texttt{CEP Handler}}
+      \caption{Arquitetura \texttt{CEP Handler} para processamento distribuído de eventos complexos.}
       \label{fig:system_architecture}
 \end{figure}
 

@@ -1,4 +1,4 @@
-\chapter{Gráficos dos Experimentos}
+\chapter{Gráficos das Execuções do Experimento}
 \label{ape:graphics}
 
 %Aqui são mostrados os gráficos de cada uma das repetições dos experimentos, para os dois algoritmos de balanceamento de carga.
@@ -11,7 +11,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_5-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_5-dez-su.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 1 do experimento utilizando o algoritmo de balanceamento por Uso de Estado.}
 \label{fig:vazao_5-dez-su}
 \end{figure}
@@ -22,20 +22,20 @@
 \begin{figure}[h]
 \centering
 \vspace{5cm}
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=0.8\textwidth]{figuras/graphics/carga_e_workers_total5-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
-\label{fig:workers_and_load_total}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total5-dez-su.png}
+\caption{Em função do tempo da execução}
+\label{fig:workers_and_load_total-5-dez-su}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario5-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
-\label{fig:workers_and_load_SPtrans}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario5-dez-su.png}
+\caption{Em função do horário do dia}
+\label{fig:workers_and_load_SPtrans-5-dez-su}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 %\subsection{Latência}
@@ -46,7 +46,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_5-dez-su_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento de \textbf{vf}}
 \label{fig:BoxPlot_vf_SU_1}
 \end{subfigure}%
 %\end{figure}
@@ -55,7 +55,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_5-dez-su_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento de \textbf{vi}}
 \label{fig:BoxPlot_vi_SU_1}
 \end{subfigure}%
 %\end{figure}
@@ -64,7 +64,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_5-dez-su_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento de \textbf{vel}}
 \label{fig:BoxPlot_vel_SU_1}
 \end{subfigure}%
 %\end{figure}
@@ -73,7 +73,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_5-dez-su_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento de \textbf{corr}}
 \label{fig:BoxPlot_corr_SU_1}
 \end{subfigure}%
 %\end{figure}
@@ -81,10 +81,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_5-dez-su_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento de \textbf{BusB} }
 \label{fig:BoxPlot_BusB_SU_1}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -102,7 +102,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_6-dez-is.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_6-dez-is.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 1 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
 \label{fig:vazao_6-dez-is}
 \end{figure}
@@ -112,20 +112,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total6-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total6-dez-is.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total-6-dez-is}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario6-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario6-dez-is.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans-6-dez-is}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -138,7 +138,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_6-dez-is_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_IS_1}
 \end{subfigure}%
 %\end{figure}
@@ -147,7 +147,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_6-dez-is_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_IS_1}
 \end{subfigure}%
 %\end{figure}
@@ -156,7 +156,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_6-dez-is_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento de \textbf{vel}}
 \label{fig:BoxPlot_vel_IS_1}
 \end{subfigure}%
 %\end{figure}
@@ -165,7 +165,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_6-dez-is_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento de \textbf{corr}}
 \label{fig:BoxPlot_corr_IS_1}
 \end{subfigure}%
 %\end{figure}
@@ -173,10 +173,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_6-dez-is_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento de \textbf{BusB}}
 \label{fig:BoxPlot_BusB_IS_1}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 1 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -193,7 +193,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_7-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_7-dez-su.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 2 do experimento utilizando o algoritmo de balanceamento por Uso de Estado.}
 \label{fig:vazao_7-dez-su}
 \end{figure}
@@ -204,20 +204,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total7-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total7-dez-su.png}
+\caption{Em função do tempo}
 \label{fig:workers_and_load_total_7-dez-su}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-su.png}
+\caption{Em função do horário do dia }
 \label{fig:workers_and_load_SPtrans_7-dez-su}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -229,7 +229,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-su_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_SU_7-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -238,7 +238,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-su_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_SU_7-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -247,7 +247,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-su_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_SU_7-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -256,7 +256,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-su_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_SU_7-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -264,10 +264,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-su_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_SU_7-dez-su}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -284,7 +284,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_7-dez-is.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_7-dez-is.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 2 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
 \label{fig:vazao_7-dez-is}
 \end{figure}
@@ -294,20 +294,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total7-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total7-dez-is.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total-7-dez-is}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-is.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans-7-dez-is}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -323,7 +323,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução  2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_7-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -332,7 +332,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_IS_7-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -341,7 +341,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_IS_7-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -350,7 +350,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_IS_7-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -358,10 +358,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_IS_7-dez-is}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -377,7 +377,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_8-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_8-dez-su.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 3 do experimento utilizando o algoritmo de balanceamento por Uso de Estado.}
 \label{fig:vazao_8-dez-su}
 \end{figure}
@@ -387,20 +387,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total8-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total8-dez-su.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total_8-dez-su}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario8-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario8-dez-su.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans_8-dez-su}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 %\subsection{Latência}
@@ -411,7 +411,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-su_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_SU_8-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -420,7 +420,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-su_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_SU_8-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -429,7 +429,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-su_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_SU_8-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -438,7 +438,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-su_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_SU_8-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -446,10 +446,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-su_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_SU_8-dez-su}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -466,7 +466,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_8-dez-is.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_8-dez-is.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
 \label{fig:vazao_8-dez-is}
 \end{figure}
@@ -476,20 +476,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total8-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total8-dez-is.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total-8-dez-is}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario8-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario8-dez-is.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans-8-dez-is}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -503,7 +503,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-is_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_8-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -512,7 +512,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-is_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_IS_8-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -521,7 +521,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-is_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_IS_8-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -530,7 +530,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-is_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_IS_8-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -538,10 +538,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_8-dez-is_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_IS_8-dez-is}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 3 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -559,7 +559,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_9-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_9-dez-su.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 4 do experimento utilizando o algoritmo de balanceamento por Uso de Estado.}
 \label{fig:vazao_9-dez-su}
 \end{figure}
@@ -569,20 +569,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total9-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total9-dez-su.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total_9-dez-su}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario9-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario9-dez-su.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans_9-dez-su}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 %\subsection{Latência}
@@ -593,7 +593,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-su_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_SU_9-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -602,7 +602,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-su_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_SU_9-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -611,7 +611,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-su_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_SU_9-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -620,7 +620,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-su_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_SU_9-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -628,10 +628,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-su_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_SU_9-dez-su}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -648,7 +648,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_9-dez-is.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_9-dez-is.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 4 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
 \label{fig:vazao_9-dez-is}
 \end{figure}
@@ -658,20 +658,20 @@
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}{0.9\textwidth}
+\begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total9-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total9-dez-is.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total-9-dez-is}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario9-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario9-dez-is.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans-9-dez-is}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -687,7 +687,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-is_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_9-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -696,7 +696,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-is_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_IS_9-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -705,7 +705,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-is_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_IS_9-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -714,7 +714,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-is_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_IS_9-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -722,10 +722,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_9-dez-is_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_IS_9-dez-is}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 4 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -740,7 +740,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_10-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_10-dez-su.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 5 do experimento utilizando o algoritmo de balanceamento por Uso de Estado.}
 \label{fig:vazao_9-dez-su}
 \end{figure}
@@ -754,18 +754,18 @@
 \centering
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=0.9\textwidth]{figuras/graphics/carga_e_workers_total10-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total10-dez-su.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total_10-dez-su}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario10-dez-su.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario10-dez-su.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans_10-dez-su}
 \end{subfigure}%
-\caption{Número de eventos entrando no sistema e número de instâncias de \texttt{CEP Worker} na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -778,7 +778,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-su_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_SU_10-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -787,7 +787,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-su_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_SU_10-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -796,7 +796,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-su_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_SU_10-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -805,7 +805,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-su_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_SU_10-dez-su}
 \end{subfigure}%
 %\end{figure}
@@ -813,10 +813,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-su_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_SU_10-dez-su}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Uso de Estado.}
 \end{figure}
 
 
@@ -831,7 +831,7 @@
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figuras/graphics/histogram_vazao_10-dez-is.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/histogram_vazao_10-dez-is.png}
 \caption{Vazão de eventos detectados pelo sistema na execução 5 do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
 \label{fig:vazao_10-dez-is}
 \end{figure}
@@ -840,17 +840,20 @@
 
 
 \begin{figure}[h]
-\begin{subfigure}{0.9\textwidth}
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total10-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do tempo na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\begin{subfigure}{\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total10-dez-is.png}
+\caption{Em função do tempo da execução}
 \label{fig:workers_and_load_total-10-dez-is}
 \end{subfigure}
 
 \begin{subfigure}{\textwidth}
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario10-dez-is.png}
-\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) em função do horário do dia na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\centering
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario10-dez-is.png}
+\caption{Em função do horário do dia}
 \label{fig:workers_and_load_SPtrans-10-dez-is}
 \end{subfigure}%
+\caption{Número de eventos entrando no sistema (em vermelho) e número de instâncias de \texttt{CEP Worker} (em azul) na execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -863,7 +866,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-is_vf.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vf} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vf}}
 \label{fig:BoxPlot_vf_10-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -872,7 +875,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-is_vi.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vi} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vi}}
 \label{fig:BoxPlot_vi_IS_10-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -881,7 +884,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-is_vel.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{vel} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{vel}}
 \label{fig:BoxPlot_vel_IS_10-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -890,7 +893,7 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-is_corr.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{corr} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{corr}}
 \label{fig:BoxPlot_corr_IS_10-dez-is}
 \end{subfigure}%
 %\end{figure}
@@ -898,10 +901,10 @@
 \begin{subfigure}{.5\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figuras/graphics/boxplot_10-dez-is_busb.png}
-\caption{BoxPlot da latência da categoria de tipos de evento \textbf{BusB} por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Tipos de evento \textbf{BusB}}
 \label{fig:BoxPlot_BusB_IS_10-dez-is}
 \end{subfigure}%
-\caption{BoxPlot da latência por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 5 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
 \end{figure}
 
 
@@ -917,13 +920,13 @@
 \begin{subfigure}{.45\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Ibirapuera.png}
-  \caption{Ibirapuera.}
+  \caption{Ibirapuera}
   \label{fig::avg_speed_Ibirapuera}
 \end{subfigure}%
 \begin{subfigure}{.45\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Inajar.png}
-  \caption{Inajar.}
+  \caption{Inajar}
   \label{fig::avg_speed_Inajar}
 \end{subfigure}
 %\end{figure}
@@ -932,13 +935,13 @@
 \begin{subfigure}{.45\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Pirituba.png}
-  \caption{Pirituba.}
+  \caption{Pirituba}
   \label{fig::avg_speed_Pirituba}
 \end{subfigure}%
 \begin{subfigure}{.45\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_PonteBaixa.png}
-  \caption{Ponte Baixa.}
+  \caption{Ponte Baixa}
   \label{fig::avg_speed_Ponte_Baixa}
 \end{subfigure}
 %\end{figure}
@@ -947,13 +950,13 @@
 \begin{subfigure}{.45\textwidth}
   \centering
 \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Itapecerica.png}
-\caption{Itapecirica.}
+\caption{Itapecirica}
 \label{fig::avg_speed_Itapecirica}
 \end{subfigure}%
 \begin{subfigure}{.45\textwidth}
  \centering
  \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_NoveDeJulho.png}
- \caption{Nove De Julho.}
+ \caption{Nove De Julho}
  \label{fig::avg_speed_Nove_de_Julho}
 \end{subfigure}
  \caption{Velocidade média de cada corredor detectada pelos tipos de eventos da categoria \textbf{corr} ao longo do horário do dia de coleta dos dados.}
@@ -963,13 +966,13 @@
 \begin{subfigure}{.5\textwidth}
   \centering
 \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Tiradentes.png}
-\caption{Tiradentes.}
+\caption{Tiradentes}
 \label{fig::avg_speed_Tiradentes}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
  \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Guarapiranga.png}
- \caption{Guarapiranga.}
+ \caption{Guarapiranga}
  \label{fig::avg_speed_Guarapiranga}
 \end{subfigure}
 %\end{figure}
@@ -984,7 +987,7 @@
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_CampoLimpo.png}
-  \caption{Campo Limpo.}
+  \caption{Campo Limpo}
   \label{fig:avg_speed_Campo Limpo}
 \end{subfigure}
 %\end{figure}
@@ -993,13 +996,13 @@
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_PaesDeBarros.png}
-  \caption{Paes de Barros.}
+  \caption{Paes de Barros}
   \label{fig::avg_speed_Paes_de_Barros}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Parelheiros.png}
-  \caption{Parelheiros.}
+  \caption{Parelheiros}
   \label{fig::avg_speed_Parelheiros}
 \end{subfigure}
  \caption{Velocidade média de cada corredor detectada pelos tipos de eventos da categoria \textbf{corr} ao longo do horário do dia de coleta dos dados.}
@@ -1097,13 +1100,13 @@
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-\includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-su.png}
+\includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_horario7-dez-su.png}
 \caption{Número de Workers por horário da carga}
 \label{fig:BoxPlot_busb+20_1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
  \centering
- \includegraphics[width=\textwidth]{figuras/graphics/carga_e_workers_total7-dez-su.png}
+ \includegraphics[width=0.7\textwidth]{figuras/graphics/carga_e_workers_total7-dez-su.png}
  \caption{Número de Workers por tempo total}
  \label{fig:BoxPlot_busb-20_1}
 \end{subfigure}
