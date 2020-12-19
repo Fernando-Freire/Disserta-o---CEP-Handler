@@ -9,7 +9,7 @@ O desempenho do sistema de processamento de eventos desenvolvido neste trabalho 
 Os experimentos usam como entrada dados das posições de ônibus do sistema de transporte público de São Paulo coletados durante três horas contínuas. Os dados foram obtidos por meio da API do sistema \cite{Olhovivo} da São Paulo Transporte S/A (SPTrans), empresa que faz a gestão do sistema de transporte público por ônibus na cidade.
 %\todo[inline]{Cabe falar com que frequência os GPSs dos ônibus reportam sua posição, para dar ideia do volume de dados envolvido no problema.}
 
-Os dados foram coletados no dia quatro de novembro de 2019, das 7h50 até às 11h02. Eles se referem a 2.360 linhas de ônibus e 26.624 veículos. O intervalo de tempo médio entre dois envios de dados em cada ônibus é de quinze a vinte segundos.
+Os dados foram coletados no dia quatro de novembro de 2019, das 7h57 até às 11h02. Eles se referem a 2.360 linhas de ônibus e 26.624 veículos. O intervalo de tempo médio entre dois envios de dados em cada ônibus é de quinze a vinte segundos.
 %, porém escolhemos usar os dados de um terço das linhas de ônibus, de 708 linhas, devido a limitações de processamento pelo rabbitmq.
 
 Os dados coletados foram pré-processados, pois estavam organizados de acordo com as linhas, sendo um dado em JSON para cada linha de ônibus e um campo com um JSON \textit{Array} contendo os dados de cada ônibus servindo a linha. A partir do pré-processamento, os atributos específicos das linhas foram replicados para cada dado de ônibus.

@@ -20,24 +20,28 @@ Os gráficos das figuras \ref{fig:avg_speed_guara_1} e \ref{fig:histogram_Bus_Bu
 % Kelly: reescrito acima
 %Apesar de apresentarem os resultados práticos da detecção de eventos, as informações representadas nestas figuras não é diretamente relevante para a análise do funcionamento do sistema cep handler, especialmente pois os dados utilizados para a geração dos gráficos não foram significativamente diferentes entre uma execução e outra do experimento. 
 
-O gráfico da Figura \ref{fig:avg_speed_guara_1} mostra a velocidade pelo horário de coleta do dado. 
-Como explicado na Seção~\ref{sec:exp_event_types}, a velocidade média de um corredor é calculada pelos tipos de evento da categoria \textbf{vi}, a partir das velocidades médias dos ônibus que passam no corredor nos últimos cinco minutos.
-O gráfico mostra uma discrepância entre as velocidades detectadas nos minutos iniciais e as velocidades detectadas posteriormente. Isso se deve ao fato de que, nos primeiros minutos, as janelas de agregação para o cálculo das velocidades médias não agregam dados suficientes,  pois ainda não se passaram os cinco minutos necessários para o cálculo. Ao longo de todo o período do experimento, a velocidade média móvel do corredor Guarapiranga se manteve majoritariamente entre os 30 km/h e 50 km/h, um intervalo que deve representar o tráfego comum do corredor. Com esse tipo de evento em atuação, poderia-se detectar em tempo real acidentes nos quais os veículos envolvidos bloqueassem a circulação no corredor.
+
 
 %Kelly: reescrevi acima
 %No gráfico da Figura \ref{fig:avg_speed_guara_1}, que apresenta a velocidade média dos últimos cinco minutos pelo o horário de coleta do dado, é possível observar que o início do gráfico apresenta uma discrepância em relação a velocidade detectada posteriormente. Ao longo de todo o gráfico a velocidade média do corredor se mantêm entre os 35 km/h e 45 km/h, um intervalo que deve representar o funcionamento comum deste corredor. Com este tipo de evento em atuação, poderia-se detectar em tempo real acidentes nos quais os veículos envolvidos bloqueassem a circulação no corredor.
 
-
 \begin{figure}[h!]
  \centering
- \includegraphics[width=0.6\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Guarapiranga.png}
+ \includegraphics[width=0.65\textwidth]{figuras/detect_graphics/avg_speed_7-dez-su-corr_Guarapiranga.png}
  \caption{Velocidades médias no corredor de ônibus Guarapiranga para uma execução do experimento.}
  \label{fig:avg_speed_guara_1}
 \end{figure}
 
-\begin{figure}[h!]
+
+\newpage
+
+O gráfico da Figura \ref{fig:avg_speed_guara_1} mostra a velocidade pelo horário de coleta do dado. 
+Como explicado na Seção~\ref{sec:exp_event_types}, a velocidade média de um corredor é calculada pelos tipos de evento da categoria \textbf{corr}, a partir das velocidades médias dos ônibus que passam no corredor nos últimos cinco minutos.
+O gráfico mostra uma discrepância entre as velocidades detectadas nos minutos iniciais e as velocidades detectadas posteriormente. Isso se deve ao fato de que, nos primeiros minutos, as janelas de agregação para o cálculo das velocidades médias não agregam dados suficientes,  pois ainda não se passaram os cinco minutos necessários para o cálculo. Ao longo de todo o período do experimento, a velocidade média móvel do corredor Guarapiranga se manteve majoritariamente entre os 30 km/h e 50 km/h, um intervalo que deve representar o tráfego comum do corredor. Com esse tipo de evento em atuação, poderia-se detectar em tempo real acidentes nos quais os veículos envolvidos bloqueassem a circulação no corredor.
+
+\begin{figure}[hb]
 \centering
-  \includegraphics[width=0.6\textwidth]{figuras/detect_graphics/histogram_7-dez-su_BB.png}
+  \includegraphics[width=0.65\textwidth]{figuras/detect_graphics/histogram_7-dez-su_BB.png}
   \caption{Histograma do número de ocorrências de agrupamento de ônibus para uma execução do experimento.}
   \label{fig:histogram_Bus_Bunching}
 \end{figure}
@@ -48,8 +52,9 @@ O gráfico mostra uma discrepância entre as velocidades detectadas nos minutos 
 %\todo[inline]{No gráfico da Figura 7.2 remover a legenda da linha que aparece no canto superior esquerdo, ela não é necessária.}
 
 
-O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bus_Bunching}) apresenta o número de ocorrências desse tipo a cada intervalo de quinze minutos, utilizando o horário de coleta do dado. Os primeiros dados foram enviados ao sistema às 07h58. Por isso, o  intervalo inicial do histograma, que vai das 7h45 às 8h00, contém um número de ocorrências bem menor do que o dos intervalos seguintes.
+O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bus_Bunching}) apresenta o número de ocorrências desse tipo a cada intervalo de quinze minutos, utilizando o horário de coleta do dado. Os primeiros dados foram enviados ao sistema às 07h57. Por isso, o  intervalo inicial do histograma, que vai das 7h45 às 8h00, contém um número de ocorrências bem menor do que o dos intervalos seguintes.
 É possível observar um crescimento do número de ocorrências até atingir um pico entre às 9h00 e 9h15, sendo que essa faixa de tempo coincide com o maior crescimento do número de dados entrando no sistema (mostrado na Figura~\ref{fig:load_and_instances-time-SU}). Uma possível explicação é que, ao longo da manhã, o número de ônibus ativos em cada linha aumenta. Quando esses ônibus iniciam sua circulação e começam a enviar suas posições para a SPTrans, eles estão localizados em terminais ou garagens, junto com outros ônibus da mesma linha. Depois das 9h15, há uma diminuição do número de ocorrências de aglomeração, pois a maioria dos ônibus está em circulação nas vias, longe de outros ônibus da sua própria linha. A partir das 10h00, a maioria das ocorrências de agrupamento de ônibus detectadas podem ser em terminais de ônibus, onde os veículos ficam estacionados entre uma viagem e outra. 
+
 
 \section{Auto-Escalabilidade do Sistema}
 \label{sec:auto_scalability}
@@ -69,8 +74,13 @@ O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bu
 A partir dos dados coletados de cada repetição do experimento, para os dois algoritmos de balanceamento de carga, foi possível observar que o sistema se auto-escala conforme o número de eventos de entrada aumenta. As figuras \ref{fig:workers_and_events_SU}  e \ref{fig:workers_and_events_IS} mostram o número de instâncias de \texttt{CEP Workers} no sistema ao longo do tempo para todas as execuções do experimento com o algoritmo de balanceamento por Uso de Estado e com o algoritmo de balanceamento por Similaridade de Entrada, respectivamente. 
 Em todas, observa-se que o número de instâncias aumenta mesmo antes do início do envio de eventos, enquanto o sistema ainda está cadastrando os tipos de eventos. Cada cadastro já ocupa um espaço na memória RAM, que cumulativamente gera o disparo da instanciação de novos \texttt{CEP Workers}.
 
- \afterpage{\clearpage}
-\begin{figure}[h!]
+
+No experimento, escolheu-se fazer o cadastro de todos os tipos de eventos antes do início dos envios para que se pudesse distinguir melhor os efeitos do cadastro de novos eventos dos efeitos do aumento do número de eventos de entrada. As figuras \ref{fig:load_and_instances-time-SU}  e \ref{fig:load_and_instances-time-IS} mostram o crescimento do número de instâncias de \texttt{CEP Worker} a partir do início de envio de eventos, pelo horário do dia da coleta do evento para todas as execuções. Elas melhor evidenciam a relação entre o número de instâncias e o aumento da carga de entrada no sistema.
+
+Como mostra a Figura~\ref{fig:workers_and_events_SU}, em todas as cinco repetições do experimento usando o algoritmo de balanceamento por Uso de Estado, o número máximo de instâncias de \texttt{CEP Worker} em uso para lidar com a carga de eventos de entrada foi cinco. Já com o algoritmo de balanceamento por Similaridade de Entrada, duas das cinco repetições chegaram ao disparo de seis instâncias de \texttt{CEP Worker}, como mostrado na Figura~\ref{fig:workers_and_events_IS}. Em uma delas, a criação da sexta instância de \texttt{CEP Worker} ocorreu depois do final do envio de eventos de entrada. 
+
+% \afterpage{\clearpage}
+\begin{figure}[p]
 \begin{subfigure}{.5\textwidth}
   \centering
   % include second image
@@ -111,8 +121,8 @@ Em todas, observa-se que o número de instâncias aumenta mesmo antes do início
 \label{fig:workers_and_events_SU}
 \end{figure}
 
- \afterpage{\clearpage}
-\begin{figure}[h!]
+% \afterpage{\clearpage}
+\begin{figure}[p]
 \begin{subfigure}{.5\textwidth}
   \centering
   % include second image
@@ -153,10 +163,10 @@ Em todas, observa-se que o número de instâncias aumenta mesmo antes do início
 \label{fig:workers_and_events_IS}
 \end{figure}
  
-No experimento, escolheu-se fazer o cadastro de todos os tipos de eventos antes do início dos envios para que se pudesse distinguir melhor os efeitos do cadastro de novos eventos dos efeitos do aumento do número de eventos de entrada. As figuras \ref{fig:load_and_instances-time-SU}  e \ref{fig:load_and_instances-time-IS} mostram o crescimento do número de instâncias de \texttt{CEP Worker} pelo horário do dia da coleta do evento para todas as execuções. Elas melhor evidenciam a relação entre o número de instâncias e o aumento da carga de entrada no sistema.
 
 
-\begin{figure}[h!]
+
+\begin{figure}[p]
 \begin{subfigure}{.5\textwidth}
   \centering
   % include second image
@@ -200,7 +210,7 @@ No experimento, escolheu-se fazer o cadastro de todos os tipos de eventos antes 
 
 
 
-\begin{figure}[h!]
+\begin{figure}[p]
 \begin{subfigure}{.5\textwidth}
   \centering
   % include second image
@@ -243,7 +253,7 @@ No experimento, escolheu-se fazer o cadastro de todos os tipos de eventos antes 
 
 
 %Das cinco repetições do experimento feitas para cada algoritmo de balanceamento de carga, 
-Como mostra a Figura~\ref{fig:workers_and_events_SU}, em todas as cinco repetições do experimento usando o algoritmo de balanceamento por Uso de Estado, o número máximo de instâncias de \texttt{CEP Worker} em uso para lidar com a carga de eventos de entrada foi cinco. Já com o algoritmo de balanceamento por Similaridade de Entrada, duas das cinco repetições chegaram ao disparo de seis instâncias de \texttt{CEP Worker}, como mostrado na Figura~\ref{fig:workers_and_events_IS}. Em uma delas, a criação da sexta instância de \texttt{CEP Worker} ocorreu depois do final do envio de eventos primários. 
+
 %As figuras \ref{fig:load_and_instances-time-SU-x} e \ref{fig:load_and_instances-time-IS-x} mostram um dos casos onde o número de instâncias não foi igual. Estas e todas as figuras das outras execuções podem ser encontradas em \autoref{ape:graphics}.
 
 
@@ -251,7 +261,7 @@ Como mostra a Figura~\ref{fig:workers_and_events_SU}, em todas as cinco repetiç
 
 %No sistema \texttt{CEP Handler}, conforme descrito em \autoref{cap:arquitetura}, assim que o número de \texttt{CEP Workers} que estão aptos a receber realocação de tipos de eventos é menor que o número de \texttt{CEP Workers} que estão em sobrecarga e precisam realocar seus próprios tipos de eventos, um novo \texttt{CEP Workers} é instanciado. Então, assumindo que somente os três primeiros \texttt{CEP Workers}, que já tinham boa parte de sua memória em uso pelo simples cadastro de tipos de eventos atingissem a sobrecarga, o número máximo de instancias de \texttt{CEP Workers} atingido seria seis\todo{Esta última frase está confusa e a afirmação que ela tenta fazer é especulativa. Sugiro que o parágrafo todo seja removido do texto.}.
 
-
+\newpage
 \section{Tempo de Uso de Recursos}
 \label{sec:resource_usage_time}
 %Na execução de um experimento auto-escalável, coletar os dados da variação do custo computacional entre uma execução e outra é fundamental para avaliar as diferenças que podem minimizar este custo. Durante os experimentos executados, considerando principalmente o custo de manter máquinas virtuais em funcionamento, a única variação que pode ser detectada é a diferença do número de instâncias de \texttt{cep worker} que estão ativas a cada momento. O propósito da coleta destes dados foi o de avaliar uma possível distinção entre o número de instâncias ativas em relação ao uso de cada um dos algoritmos de balanceamento de carga, descritos em \autoref{cap:arquitetura}.
@@ -308,12 +318,123 @@ A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, s
 %\todo[inline]{Fernando, como conversamos por vídeo na sexta, essa explicação no parágrafo acima precisa ser revista, ou talvez retirada do texto mesmo. O raciocínio baseado na história das 3 instâncias em sobrecarga não está nada claro e não se apoia nos gráficos apresentados ao leitor. }
 %O algoritmo de Similaridade de Entrada, utilizando-se do fato de vários destes tipos de eventos terem como fonte o mesmo tipo de evento de filtro de velocidade, tentou aloca-los no mesmo cep worker, atingindo um desempenho similar ao de algoritmo de Uso de Estado em relação ao custo computacional do experimento.
 
+
+
+%------------------------------------------------------
+
+
+
+
+
+
+%Nós escolhemos utilizar a mediana, pois observamos alguns eventos específicos que apresentavam latências muito maiores, levando a média a níveis fora do padrão de sistemas em tempo real
+
+
+\section{Vazão}
+\label{sec:vazao}
+
+A vazão do sistema pode ser definida como a quantidade de dados transmitidos por intervalo de tempo~\citep{bukh1992art}. Neste trabalho, a vazão do \textit{CEP Handler} é definida como a quantidade de eventos por minuto transmitidos pelas instâncias de \texttt{CEP Worker} para o sistema de mensageria, para serem utilizados como entrada na detecção de outros tipos de eventos ou para o consumo do usuário final. %\todo{aqui neste frase você misturou uma definição de vazão vinda da ref bibliográfica e a sua definição de vazão no seu sistema. você tem que separar essas duas definições em duas frases diferentes: primeiro a definição clássica, depois a sua definição. A vazão é uma quantidade por unidade de tempo; você precisa deixar isso claro na definição, precisa dizer qual é a unidade de tempo da sua vazão (minuto)}. 
+As figuras \ref{fig:histogram_full_IS} e \ref{fig:histogram_full_SU} mostram a vazão do sistema ao longo de uma execução do experimento para cada algoritmo de balanceamento. Na figuras, pode-se observar que existe um crescimento da vazão ao longo do tempo similar ao da carga de entrada. 
+
+% \afterpage{\clearpage}
+
+\begin{figure}[p]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_5-dez-su.png}  
+  \caption{Execução 1}
+  \label{fig:histv-5-dez-su}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_7-dez-su.png}  
+  \caption{Execução 2}
+  \label{fig:histv-7-dez-su}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_8-dez-su.png} 
+  \caption{Execução 3}
+  \label{fig:histv-8-dez-su}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_9-dez-su.png}  
+  \caption{Execução 4}
+  \label{fig:histv-9-dez-su}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_10-dez-su.png}  
+  \caption{Execução 5}
+  \label{fig:histv-10-dez-su}
+\end{subfigure}
+\caption{Vazão de eventos detectados pelo sistema nas  execuções do experimento utilizando o algoritmo de de balanceamento por Uso de Estado.}
+\label{fig:histogram_full_SU}
+%\todo[inline]{Verificar se vai usar no capítulo nome do alg ou número do alg., para corrigir a legenda se necessário.}
+\end{figure}
+
+% \afterpage{\clearpage}
+
+\begin{figure}[p]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_6-dez-is.png}  
+  \caption{Execução 1}
+  \label{fig:histv-6-dez-is}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_7-dez-is.png}  
+  \caption{Execução 2}
+  \label{fig:histv-7-dez-is}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_8-dez-is.png} 
+  \caption{Execução 3}
+  \label{fig:histv-8-dez-is}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_9-dez-is.png}  
+  \caption{Execução 4}
+  \label{fig:histv-9-dez-is}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_10-dez-is.png}  
+  \caption{Execução 5}
+  \label{fig:histv-10-dez-is}
+\end{subfigure}
+\caption{Vazão de eventos detectados pelo sistema nas execuções do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
+%\todo[inline]{Verificar se vai usar no capítulo nome do alg ou número do alg., para corrigir a legenda se necessário.}
+\label{fig:histogram_full_IS}
+\end{figure}
+
+
+%A vazão do sistema, ou seja, o número de eventos que foram transmitidos por intervalo de tempo, foi crescente durante o experimento, seguindo a curva de eventos que entravam no sistema. 
+As figuras que mostram a variação de vazão de todas as execuções do experimento podem ser encontradas no Apêndice \ref{ape:graphics}. Comparando os gráficos das execuções que usam o algoritmo de balanceamento de carga por Uso de Estado com os do algoritmo por Similaridade de Entrada, não é possível notar uma diferença significativa nas vazões do sistema, para qualquer sub-intervalo de tempo do experimento. A pequena variação observada na vazão do sistema pode se originar da variação de latência ao longo do tempo dos eventos de entrada para cada tipo de evento, principalmente para os tipos de eventos que usam janelas de tempo para a detecção. Esse é o caso dos tipos de evento de detecção de agrupamento de ônibus, que são maioria na rede de processamento de eventos do cenário do experimento.
+% como já discutido na Seção \ref{sec:number_of_detected_events}.
+%, o número geral de eventos detectados e a vazão do sistema são afetados pela latência do sistema.
+
+\newpage
 \section{Número de Eventos Detectados}
 \label{sec:number_of_detected_events}
 
 
-A Tabela \ref{Tab:events_total_and_avg} mostra o número de eventos detectados para cada uma das execuções do experimento, bem como a média e o desvio padrão para as execuções de cada um dos algoritmos de balanceamento de carga. A média do número de eventos detectados com o uso do algoritmo de balanceamento por uso de estado não foi expressivamente diferente da média de eventos detectados com o uso do algoritmo de balanceamento por Similaridade de Entrada. %Considerando a média e o intervalo de desvio padrão, eles detectaram um número de eventos similar\todo{Aqui vale o mesmo comentário que fiz na comparação de médias anterior: o mais correto seria usar um teste estatístico}.
-Embora isso não possa ser visto na tabela, foi verificado que a diferença entre o número de eventos primários que foram enviados como entrada e depois coletados na saída do sistema em cada experimento foi nula. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
+A Tabela \ref{Tab:events_total_and_avg} mostra o número de eventos detectados para cada uma das execuções do experimento, bem como a média e o desvio padrão para as execuções de cada um dos algoritmos de balanceamento de carga. A média do número de eventos detectados com o uso do algoritmo de balanceamento por Uso de Estado não foi expressivamente diferente da média de eventos detectados com o uso do algoritmo de balanceamento por Similaridade de Entrada. %Considerando a média e o intervalo de desvio padrão, eles detectaram um número de eventos similar\todo{Aqui vale o mesmo comentário que fiz na comparação de médias anterior: o mais correto seria usar um teste estatístico}.
+
 
 %\todo[inline]{É preciso ter consistência. O capítulo quase todo referencia os algoritmos pelo nome (inclusive nas figuras e tabelas). Mas aqui (e em alguns outros poucos lugares) você referenciou pelo número. Use somente o nome em todo lugar, ou use somente o número em todo lugar. Mas não misture os dois estilos de referência aos algoritmos, senão confunde o leitor.}
 %\todo[inline]{Ao longo do capítulo, a uma outra inconsistência relacionada aos algs. Em algumas figuras e tabelas, a ordem de apresentação dos resultados é primeiro para o Alg por Uso de Estado e depois para o Similaridade. Em outras, a ordem é a inversa. Isso também confunde bastante. É preciso adotar uma só ordem.}
@@ -338,8 +459,11 @@ Embora isso não possa ser visto na tabela, foi verificado que a diferença entr
 \label{Tab:events_total_and_avg}
 \end{table}
 %\todo[inline]{Formate mais uniformemente as tabelas desta seção. Destaque os nomes com negritos, para melhorar a legibilidade. Coloque pontos para separar os milhares dos números.}
+%Embora isso não possa ser visto na tabela, foi verificado que a diferença entre o número de eventos primários que foram enviados como entrada e depois coletados na saída do sistema em cada experimento foi nula. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
 
-A principal causa das diferenças no número de eventos detectados fica mais clara ao olhar para os resultados separados por categoria de tipo de evento para cada execução do experimento. As tabelas \ref{Tab:events_SU_and_avg} e \ref{Tab:events_IS_and_avg} mostram que não há diferença no número de eventos coletados para tipos de evento de cálculo de velocidade instantânea e de filtro de velocidade. A diferença só é expressa nos eventos obtidos a partir de tipos de eventos que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de eventos faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de eventos em diferentes execuções.
+A principal causa das diferenças no número de eventos detectados fica mais clara ao olhar para os resultados separados por categoria de tipo de evento para cada execução do experimento. As tabelas \ref{Tab:events_SU_and_avg} e \ref{Tab:events_IS_and_avg} mostram que não há diferença no número de eventos coletados para tipos de evento de cálculo de velocidade instantânea e de filtro de velocidade. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
+
+A diferença só é expressa nos eventos obtidos a partir de tipos de eventos que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de eventos faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de eventos em diferentes execuções.
 %\todo[inline]{Essa explicação dada na parte final do parágrafo acima não parece correta. Não é a "distribuição de latências desigual ao longo da execução" de um experimento que causa a diferença de qtde de detecções em duas execuções diferentes. O que causa a diferença na qtde é a diferença das distribuições das latências das execuções, certo? }
 
 
@@ -384,116 +508,9 @@ Ao observar, como exemplo de tipo de evento que não utiliza janela temporal, a 
 
 
 
-%------------------------------------------------------
 
 
 
-
-
-
-%Nós escolhemos utilizar a mediana, pois observamos alguns eventos específicos que apresentavam latências muito maiores, levando a média a níveis fora do padrão de sistemas em tempo real
-
-
-\section{Vazão}
-\label{sec:vazao}
-
-A vazão do sistema pode ser definida como a quantidade de dados transmitidos por intervalo de tempo~\citep{bukh1992art}. Neste trabalho, a vazão do \textit{CEP Handler} é definida como a quantidade de eventos por minuto transmitidos pelas instâncias de \texttt{CEP Worker} para o sistema de mensageria, para serem utilizados como entrada na detecção de outros tipos de eventos ou para o consumo do usuário final. %\todo{aqui neste frase você misturou uma definição de vazão vinda da ref bibliográfica e a sua definição de vazão no seu sistema. você tem que separar essas duas definições em duas frases diferentes: primeiro a definição clássica, depois a sua definição. A vazão é uma quantidade por unidade de tempo; você precisa deixar isso claro na definição, precisa dizer qual é a unidade de tempo da sua vazão (minuto)}. 
-As figuras \ref{fig:histogram_full_IS} e \ref{fig:histogram_full_SU} mostram a vazão do sistema ao longo de uma execução do experimento para cada algoritmo de balanceamento. Na figuras, pode-se observar que existe um crescimento da vazão ao longo do tempo similar ao da carga de entrada. 
-
- \afterpage{\clearpage}
-
-\begin{figure}[h!]
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.8\linewidth]{figuras/graphics/histogram_vazao_5-dez-su.png}  
-  \caption{Execução 1}
-  \label{fig:histv-5-dez-su}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.8\linewidth]{figuras/graphics/histogram_vazao_7-dez-su.png}  
-  \caption{Execução 2}
-  \label{fig:histv-7-dez-su}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.8\linewidth]{figuras/graphics/histogram_vazao_8-dez-su.png} 
-  \caption{Execução 3}
-  \label{fig:histv-8-dez-su}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.8\linewidth]{figuras/graphics/histogram_vazao_9-dez-su.png}  
-  \caption{Execução 4}
-  \label{fig:histv-9-dez-su}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.8\linewidth]{figuras/graphics/histogram_vazao_10-dez-su.png}  
-  \caption{Execução 5}
-  \label{fig:histv-10-dez-su}
-\end{subfigure}
-\caption{Vazão de eventos detectados pelo sistema nas  execuções do experimento utilizando o algoritmo de de balanceamento por Uso de Estado.}
-\label{fig:histogram_full_SU}
-%\todo[inline]{Verificar se vai usar no capítulo nome do alg ou número do alg., para corrigir a legenda se necessário.}
-\end{figure}
-
- \afterpage{\clearpage}
-
-\begin{figure}[h!]
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_6-dez-is.png}  
-  \caption{Execução 1}
-  \label{fig:histv-6-dez-is}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_7-dez-is.png}  
-  \caption{Execução 2}
-  \label{fig:histv-7-dez-is}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_8-dez-is.png} 
-  \caption{Execução 3}
-  \label{fig:histv-8-dez-is}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_9-dez-is.png}  
-  \caption{Execução 4}
-  \label{fig:histv-9-dez-is}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{figuras/graphics/histogram_vazao_10-dez-is.png}  
-  \caption{Execução 5}
-  \label{fig:histv-10-dez-is}
-\end{subfigure}
-\caption{Vazão de eventos detectados pelo sistema nas execuções do experimento utilizando o algoritmo de balanceamento por Similaridade de Entrada.}
-%\todo[inline]{Verificar se vai usar no capítulo nome do alg ou número do alg., para corrigir a legenda se necessário.}
-\label{fig:histogram_full_IS}
-\end{figure}
-
-
-%A vazão do sistema, ou seja, o número de eventos que foram transmitidos por intervalo de tempo, foi crescente durante o experimento, seguindo a curva de eventos que entravam no sistema. 
-As figuras que mostram a variação de vazão de todas as execuções do experimento podem ser encontradas no Apêndice \ref{ape:graphics}. Comparando os gráficos das execuções que usam o algoritmo de balanceamento de carga por Uso de Estado com os do algoritmo por Similaridade de Entrada, não é possível notar uma diferença significativa nas vazões do sistema, para qualquer sub-intervalo de tempo do experimento. A pequena variação observada na vazão do sistema pode se originar da variação de latência ao longo do tempo dos eventos de entrada para cada tipo de evento, principalmente para os tipos de eventos que usam janelas de tempo para a detecção. Esse é o caso dos tipos de evento de detecção de agrupamento de ônibus, que são maioria na rede de processamento de eventos do cenário do experimento, como já discutido na Seção \ref{sec:number_of_detected_events}.
-%, o número geral de eventos detectados e a vazão do sistema são afetados pela latência do sistema.
-
-
-
-\newpage
 \section{Latência}
 \label{sec:latency}
 
@@ -507,7 +524,10 @@ As figuras que mostram a variação de vazão de todas as execuções do experim
 
 Em um sistema que lida com dados em tempo real, a latência da transmissão de eventos pelo sistema é a principal métrica de análise do desempenho. Para medir a latência no \texttt{CEP Handler}, foi usado o método descrito na Seção  \ref{sec:experiment_architecture}. Uma marca temporal foi gerada no momento em que o evento primário foi enviado do microsserviço do experimento para ser consumido pelas instâncias de \texttt{CEP Workers}. Outra marca temporal foi gerada quando o evento foi armazenado no banco de dados chave-valor, depois de sua detecção pelo sistema. A latência foi tomada como a diferença entre esses dois valores. O tempo utilizado para os intervalos no eixo x dos gráficos de latência vêm da marca temporal de quando o evento foi armazenado, depois da detecção. 
 
-Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} mostram as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior.  % - \todo{Só para te avisar: expliquei aqui como ler os diagramas de caixa.}
+Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} mostram as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior. No Apêndice \ref{ape:graphics} podem ser encontrados disgramas de caixa que representam a variação de latência ao longo do tempo da execução de cada experimento, separados por categorias de tipos de eventos.
+
+
+% - \todo{Só para te avisar: expliquei aqui como ler os diagramas de caixa.}
 
 %A latência observada nos experimentos não foi afetada significativamente pela escolha de algoritmo de balanceamento de carga. 
 %Observando as figuras, é possível ver que o intervalo de latências foi similar entre todas as execuções e entre todos os tipos de eventos, ou seja, não houve uma diferença expressiva entre o uso de um algoritmo ou outro.
@@ -530,44 +550,41 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 %Os gráficos de \textit{boxplot}  mostram a evolução da latência por tempo, ao longo de uma execução de um experimento, com a figura \ref{fig:boxplot_vf_su_1} representando uma execução utilizado o algoritmo de balanceamento de carga de Uso de Estado, enquanto que a figura \ref{fig:boxplot_vf_is_1} representa uma execução utilizando o algoritmo de balanceamento de carga de Similaridade de Entrada. Estas e as outras figuras mostrando a latência por tempo para cada execução podem ser encontradas no apêndice \ref{ape:graphics} .
 
 %Os dados de cada um dos tipos de eventos com definições similares para linhas ou corredores distintos foram agrupados no mesmo gráfico, sendo que os dois gráficos das figuras \ref{fig:boxplot_vf_is_1} e \ref{fig:boxplot_vf_su_1} representam as latências do tipo de evento de cálculo de velocidade instantânea.
- \afterpage{\clearpage}
+ %\afterpage{\clearpage}
 
-\begin{figure}[ht]
+\begin{figure}[p]
 \centering
- \includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_vf.png}
+ \includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_vf.png}
  \caption{Latência para velocidade instantânea nas execuções do experimento para cada algoritmo de balanceamento de carga.}
  \label{fig:boxplot_vf_agg_1}
 \end{figure}
 
-\afterpage{\clearpage}
+%\afterpage{\clearpage}
 
-\begin{figure}[ht]
+\begin{figure}[p]
   \centering
-\includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_vi.png}
+\includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_vi.png}
 \caption{Latência para filtro de velocidade nas execuções do experimento para cada algoritmo de balanceamento de carga.}
 \label{fig:boxplot_vi_agg_1}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[p]
   \centering
-\includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_vel.png}
+\includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_vel.png}
 \caption{Latência para velocidade média de ônibus nos corredores nas execuções do experimento para cada algoritmo de balanceamento de carga.}
 \label{fig:boxplot_vel_agg}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[p]
 \centering
-\includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_corr.png}
+\includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_corr.png}
  \caption{Latência para velocidade média de cada corredor nas execuções do experimento para cada algoritmo de balanceamento de carga.}
  \label{fig:boxplot_corr_agg}
 \end{figure}
-
-
 \afterpage{\clearpage}
+\begin{figure}[p]
 
-\begin{figure}[ht]
-
-  \centering
+\centering
 \includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_BusB.png}
 \caption{Latência para detecção de agrupamento de ônibus nas execuções do experimento para cada algoritmo de balanceamento de carga.}
 \label{fig:boxplot_BusB_agg}
@@ -583,7 +600,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 %As figuras \textbf{XXXXX} mostram uma comparação das medianas totais de cada experimento, para ambos os algoritmos de balanceamento de carga. Como é possível observar, não há uma diferença significativa entre os valores de latência das execuções. Todas obtiveram um desempenho similar no experimento.
 
 
-
+\newpage
 \section{Conclusão}
 
 
@@ -597,7 +614,7 @@ A vazão e o número de eventos detectados pelo experimento são dependentes da 
 
 %ou seja, só dependem da velocidade de emissão de eventos pelo produtor de eventos em uso .\todo{O que vem depois do "ou seja",  está errado. Primeiro porque não diz a mesma coisa dita na primeira parte da frase. Segundo porque, se não tem janela, a qtde detectada NÃO muda com a velocidade de entrada. } 
 
-A o tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por uso de estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento
+A o tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento
 
 Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava minimizar o número de eventos entrando em cada instância em sobrecarga forte, como descrito na Seção \ref{sec:cepworker}. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. No entanto, a diferença em tempo de uso das instâncias médio foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
 
