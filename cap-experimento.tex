@@ -9,8 +9,8 @@ O desempenho do sistema de processamento de eventos desenvolvido neste trabalho 
 Os experimentos usam como entrada dados das posições de ônibus do sistema de transporte público de São Paulo coletados durante três horas contínuas. Os dados foram obtidos por meio da API do sistema \cite{Olhovivo} da São Paulo Transporte S/A (SPTrans), empresa que faz a gestão do sistema de transporte público por ônibus na cidade.
 %\todo[inline]{Cabe falar com que frequência os GPSs dos ônibus reportam sua posição, para dar ideia do volume de dados envolvido no problema.}
 
-Os dados foram coletados no dia quatro de novembro de 2019, das 7h57 até às 11h02. Eles se referem a 2.360 linhas de ônibus e 26.624 veículos. O intervalo de tempo médio entre dois envios de dados em cada ônibus é de quinze a vinte segundos.
-%, porém escolhemos usar os dados de um terço das linhas de ônibus, de 708 linhas, devido a limitações de processamento pelo rabbitmq.
+Os dados foram coletados no dia quatro de novembro de 2019, segunda-feira, das 7h57 até às 11h02. Eles se referem a 2.360 linhas de ônibus e 26.624 veículos. O intervalo de tempo médio entre dois envios de dados em cada ônibus é de quinze a vinte segundos.
+%, porém escolhemos usar os dados de um terço das linhas de ônibus, de 708 linhas, devido a limitações de processamento pelo RabbitMQ.
 
 Os dados coletados foram pré-processados, pois estavam organizados de acordo com as linhas, sendo um dado em JSON para cada linha de ônibus e um campo com um JSON \textit{Array} contendo os dados de cada ônibus servindo a linha. A partir do pré-processamento, os atributos específicos das linhas foram replicados para cada dado de ônibus.
 Depois do pré-processamento, os dados ficaram com os campos descritos no Exemplo \ref{exp:dadosSPTrans}.
@@ -32,7 +32,7 @@ ta - Indica o horário universal (UTC) em que a localização foi capturada.
 py - Informação de latitude da localização do veículo,
 px - Informação de longitude da localização do veículo,
 \end{verbatim}
-\caption{Descrição dos dados da SPTrans .}
+\caption{Descrição dos dados da SPTrans após o pré-processamento .}
 \label{exp:dadosSPTrans}
 \end{evento}
 
@@ -56,23 +56,21 @@ Cada categoria foi implementada em um dos seguintes níveis de granularidade:
 \end{figure}
 
 
-A Figura~\autoref{fig:experiment_diagram} mostra o diagrama da rede de processamento, com as origens e destinos de cada categoria de tipo de evento. %\todo[inline]{Fernando, você precisa corrigir a figura. Em vf, a figura dá a entender que a velocidade é calculada por linha (por conta do "agrupado por linha"). Além disso, não tem mais a detecção de velocidades < 20km/h. Veja como ficou as explicações dos tipos de eventos abaixo e tente corrigir a figura de acordo.}
-Cada tipo de evento teve seu identificador, que normalmente seria gerado pelo \texttt{CEP Cataloger}, e seu nome criados a partir de prefixos específicos para cada categoria, concatenados ao identificador de linha, ônibus ou corredor. A linguagem EPL do ESPER, utilizada nas definições dos eventos, é bastante similar à linguagem SQL, porém uma diferença significativa é a existência das janelas de agregação deslizantes, como descrito em \autoref{sec:CEPcontext}. Para o experimento foram utilizados dois tipos de janelas:
+A Figura~\ref{fig:experiment_diagram} mostra o diagrama da rede de processamento, com as origens e destinos de cada categoria de tipo de evento. %\todo[inline]{Fernando, você precisa corrigir a figura. Em vf, a figura dá a entender que a velocidade é calculada por linha (por conta do "agrupado por linha"). Além disso, não tem mais a detecção de velocidades < 20km/h. Veja como ficou as explicações dos tipos de eventos abaixo e tente corrigir a figura de acordo.}
+Cada tipo de evento teve seu identificador, que normalmente seria gerado pelo \texttt{CEP Cataloger}, e seu nome criados a partir de prefixos específicos para cada categoria, concatenados ao identificador de linha, ônibus ou corredor. A linguagem EPL do ESPER, utilizada nas definições dos eventos, é bastante similar à linguagem SQL, porém uma diferença significativa é a existência das janelas de agregação deslizantes, como descrito na Seção \ref{sec:CEPcontext}. Para o experimento foram utilizados dois tipos de janelas:
 
 
 \begin{itemize}
     \item \textit{ext\_timed}: utiliza um \textit{timestamp} do próprio tipo de evento para realizar a agregação em janelas temporais deslizantes;
     \item \textit{lenght}: utiliza um número de eventos fixo para a agregação por janelas de eventos deslizantes.
 \end{itemize}
-As definições de janelas de eventos deslizantes e janelas de tempo deslizantes podem ser encontradas em  \autoref{sec:CEPcontext}. 
-
-As cinco categorias de tipos de eventos da rede dos experimentos são: 
+As definições de janelas de eventos deslizantes e janelas de tempo deslizantes podem ser encontradas na Seção \ref{sec:CEPcontext}. Para cada categoria de tipo de evento, além dos tipos de evento de entrada, é necessário definir o nome do tipo de evento,o identificador e a definição em EPL, como descrito na Seção \ref{sec:redis}. As cinco categorias de tipos de eventos da rede dos experimentos são: 
 
 \begin{itemize}    
     \item \textbf{Velocidade Instantânea de Ônibus (vf)} -- nível: um por linha de ônibus
     \begin{itemize}
-        \item  Id do tipo de evento: vf+(identificador da linha)
-        \item Nome do tipo de evento: velf+(identificador da linha)
+        \item  Id do tipo de evento: vf+ \texttt{cl}%(identificador da linha)
+        \item Nome do tipo de evento: velf+ \texttt{cl}%(identificador da linha)
     \end{itemize}
    
     
@@ -94,8 +92,8 @@ FROM bus" + cl + "#length(2) group by p
     \item \textbf{Velocidade Instantânea de Ônibus Filtrada (vi)}  -- nível: um por linha de ônibus
     
     \begin{itemize}
-        \item Id do tipo de evento: vi+(identificador da linha)
-        \item Nome do tipo de evento: veli+(Identificador da linha)
+        \item Id do tipo de evento: vi+ \texttt{cl} %(identificador da linha)
+        \item Nome do tipo de evento: veli+ \texttt{cl}%(Identificador da linha)
     \end{itemize}
     Cada tipo de evento nessa categoria filtra os eventos de \textbf{vf}, selecionando aqueles que apresentam velocidades entre 0 km/h e 100 km/h. Essa categoria é importante para filtrar possíveis eventos com dados de posição irregulares vindos da SPtrans. 
     
@@ -111,8 +109,8 @@ WHERE v > 0 AND v < 100
     \item \textbf{Velocidade Média de Ônibus (vel)} -- nível: um por linha de ônibus que passa em corredores
     
     \begin{itemize}
-        \item Id do tipo de evento: vel+(identificador da linha)+(identificador do corredor)
-        \item Nome do tipo de evento: speedbus+(Identificador do corredor)
+        \item Id do tipo de evento: vel+ \texttt{cl} + (nome do corredor) %(identificador da linha)+(identificador do corredor)
+        \item Nome do tipo de evento: speedbus+ (nome do corredor)
     \end{itemize}
  
     Cada tipo de evento nessa categoria calcula a velocidade média de cada ônibus de uma linha, considerando as velocidades instantâneas do ônibus acumuladas nos últimos 5 minutos. 
@@ -159,8 +157,8 @@ No experimento, para facilitar a definição em EPL dos tipos de evento de \text
 \item \textbf{Aglomeração em Linha de Ônibus (BusB)} -- nível: um por ônibus
 
 \begin{itemize}
-    \item Id do tipo de evento: BusB+(identificador do ônibus)+(identificador da linha)
-    \item Nome do tipo de Evento: BB+(identificador do ônibus)+(identificador da linha)
+    \item Id do tipo de evento: BusB+\texttt{p}+ \texttt{cl}
+    \item Nome do tipo de Evento: BB+\texttt{p}+ \texttt{cl}
 \end{itemize}
 
 Nessa categoria, um tipo de evento é criado para cada ônibus em circulação, para detectar se existem ônibus da mesma linha circulando muito próximos um do outro. 
@@ -186,7 +184,7 @@ Os tipos de evento de \textbf{busB} utilizam como entrada os eventos do tipo \te
 
 
 
-Para os experimentos, foram usados dados de apenas 708 linhas de ônibus (30\% do total de linhas da cidade), devido a limitações de uso de recursos no cadastro de filas e canais no rabbitmq. Cada experimento utiliza uma só instância do rabbitmq, e para cada tipo de evento registrado é necessária a inscrição da instância no rabbitmq para receber os novos tipos de entrada e enviar os eventos detectados pelo novo tipo cadastrado. As 708 linhas foram escolhidas porque passam pelos corredores de ônibus da cidade e têm a maior quantidade de dados coletados. No total, a rede de processamento para o monitoramento dessas linhas contém 15.729 tipos de eventos, sendo:
+Para os experimentos, foram usados dados de apenas 708 linhas de ônibus (30\% do total de linhas da cidade), devido a limitações de uso de recursos no cadastro de filas e canais no RabbitMQ. Cada experimento utiliza uma só instância do RabbitMQ, e para cada tipo de evento registrado é necessária a inscrição da instância no RabbitMQ para receber os novos tipos de entrada e enviar os eventos detectados pelo novo tipo cadastrado. Foi escolhido utilizar uma única instância de \textit{broker} para minimizar a variação de latência que a transmissão de dados poderia atingir caso os dados fossem transmitidos para instâncias distintas, em máquinas virtuais distintas. As 708 linhas foram escolhidas porque passam pelos corredores de ônibus da cidade e têm a maior quantidade de dados coletados. No total, a rede de processamento para o monitoramento dessas linhas contém 15.729 tipos de eventos, sendo:
 \begin{itemize}
     \item 708 tipos para detecção de velocidades instantâneas de ônibus (vf), um por linha;
     \item 708 tipos para filtragem de velocidades entre 0 e 100 km/h (vi), um por linha;
@@ -199,7 +197,7 @@ Para os experimentos, foram usados dados de apenas 708 linhas de ônibus (30\% d
 
 \section{Arquitetura dos Experimentos}
 \label{sec:experiment_architecture}
-Para simular um ambiente de execução do sistema \texttt{CEP Handler} de forma automatizada, foi projetado um microsserviço adicional, o \texttt{Experiment-Repository} (\cite{Experiment-Repository}), cuja função é o envio dos eventos primários e a coleta e armazenamento de todos os eventos detectados. A arquitetura do ambiente dos experimentos é representada em \autoref{fig:experiment_arch_diagram}.
+Para simular um ambiente de execução do sistema \texttt{CEP Handler} de forma automatizada, foi projetado um microsserviço adicional, o \texttt{Experiment-Repository} (\cite{Experiment-Repository}), cuja função é o envio dos eventos primários e a coleta e armazenamento de todos os eventos detectados. A arquitetura do ambiente dos experimentos é representada na Figura \ref{fig:experiment_arch_diagram}.
 O banco de dados chave-valor que é consultado pelo \texttt{CEP Worker} para o cadastro e verificação dos metadados dos tipos de eventos é instanciado já com todos os metadados dos tipos de eventos da rede de processamento dos experimentos pré-registrados.
 
 O microsserviço de experimento carrega todos os dados dos eventos primários de um arquivo para a memória RAM antes do início do experimento e depois os ordena pela marca temporal \textit{"ta"} (do horário em que a posição do ônibus foi capturada no sistema da SPTrans), para enviá-los um por vez ao \texttt{CEP Handler}. Um evento primário $E_t$ só é enviado pelo \texttt{Experiment-Repository} ao \texttt{CEP Handler} quando o intervalo de tempo transcorrido desde o envio do evento anterior $E_{t-1}$ for igual ao intervalo entre os tempos $E_t.ta$ e $E_{t-1}.ta$. 

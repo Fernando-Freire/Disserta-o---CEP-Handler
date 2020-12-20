@@ -95,7 +95,7 @@ O Exemplo \ref{exemploEvento} apresenta um exemplo de dois eventos de um mesmo t
     "timestamp" : "10:35:35 05/04/2020" } ]
 }
 \end{verbatim}
-\caption{Eventos de posição.}
+\caption{Eventos de posição - latitude e longitude - de veículos e \textit{timestamp} da coleta da informação.}
 \label{exemploEvento}
 \end{evento}
 
@@ -314,7 +314,7 @@ Operadores de composição precisam especificar algumas políticas de tratamento
 
 \item \textbf{Detecção de Padrão:} é o principal operador de CEP. Ele diferencia CEP de outras ferramentas de processamento de dados em tempo real. Um EPA com esta operação detecta se os eventos (possivelmente de tipos diferentes) seguiram um padrão ao passarem no sistema. Um detector de padrão de eventos tem seis propriedades que devem ser definidas para que ele possa atuar de forma correta: 
 %Lista de tipos de eventos relevantes, Eventos participantes, Conjunto de combinação do padrão, Parâmetros do padrão, Politicas do padrão e Tipo de padrão. 
-\begin{itemize}
+\begin{enumerate}
 \item \textbf{Lista de tipos de evento relevantes}: lista quais tipos de eventos precisam ser enviados para o EPA para que o padrão seja detectado. % ou seja, lista os tipos dos eventos de entrada que compõe o padrão. 
 Por exemplo, caso o único tipo de evento relevante fosse o do tipo \textit{Posição} (Exemplo \ref{exemploEvento}), eventos do tipo \textit{Chuva} (Exemplo \ref{exemploEventoChuva}) não entrariam no processamento do padrão. 
 
@@ -361,7 +361,7 @@ Um possível uso deste padrão seria detectar se eventos de \textit{Posição} d
 \end{itemize}
 \end{itemize}
 \item \textbf{Parâmetros do padrão}: consistem nos demais parâmetros que o padrão precisa ter para ser detectado.
-\end{itemize}
+\end{enumerate}
 \end{itemize}
 
 
@@ -494,7 +494,7 @@ As ferramentas de CEP de \textit{software} livre -- Apache Flink, Drools Fusion,
 
 A ferramenta Drools Fusion foi imaginada inicialmente como um Sistema para Processamento de Regras de Negócio, que é utilizado por companhias para administrar o funcionamento correto de processos internos empresariais. O processamento de eventos complexos foi uma característica adicionada tempos depois, com o propósito de tornar a aplicação Drools um sistema completo para modelagem de comportamento. A ferramenta em si é uma aplicação monolítica que não fornece meios para distribuir seu processamento nativamente~\citep{DroolsFusion} %\todo{Incluir referência bibliográfica}.
 
-A Esper é uma das ferramentas de CEP que oferecem linguagens orientadas a fluxo para a definição de eventos. Ele é utilizado por meio de bibliotecas próprias, e as funções oferecidas pelas bibliotecas são usadas na definição, detecção e resposta dos eventos detectados. A Esper tem uma versão com suporte a escalabilidade horizontal e balanceamento de carga, porém essa versão é de código fechado~\citep{ESPERMatrix}.
+O Esper é uma das ferramentas de CEP que oferecem linguagens orientadas a fluxo para a definição de eventos. Esper é utilizado por meio de bibliotecas próprias, e as funções oferecidas pelas bibliotecas são usadas na definição, detecção e resposta dos eventos detectados. A Esper tem uma versão com suporte a escalabilidade horizontal e balanceamento de carga, porém essa versão é de código fechado~\citep{ESPERMatrix}.
 
 O Siddhi CEP é o motor de processamento de eventos usado
 %pelo WSO2 Complex Event Processor
@@ -528,7 +528,7 @@ O WSO Stream Processor \citep{WSO2SP}, por sua vez, tem recursos nativos para a 
 \section{Isolamento de Ambiente e Processamento em Nuvem}
 \label{sec:cloudtools}
 
-Para executar as ferramentas de CEP em plataformas de computação em nuvem, o uso de provedores de nuvem é necessário. Serviços de computação em nuvem (como o Google Cloud Platform - GCP, o Microsoft Azure e o Amazon Web Services - AWS), são definidos como um modelo para permissão de acesso sob-demanda e configurável de recursos computacionais, que podem ser provisionados ou descartados rapidamente~\citep{CLoudComputing}. 
+Para executar as ferramentas de CEP em plataformas de computação em nuvem o uso de provedores de nuvem é necessário. Serviços de computação em nuvem (como o Google Cloud Platform - \cite{GCP} , o Microsoft Azure - \cite{Azure} e o Amazon Web Services - \cite{AWS}), são definidos como um modelo para permissão de acesso sob-demanda e configurável de recursos computacionais, que podem ser provisionados ou descartados rapidamente~\citep{CLoudComputing}. 
 
 
 
@@ -554,7 +554,7 @@ Atualmente dois tipos de técnicas se destacam para garantir esse isolamento:
 
 O uso de máquinas virtuais gasta mais recursos do sistema simplesmente por ter que rodar todo um outro sistema operacional sobre o da máquina hospedeira. Em comparação, a instanciação de contêineres em um máquina hospedeira gasta bem menos recursos e garante o mesmo nível de isolamento. De acordo com  \cite{7095802}, os contêineres pode atingir e até superar o desempenho de máquinas virtuais em relação a economia do uso de CPU e memória. %\todo{desempenho em termos do que? velocidade? Essa última frase está estranha, o "qualquer em ocasião" não faz sentido nela.}.
 
-Para fazer a interface entre o desenvolvedor de contêineres e os recursos disponíveis na nuvem, existem vários tipos de sistemas de orquestração de contêineres~\citep{Kubernetes,Mesos,Swarm}. Esses sistemas fornecem várias operações que facilitam a administração das aplicações, sendo algumas delas:
+Para fazer a interface entre o desenvolvedor de contêineres e os recursos disponíveis na nuvem, existem vários tipos de sistemas de gerenciamento dinâmico de recursos, chamados de serviços de orquestração de contêineres~\citep{Kubernetes,Mesos,Swarm}. Esses sistemas fornecem várias operações que facilitam a administração das aplicações, sendo algumas delas:
 \begin{itemize}
     \item Fácil visualização de \textit{logs} e descrição do uso de recursos de cada contêiner.
     \item Configuração individual do uso de recursos por cada contêiner.
@@ -572,7 +572,7 @@ Para fazer a interface entre o desenvolvedor de contêineres e os recursos dispo
 \label{sec:cloud-native-systems}
 Sistemas nativos de nuvem podem ser definidos como sistemas que cumprem os  requisitos de auto-escalabilidade, ou seja, o sistema é capaz de regular seu próprio uso de recursos computacionais, e tolerância a falhas no ambiente de execução, ou seja, o sistema é capaz de se recuperar de quaisquer falhas a um estado de funcionamento normal~\citep{garrison2017cloud,gilbert2018cloud}. Estes dois requisitos são fundamentais para o aproveitamento do ambiente de nuvem. A tolerância a falhas é necessária pois nenhuma nuvem garante um ambiente de execução sem falhas de processamento ou comunicação a qualquer momento, logo os sistemas devem ser construídos com mecanismos de recuperação para estes tipos de falhas. A auto-escalabilidade é necessária para a modulação do uso de recursos computacionais a somente o necessário para o correto funcionamento do sistema, reduzindo custos computacionais. Como a maioria dos ambientes de nuvem cobram por quantidade e tempo de uso de cada recurso, uma economia de recursos computacionais normalmente significa um economia financeira.
 
-Para satisfazer estes dois requisitos, é importante que a especificação da infraestrutura do ambiente de execução seja descrita em código, capaz de ser lido por ferramentas que realizam a orquestração de recursos computacionais da nuvem, como é o caso dos sistemas de orquestração de contêineres. Dessa forma, um serviço em falha pode ser removido e re-instanciado automaticamente utilizando a mesma quantidade de recursos computacionais de forma automatizada ou um serviço em sobrecarga pode ter uma segunda instância criada com as mesmas especificações de infraestrutura de ambiente. 
+Para satisfazer estes dois requisitos, é importante que a especificação da infraestrutura do ambiente de execução seja descrita em código, capaz de ser lido por ferramentas que realizam o gerenciamento dinâmico de recursos computacionais da nuvem, como é o caso dos sistemas de orquestração de contêineres. Dessa forma, um serviço em falha pode ser removido e re-instanciado automaticamente utilizando a mesma quantidade de recursos computacionais de forma automatizada ou um serviço em sobrecarga pode ter uma segunda instância criada com as mesmas especificações de infraestrutura de ambiente. 
 
 Outras práticas normalmente associadas ao desenvolvimento de sistemas nativos de nuvem é o uso de ferramentas de isolamento de ambiente de execução, como contêineres, para o desenvolvimento de cada um dos serviços que compõe o sistema. Dessa forma, cada parte do sistema pode ser desenvolvida na linguagem de programação mais apropriada para o serviço proposto. Além disso, sistemas nativos de nuvem também são caracterizados por serem desenvolvidos levando em conta o uso, nos casos apropriados, dos serviços providos pela própria plataforma de nuvem, como FaaS.
 

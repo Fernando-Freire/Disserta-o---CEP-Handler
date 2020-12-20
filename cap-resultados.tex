@@ -284,6 +284,13 @@ A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, s
 
 
 
+Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga forte. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento. É importante lembrar que uma instância nova só é requisitada por sobrecarga forte quando o número de instância em sobrecarga forte é maior que o número de instâncias que não atingiram nenhum tipo de sobrecarga. Essa solução é adotada pois a realocação de efeitos é realizada de forma sequencial, sendo que uma instância não pode aceitar a realocação de tipos de eventos de duas instâncias distintas ao mesmo tempo, como descrito na Seção \ref{sec:cepworker}.
+
+Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. Como os intervalos de tempo em que cada instância ficou em sobrecarga forte foram maiores, usando o algoritmo de balanceamento de carga por Similaridade de Entrada, em algumas execuções haviam três instâncias de \texttt{CEP Worker} em sobrecarga ao mesmo tempo, levando a criação de três instâncias adicionais. No entanto, a diferença da média do tempo de uso somado de todas as instâncias foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
+
+%-----falar da aceitação sequencial de eventos e diminuição do tempo concomitante de intervalos de tempo em sobregcarga forte
+
+
 
 %A média de tempo de uso de recursos das execuções usando o algoritmo de Similaridade de Entrada é maior que a média dos experimentos usando o algoritmo de Uso de Estado, no entanto os seus desvios padrão permitem dizer que as duas médias são similares.
 %\todo[inline]{Fernando, creio que não é correto fazer a comparação das médias da forma como você fez, olhando para o DP. Seria preciso usar algum tipo de teste de hipóteses, como o teste t, para a comparação de amostras independentes (também chamadas de amostras não-pareadas). Veja exemplos em \url{http://www.leg.ufpr.br/lib/exe/fetch.php/disciplinas:ce001:bioestatistica_testes_t_para_comparacao_de_medias_de_dois.pdf} e \url{https://www.ime.usp.br/~sandoval/mae5755/comparacao_2medias\_\%20independentes.pdf}. Acho que não vai dar tempo de verificar isso até o dia 23. Mas anotei isso só pra vc lembrar de estudar sobre isso depois, para responder possíveis questionamentos da banca. }
@@ -321,6 +328,86 @@ A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, s
 
 
 %------------------------------------------------------
+
+
+
+\section{Número de Eventos Detectados}
+\label{sec:number_of_detected_events}
+
+
+A Tabela \ref{Tab:events_total_and_avg} mostra o número de eventos detectados para cada uma das execuções do experimento, bem como a média e o desvio padrão para as execuções de cada um dos algoritmos de balanceamento de carga. A média do número de eventos detectados com o uso do algoritmo de balanceamento por Uso de Estado não foi expressivamente diferente da média de eventos detectados com o uso do algoritmo de balanceamento por Similaridade de Entrada. %Considerando a média e o intervalo de desvio padrão, eles detectaram um número de eventos similar\todo{Aqui vale o mesmo comentário que fiz na comparação de médias anterior: o mais correto seria usar um teste estatístico}.
+
+
+%\todo[inline]{É preciso ter consistência. O capítulo quase todo referencia os algoritmos pelo nome (inclusive nas figuras e tabelas). Mas aqui (e em alguns outros poucos lugares) você referenciou pelo número. Use somente o nome em todo lugar, ou use somente o número em todo lugar. Mas não misture os dois estilos de referência aos algoritmos, senão confunde o leitor.}
+%\todo[inline]{Ao longo do capítulo, a uma outra inconsistência relacionada aos algs. Em algumas figuras e tabelas, a ordem de apresentação dos resultados é primeiro para o Alg por Uso de Estado e depois para o Similaridade. Em outras, a ordem é a inversa. Isso também confunde bastante. É preciso adotar uma só ordem.}
+
+
+\begin{table}[h!]
+\centering
+\caption{Número de eventos detectados em cada execução do experimento.}
+\begin{tabular}{rr}
+\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
+\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
+     1.703.200   &    1.706.853     \\
+           1.705.963    & 1.707.100 \\
+       1.704.298    &   1.703.770   \\
+        1.709.012    &  1.703.887  \\
+            1.707.569  &  1.704.115 \\
+\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}}\\
+       1.706.008,4   &  1.705.145  \\
+\multicolumn{1}{l}{\textbf{Desvio Padrão}}& \multicolumn{1}{l}{\textbf{Desvio Padrão}} \\
+ 2.359,65   &  1.678,79 
+\end{tabular}
+\label{Tab:events_total_and_avg}
+\end{table}
+%\todo[inline]{Formate mais uniformemente as tabelas desta seção. Destaque os nomes com negritos, para melhorar a legibilidade. Coloque pontos para separar os milhares dos números.}
+%Embora isso não possa ser visto na tabela, foi verificado que a diferença entre o número de eventos primários que foram enviados como entrada e depois coletados na saída do sistema em cada experimento foi nula. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
+
+A principal causa das diferenças no número de eventos detectados fica mais clara ao olhar para os resultados separados por categoria de tipo de evento para cada execução do experimento. As tabelas \ref{Tab:events_SU_and_avg} e \ref{Tab:events_IS_and_avg} mostram que não há diferença no número de eventos coletados para tipos de evento de cálculo de velocidade instantânea e de filtro de velocidade. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
+
+A diferença só é expressa nos eventos obtidos a partir de tipos de eventos que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de eventos faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de eventos em diferentes execuções.
+%\todo[inline]{Essa explicação dada na parte final do parágrafo acima não parece correta. Não é a "distribuição de latências desigual ao longo da execução" de um experimento que causa a diferença de qtde de detecções em duas execuções diferentes. O que causa a diferença na qtde é a diferença das distribuições das latências das execuções, certo? }
+
+
+
+
+
+\begin{table}[h!]
+\centering
+\caption{Número de eventos detectados por categoria de tipo de evento em cada execução do experimento com o algoritmo de balanceamento por Uso de Estado.}
+\begin{tabular}{lrrrrr}
+          & \multicolumn{1}{l}{\textbf{vf}} & \multicolumn{1}{l}{\textbf{vi}} & \multicolumn{1}{l}{\textbf{vel}} & \multicolumn{1}{l}{\textbf{BusB}} & \multicolumn{1}{l}{\textbf{corr}}  \\
+  & 1.434.615 & 80.528 & 26.613  & 138.452 & 26.645   \\
+  & 1.434.615 & 80.530 & 26.608 & 138.667  & 26.680      \\
+  & 1.434.615 & 80.529   & 26.541    & 135.752    & 26.333                     \\
+  & 1.434.615 & 80.529   & 26.534    & 135.860    & 26.349                     \\
+ & 1.434.615 & 80.528   & 26.563    & 136.007    & 26.402                     \\
+\textbf{Média}      & 1.434.615 & 80.528,8 & 26.571,8  & 136.947,6  & 26.481,8                   \\
+\textbf{Desvio Padrão}   & 0       & 0,8367      & 36,95        & 1476,19         & 167,38         
+\end{tabular}
+\label{Tab:events_SU_and_avg}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\caption{Número de eventos detectados por categoria de tipo de evento em cada execução do experimento com o algoritmo de balanceamento por Similaridade de Entrada.}
+\begin{tabular}{lrrrrr}
+          & \multicolumn{1}{l}{\textbf{vf}} & \multicolumn{1}{l}{\textbf{vi}} & \multicolumn{1}{l}{\textbf{vel}} & \multicolumn{1}{l}{\textbf{BusB}} & \multicolumn{1}{l}{\textbf{corr}}  \\
+  & 1.434.615 & 80.529   & 26.522    & 135.246    & 26.288                     \\
+  & 1.434.615 & 80.528   & 26.585    & 137.671    & 26.564                     \\
+  & 1.434.615 & 80.528   & 26.537    & 136.227    & 26.391                     \\
+  & 1.434.615 & 80.529   & 26.718    & 140.277    & 26.873                     \\
+ & 1.434.615 & 80.530   & 26.644    & 139.071    & 26.709                     \\
+\textbf{Média}          & 1.434.615 & 80.528,8 & 26.601,2  & 137.698,4  & 26.565                     \\
+\textbf{Desvio Padrão}           & 0       & 0,8367      & 80,83        & 2.044,09         & 235,91         
+\end{tabular}
+\label{Tab:events_IS_and_avg}
+\end{table}
+
+
+Ao observar, como exemplo de tipo de evento que não utiliza janela temporal, a diferença entre o valor máximo e mínimo do número de eventos dos tipos de filtro de velocidade (\textbf{vi}), verifica-se que foram coletados no máximo 80.530 e no mínimo 80.528 eventos, sendo a diferença de apenas 2 eventos, ou seja, de 0,00002\%. Isso é um indício de que não houve perda significativa de eventos no sistema por parte de transmissão entre instâncias de \texttt{CEP Worker} ou por outros mecanismos do experimento.
+
 
 
 
@@ -429,86 +516,6 @@ As figuras que mostram a variação de vazão de todas as execuções do experim
 %, o número geral de eventos detectados e a vazão do sistema são afetados pela latência do sistema.
 
 \newpage
-\section{Número de Eventos Detectados}
-\label{sec:number_of_detected_events}
-
-
-A Tabela \ref{Tab:events_total_and_avg} mostra o número de eventos detectados para cada uma das execuções do experimento, bem como a média e o desvio padrão para as execuções de cada um dos algoritmos de balanceamento de carga. A média do número de eventos detectados com o uso do algoritmo de balanceamento por Uso de Estado não foi expressivamente diferente da média de eventos detectados com o uso do algoritmo de balanceamento por Similaridade de Entrada. %Considerando a média e o intervalo de desvio padrão, eles detectaram um número de eventos similar\todo{Aqui vale o mesmo comentário que fiz na comparação de médias anterior: o mais correto seria usar um teste estatístico}.
-
-
-%\todo[inline]{É preciso ter consistência. O capítulo quase todo referencia os algoritmos pelo nome (inclusive nas figuras e tabelas). Mas aqui (e em alguns outros poucos lugares) você referenciou pelo número. Use somente o nome em todo lugar, ou use somente o número em todo lugar. Mas não misture os dois estilos de referência aos algoritmos, senão confunde o leitor.}
-%\todo[inline]{Ao longo do capítulo, a uma outra inconsistência relacionada aos algs. Em algumas figuras e tabelas, a ordem de apresentação dos resultados é primeiro para o Alg por Uso de Estado e depois para o Similaridade. Em outras, a ordem é a inversa. Isso também confunde bastante. É preciso adotar uma só ordem.}
-
-
-\begin{table}[h!]
-\centering
-\caption{Número de eventos detectados em cada execução do experimento.}
-\begin{tabular}{rr}
-\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
-\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
-     1.703.200   &    1.706.853     \\
-           1.705.963    & 1.707.100 \\
-       1.704.298    &   1.703.770   \\
-        1.709.012    &  1.703.887  \\
-            1.707.569  &  1.704.115 \\
-\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}}\\
-       1.706.008,4   &  1.705.145  \\
-\multicolumn{1}{l}{\textbf{Desvio Padrão}}& \multicolumn{1}{l}{\textbf{Desvio Padrão}} \\
- 2.359,65   &  1.678,79 
-\end{tabular}
-\label{Tab:events_total_and_avg}
-\end{table}
-%\todo[inline]{Formate mais uniformemente as tabelas desta seção. Destaque os nomes com negritos, para melhorar a legibilidade. Coloque pontos para separar os milhares dos números.}
-%Embora isso não possa ser visto na tabela, foi verificado que a diferença entre o número de eventos primários que foram enviados como entrada e depois coletados na saída do sistema em cada experimento foi nula. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
-
-A principal causa das diferenças no número de eventos detectados fica mais clara ao olhar para os resultados separados por categoria de tipo de evento para cada execução do experimento. As tabelas \ref{Tab:events_SU_and_avg} e \ref{Tab:events_IS_and_avg} mostram que não há diferença no número de eventos coletados para tipos de evento de cálculo de velocidade instantânea e de filtro de velocidade. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
-
-A diferença só é expressa nos eventos obtidos a partir de tipos de eventos que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de eventos faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de eventos em diferentes execuções.
-%\todo[inline]{Essa explicação dada na parte final do parágrafo acima não parece correta. Não é a "distribuição de latências desigual ao longo da execução" de um experimento que causa a diferença de qtde de detecções em duas execuções diferentes. O que causa a diferença na qtde é a diferença das distribuições das latências das execuções, certo? }
-
-
-
-
-
-\begin{table}[h!]
-\centering
-\caption{Número de eventos detectados por categoria de tipo de evento em cada execução do experimento com o algoritmo de balanceamento por Uso de Estado.}
-\begin{tabular}{lrrrrr}
-          & \multicolumn{1}{l}{\textbf{vf}} & \multicolumn{1}{l}{\textbf{vi}} & \multicolumn{1}{l}{\textbf{vel}} & \multicolumn{1}{l}{\textbf{BusB}} & \multicolumn{1}{l}{\textbf{corr}}  \\
-  & 1.434.615 & 80.528 & 26.613  & 138.452 & 26.645   \\
-  & 1.434.615 & 80.530 & 26.608 & 138.667  & 26.680      \\
-  & 1.434.615 & 80.529   & 26.541    & 135.752    & 26.333                     \\
-  & 1.434.615 & 80.529   & 26.534    & 135.860    & 26.349                     \\
- & 1.434.615 & 80.528   & 26.563    & 136.007    & 26.402                     \\
-\textbf{Média}      & 1.434.615 & 80.528,8 & 26.571,8  & 136.947,6  & 26.481,8                   \\
-\textbf{Desvio Padrão}   & 0       & 0,8367      & 36,95        & 1476,19         & 167,38         
-\end{tabular}
-\label{Tab:events_SU_and_avg}
-\end{table}
-
-
-\begin{table}[h!]
-\centering
-\caption{Número de eventos detectados por categoria de tipo de evento em cada execução do experimento com o algoritmo de balanceamento por Similaridade de Entrada.}
-\begin{tabular}{lrrrrr}
-          & \multicolumn{1}{l}{\textbf{vf}} & \multicolumn{1}{l}{\textbf{vi}} & \multicolumn{1}{l}{\textbf{vel}} & \multicolumn{1}{l}{\textbf{BusB}} & \multicolumn{1}{l}{\textbf{corr}}  \\
-  & 1.434.615 & 80.529   & 26.522    & 135.246    & 26.288                     \\
-  & 1.434.615 & 80.528   & 26.585    & 137.671    & 26.564                     \\
-  & 1.434.615 & 80.528   & 26.537    & 136.227    & 26.391                     \\
-  & 1.434.615 & 80.529   & 26.718    & 140.277    & 26.873                     \\
- & 1.434.615 & 80.530   & 26.644    & 139.071    & 26.709                     \\
-\textbf{Média}          & 1.434.615 & 80.528,8 & 26.601,2  & 137.698,4  & 26.565                     \\
-\textbf{Desvio Padrão}           & 0       & 0,8367      & 80,83        & 2.044,09         & 235,91         
-\end{tabular}
-\label{Tab:events_IS_and_avg}
-\end{table}
-
-
-Ao observar, como exemplo de tipo de evento que não utiliza janela temporal, a diferença entre o valor máximo e mínimo do número de eventos dos tipos de filtro de velocidade (\textbf{vi}), verifica-se que foram coletados no máximo 80.530 e no mínimo 80.528 eventos, sendo a diferença de apenas 2 eventos, ou seja, de 0,00002\%. Isso é um indício de que não houve perda significativa de eventos no sistema por parte de transmissão entre instâncias de \texttt{CEP Worker} ou por outros mecanismos do experimento.
-
-
-
-
 
 
 \section{Latência}
@@ -614,11 +621,16 @@ A vazão e o número de eventos detectados pelo experimento são dependentes da 
 
 %ou seja, só dependem da velocidade de emissão de eventos pelo produtor de eventos em uso .\todo{O que vem depois do "ou seja",  está errado. Primeiro porque não diz a mesma coisa dita na primeira parte da frase. Segundo porque, se não tem janela, a qtde detectada NÃO muda com a velocidade de entrada. } 
 
-A o tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento
+O tempo médio de uso de recursos computacionais pelas instâncias de \texttt{CEP Worker} em cada execução do experimento não foi expressivamente diferente para o dois algoritmos de balanceamento de carga, sendo de  $1.049,2 \pm 4,51$ minutos para o Algoritmo de balanceamento por Similaridade de Entrada e $1.045,56 \pm 5,04$ minutos para o algoritmo de balanceamento por Uso de Estado. Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga. 
 
-Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava minimizar o número de eventos entrando em cada instância em sobrecarga forte, como descrito na Seção \ref{sec:cepworker}. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. No entanto, a diferença em tempo de uso das instâncias médio foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
+%Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento
 
-\todo[inline]{Conforme já conversamos, essa explicação é incorreta, porque o alg não faz essa minimização. O que ele faz é, na escolha do tipo de evento para realocação, privilegiar os tipos que não causam ou que causam menos a duplicação de fluxos de entrada}.  
+%Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas, como descrito na Seção \ref{sec:cepworker}. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. No entanto, a diferença em tempo de uso das instâncias médio foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
+
+%\todo[inline]{Conforme já conversamos, essa explicação é incorreta, porque o alg não faz essa minimização. O que ele faz é, na escolha do tipo de evento para realocação, privilegiar os tipos que não causam ou que causam menos a duplicação de fluxos de entrada}.  
+
+
+%Portanto, no cenário usado no experimento, o uso de um algoritmo de balanceamento de carga não foi expressivamente mais eficaz que o outro na economia de recursos computacionais.
 
 %\todo[inline]{Ao longo do capítulo todo, você escreveu coisas como "expressivamente diferente" e "diferença expressiva". Anote aí que alguém da banca de defesa vai te perguntar o que significa "expressivo" nesse contexto.  ;)  Quando uma diferença seria considerada expressiva no contexto do seu experimento?  - Eu disse que nenhum é expressiva, pois é uma das unicas afirmações que eu posso fazer. Não Expressiva significando que não é intuitivamente e visivelvelmente diferente, ao contrario de uma diferença significativa que eu teria que provar usando os testes de estatista. Eu não sei que outro tipo de analise eu posso fazer sobre os resultados.}
 

@@ -2,8 +2,8 @@
 \chapter{Arquitetura para a Distribuição do Processamento de Eventos Complexos}
 \label{cap:arquitetura}
 
-Com o objetivo de criar um sistema para o processamento de dados de cidades inteligentes em tempo real, este trabalho de mestrado propõe a criação de uma arquitetura de microsserviços para a execução e distribuição do processamento de eventos complexos, representada na \autoref{fig:system_architecture}. Esta arquitetura é separada em quatro microsserviços que funcionam em conjunto para o executar todas as funções. A arquitetura foi desenhada com o intuito de complementar a Plataforma InterSCity de cidades inteligentes, recebendos dados em tempo real dela. %Estes dados são transformados em eventos, que podem ser usados como entrada para tipos de eventos definidos pelo usuário. Para um usuário ser notificado da ocorrência de um evento, ele pode cadastrar um \textit{webhooks}, uma URL para ser chamada por API REST, o sistema enviará o evento em formato JSON para o usuário por método POST
-Essa arquitetura, chamada \texttt{CEP Handler}, consiste em quatro microsserviços: \texttt{CEP Cataloger} (Seção \ref{sec:cepcataloger}), \texttt{Event Composer} (Seção \ref{sec:eventcomposer}), \texttt{Event Sender} (Seção  \ref{sec:eventsender}) e \texttt{CEP Worker} (Seção \ref{sec:cepworker}), e utiliza mais dois microsserviços prontos para realizar sua funções: um sistema gerenciador de bancos de dados chave-valor(Seção  \ref{sec:key-value-sgbd}) e um sistema de mensageria (Seção \ref{sec:messaging-system}). Todos esses microsserviços operam sob um serviço de orquestração de ambientes de nuvem.
+Com o objetivo de criar um sistema para o processamento de dados de cidades inteligentes em tempo real, este trabalho de mestrado propõe a criação de uma arquitetura de microsserviços para a execução e distribuição do processamento de eventos complexos, representada na \autoref{fig:system_architecture}. Esta arquitetura é separada em quatro microsserviços que funcionam em conjunto para executar todas as funções. A arquitetura foi desenhada com o intuito de complementar a Plataforma InterSCity de cidades inteligentes, recebendos dados em tempo real dela. %Estes dados são transformados em eventos, que podem ser usados como entrada para tipos de eventos definidos pelo usuário. Para um usuário ser notificado da ocorrência de um evento, ele pode cadastrar um \textit{webhooks}, uma URL para ser chamada por API REST, o sistema enviará o evento em formato JSON para o usuário por método POST
+Essa arquitetura, chamada \texttt{CEP Handler}, consiste em quatro microsserviços: \texttt{CEP Cataloger} (Seção \ref{sec:cepcataloger}), \texttt{Event Composer} (Seção \ref{sec:eventcomposer}), \texttt{Event Sender} (Seção  \ref{sec:eventsender}) e \texttt{CEP Worker} (Seção \ref{sec:cepworker}), e utiliza mais dois microsserviços prontos para realizar sua funções: um sistema gerenciador de bancos de dados chave-valor(Seção  \ref{sec:key-value-sgbd}) e um sistema de mensageria (Seção \ref{sec:messaging-system}). Todos esses microsserviços operam sob um serviço de gerenciamento dinâmico de recursos na nuvem.
 
 
 %\todo[inline]{Fernando, este é o capítulo no qual você começa a apresentar sua solução. Antes sair explicando cada microsserviços separadamente, você primeiro precisa retomar aqui qual é o problema alvo do seu trabalho e o seus objetivos quanto a ele, e depois dar uma visão geral (de alto nível) da solução que você está propondo. Só depois disso você pode começar a detalhar os microsserviços, caso contrário o leitor do texto já começará o capítulo 4 perdido! Sugiro que você apresente a figura da arquitetura aqui no começo do capítulo. E acho que dá pra aproveitar aqui trechos que foram escritos no artigo do ERAD.}
@@ -33,13 +33,13 @@ O microsserviço \texttt{CEP Cataloger} é responsável por prover uma API RESTf
 \section{Event Composer} \label{sec:eventcomposer}
 O \texttt{Event Composer} é responsável por transformar os dados em tempo real vindos da plataforma InterSCity em eventos de entrada primários, além de ser responsável por cadastrar tipos de eventos de entrada primários. A plataforma InterSCity utiliza o conceito de Recurso para definir objetos espalhados pela cidade que funcionam como sensores ou atuadores e o conceito de Capacidade como os tipos de medições que os Recursos com capacidades sensoriais podem coletar. Quando um usuário cadastra um novo tipo de evento no \texttt{CEP Handler} que utiliza diretamente os dados da plataforma como fonte, ele precisa passar quais Recursos e quais Capacidades desses recursos medem os dados em tempo real%\todo{"Recurso" e "capacidade" são conceitos da plataforma do InterSCity. Para que o leitor possa entender este trecho, você precisa explicar a plataforma antes.}
 . O \texttt{Event Composer} cria um tipo de evento primário, que contém como campos de atributos todos os dados da capacidade e recursos especificados. 
-Como a plataforma InterSCity oferece um transmite internamente os dados em tempo real por meio de um \textit{broker} de mensagens, o \texttt{Event Composer} se inscreve%\todo{se inscreve onde? precisar explicar que a plataforma interscity usa um broker de mensagens, onde publica os dados dos recursos em diferentes tópicos}
+Como a plataforma InterSCity transmite internamente os dados em tempo real por meio de um \textit{broker} de mensagens, o \texttt{Event Composer} se inscreve%\todo{se inscreve onde? precisar explicar que a plataforma interscity usa um broker de mensagens, onde publica os dados dos recursos em diferentes tópicos}
 para receber os dados das capacidades em tempo real na plataforma. Quando estes dados chegam, ele adiciona as informações dos recursos que originaram os dados e converte-os em formato de evento para que o \texttt{CEP Worker} consiga reconhecer e processar.
 %MENCIONAR QUE FOI DESENVOLVIDO PELA UFBA - INSTERSCITY 
 
 \section{Sistema de Mensageria}
 \label{sec:messaging-system}
-Para o envio de dados em tempo real entre os microsserviços do sistema \texttt{CEP Handler}, foi escolhido usar um sistema de mensageria do tipo \textit{broker} de mensagens. Um \textit{broker} de mensagens é definido como um sistema que centraliza o envio e recebimento de mensagens entre serviços, permitindo que qualquer serviço se inscreva para receber mensagens de qualquer outro serviço, no estilo de comunicação assíncrona , como descrito em \autoref{sec:servicecom}. Todas os envios de eventos entre os microsserviços desenvolvidos para o sistema \textit{CEP Handler} é feita de forma assíncrona por meio do \textit{broker}. 
+Para o envio de dados em tempo real entre os microsserviços do sistema \texttt{CEP Handler}, foi escolhido usar um sistema de mensageria do tipo \textit{broker} de mensagens. Um \textit{broker} de mensagens é definido como um sistema que centraliza o envio e recebimento de mensagens entre serviços, permitindo que qualquer serviço se inscreva para receber mensagens de qualquer outro serviço, no estilo de comunicação assíncrona , como descrito em \autoref{sec:servicecom}. Todas os envios de eventos entre os microsserviços desenvolvidos para o sistema \textit{CEP Handler} são feitos de forma assíncrona por meio do \textit{broker}. 
 
 
 \section{Sistema Gerenciador de Banco de Dados Chave-Valor}
@@ -68,6 +68,7 @@ Diferentemente do \texttt{CEP Worker}, os outros três microsserviços do sistem
 
 
 %A \autoref{fig:system_architecture} ilustra a arquitetura do sistema \texttt{CEP Handler}. Conforme já descrito, o microsserviço \texttt{CEP Cataloger} provê uma API RESTful para que o usuário possa interagir com o sistema. Quando um novo tipo de evento que usa dados da plataforma InterSCity é cadastrado, o \texttt{CEP Cataloger} envia uma chamada para o \texttt{Event Composer} criar o tipo de evento de entrada, armazená-lo no banco de dados chave-valor do sistema e começar a receber os dados da plataforma em tempo real, convertendo-os em eventos de entrada. Um \texttt{CEP Worker} consulta o banco de dados chave-valor, toma ciência da criação de um novo tipo de evento, inicia o processo de detecção dele e se inscreve no \textit{broker} para receber os eventos do \texttt{Event Composer} ou de outros \texttt{CEP Workers} para que os eventos comecem a ser detectados, consultando os metadados no banco de dados chave-valor, como nome do tipo de evento e definição. O \texttt{Event Sender} consulta o banco de dados chave-valor para encontrar todos \textit{webhooks} cadastrados no sistema e se inscreve no \textit{broker} para receber os eventos dos tipos que têm \textit{webhooks} associados. Quando estes chegam ao \texttt{Event Sender}, ele converte os eventos em chamadas POST e as envia para os endereços URL associados. 
+\subsection{Cadastro de novos tipos de evento}
 Os passos para o cadastro de novos tipos de eventos podem ser descritos na seguinte ordem:
 
 \begin{enumerate}
@@ -88,7 +89,7 @@ Os passos para o cadastro de novos tipos de eventos podem ser descritos na segui
 \subsection{Funcionamento do CEP Worker}
 \label{sub-sec:cep-worker-func}
 
-O \texttt{CEP Worker} é o principal microsserviço do sistema \texttt{CEP Handler}. Além de ser responsável pelo processamento dos tipos de eventos, ele tem a capacidade de auto-escalabilidade horizontal, a partir da criação de novas instâncias de si próprio. Para distribuir o processamento de eventos entre as instâncias, o \texttt{CEP Worker} utiliza uma série de técnicas para selecionar qual tipo de evento será realocado, como é feita a realocação do tipo de evento sem perda de detecção a partir dos eventos de entrada e como é feito o monitoramento do uso de recursos. O \texttt{CEP Worker} utiliza o SGBD chave-valor para compartilhar todos os dados que são utilizados por mais de uma instância, como meta-dados de tipos de eventos, informações sobre a realocação de tipos de eventos, etc. O disparo da criação de novas instâncias do \texttt{CEP Worker} é feito a partir do monitoramento de recursos (CPU e memória) utilizados por cada instância. São definidos dois limites de sobrecarga, um limite fraco, o qual caso atingido a instância para o cadastramento de novos tipos de eventos para processamento e mantêm o processamento dos tipos de eventos já cadastrados e um limite forte, que dispara a realocação de tipos de eventos. A partir do momento em que é iniciada, cada instância de nova do \texttt{CEP Worker} recebe um identificador e inicia três \textit{threads}, cada uma com uma responsabilidade distinta. 
+O \texttt{CEP Worker} é o principal microsserviço do sistema \texttt{CEP Handler}. Além de ser responsável pelo processamento dos tipos de eventos, ele tem a capacidade de auto-escalabilidade horizontal, a partir da criação de novas instâncias de si próprio. Para distribuir o processamento de eventos entre as instâncias, o \texttt{CEP Worker} utiliza uma série de técnicas para selecionar qual tipo de evento será realocado, como é feita a realocação do tipo de evento sem perda de detecção a partir dos eventos de entrada e como é feito o monitoramento do uso de recursos. O \texttt{CEP Worker} utiliza o SGBD chave-valor para compartilhar todos os dados que são utilizados por mais de uma instância, como meta-dados de tipos de eventos, informações sobre a realocação de tipos de eventos, etc. O disparo da criação de novas instâncias do \texttt{CEP Worker} é feito a partir do monitoramento de recursos (CPU e memória) utilizados por cada instância. São definidos dois limites de sobrecarga, um limite fraco e outro forte. Quando o limite fraco é atingido, a instância para o cadastramento de novos tipos de eventos para processamento e mantêm o processamento dos tipos de eventos já cadastrados. Quando o limite forte é atingido a instância inicia o processo de realocação dos tipos de evento. A partir do momento em que é iniciada, cada instância de nova do \texttt{CEP Worker} recebe um identificador e inicia três \textit{threads}, cada uma com uma responsabilidade distinta. 
 
 %\todo[inline]{Aqui, é bom começar a seção com algumas explicações mais gerais sobre os Workers, para a ajudar o leitor a entender mais facilmente a descrição "mais baixo nível" que vem a seguir. É bom explicar que os workers são auto-escaláveis e responsáveis pelo balanceamento da carga, que se comunicam por meio do banco de dados, etc. Explicar também  que o sistema cresce quando o consumo de recursos em todos os workers fica acima de um limite pré-definido,  e diminui quando ... Dizer que há dois limites de sobrecargas considerados num worker: um para impedir novas alocação de tipos no worker (o fraco) e outro para iniciar a redistribuição de tipos já alocados nele (forte). }
 
@@ -97,33 +98,33 @@ O \texttt{CEP Worker} é o principal microsserviço do sistema \texttt{CEP Handl
    
 \item A \textit{thread} de Aceitação é responsável pelo cadastro de eventos no sistema. Quando é iniciada, ela verifica, a partir do identificador, se a instância de \texttt{CEP Worker} é nova ou foi terminada previamente, por motivo de falha no ambiente de execução. Caso a instância seja nova, a \textit{thread} procura por tipos de eventos prontos para serem realocados de outras instâncias de \texttt{CEP Worker} e inicia o processo de aceitar a realocação. Este processo se repete até que o percentual de uso da CPU e memória disponíveis para a instância atinja um limite de sobrecarga fraca. Se não for atingida a sobrecarga fraca depois de aceitar todas as realocações disponíveis, a instância inicia o cadastro de tipos de eventos recém registrados no sistema até atingir o limite de sobrecarga fraca. Caso a instância tenha sido terminada indevidamente previamente, a \textit{thread} inicia o recadastramento dos tipos de eventos  anteriormente cadastrados até atingir o limite de sobrecarga fraca.
 
-Independentemente se a instância vêm de uma recuperação de falhas de execução ou foi recém criada, ao atingir o limite de sobrecarga fraca e armazena esta informação no SBGD chave valor. A instância verifica se ainda existem tipos de eventos recém registrados que ainda não foram cadastrados em nenhuma instância e se todas as instâncias também estão em sobrecarga fraca. Se isto ocorrer, ela requisita a criação de uma nova instância de \texttt{CEP Worker}. A especificação para a quantidade de cada recurso computacional a ser usado por uma nova instância é fixada no mecanismo de requisição de novas instâncias ao sistema de orquestração em nuvem. Depois disso, a \textit{thread} dorme por um período de tempo fixo (definido por variável de ambiente).
+Independentemente se a instância vêm de uma recuperação de falhas de execução ou foi recém criada, ao atingir o limite de sobrecarga fraca e armazena esta informação no SBGD chave valor. A instância verifica se ainda existem tipos de eventos recém registrados que ainda não foram cadastrados em nenhuma instância e se todas as instâncias também estão em sobrecarga fraca. Se isto ocorrer, ela requisita a criação de uma nova instância de \texttt{CEP Worker}. A especificação para a quantidade de cada recurso computacional a ser usado por uma nova instância é fixada no mecanismo de requisição de novas instâncias ao serviço de gerenciamento dinâmico de recursos da nuvem. Depois disso, a \textit{thread} dorme por um período de tempo fixo (definido por variável de ambiente).
 A \textit{thread} verifica periodicamente a sobrecarga e, caso ela esteja abaixo do limite de sobrecarga fraca, ela repete os passos descritos anteriormente até atingir a sobrecarga fraca ou até atingir o ponto de dormir novamente. Quando um tipo de evento é cadastrado em uma instância do \texttt{CEP Worker} pela \textit{thread} de Aceitação, a instância se inscreve automaticamente para receber os eventos dos tipos de eventos de entrada desse tipo de evento no \textit{broker} de mensagens.
 
 
 %\todo[inline]{Seria melhor que esse comportamento fosse definido na forma de um algoritmo, ficaria mais legível.}
 
 \item A \textit{thread} de Sobrecarga monitora periodicamente o uso de recursos do sistema. Ela inicia a realocação de tipos de eventos cadastrados na instância caso o uso atinja um limite de sobrecarga forte, ou dorme por um período de tempo pré-definido no caso contrário. A duração desse período e o limite de sobrecarga forte podem ser definidos ao iniciar a execução do sistema.
-Caso esteja em sobrecarga forte, a instância escolhe o tipo de evento que será realocado a partir de dois algoritmos de balanceamento de carga, que serão descritos na Seção \ref{sec:loadDistribution}. Além disso, essa \textit{thread} também monitora se o número de instâncias em sobrecarga forte é maior que o número de instâncias que não estão em nenhuma sobrecarga. Se esse for o caso, ela requisita e criação de uma nova instância de \texttt{CEP Worker} para o serviço de orquestração de nuvem, utilizando a especificação fixada de recursos computacionais de cada instância. 
+Caso esteja em sobrecarga forte, a instância escolhe o tipo de evento que será realocado a partir de dois algoritmos de balanceamento de carga, que serão descritos na Seção \ref{sec:loadDistribution}. Além disso, essa \textit{thread} também monitora se o número de instâncias em sobrecarga forte é maior que o número de instâncias que não estão em nenhuma sobrecarga. Se esse for o caso, ela requisita e criação de uma nova instância de \texttt{CEP Worker} para o serviço de gerenciamento dinâmico de recursos na nuvem, utilizando a especificação fixada de recursos computacionais de cada instância. 
 
 
-\item A \textit{thread} de Subcarga também monitora periodicamente o uso de recursos do sistema e armazena no banco de dados quando o limite é atingido. Caso a instância seja a com menor uso de recursos entre todas em subcarga, a \textit{thread} inicia a realocação de todos os tipos de eventos cadastrados na instância. Caso todos os tipos de eventos forem realocados, a instância requisita sua remoção ao serviço de orquestração de recursos na nuvem. O intervalo de tempo entre uma verificação e a próxima e o limite de subcarga podem ser definidos por variáveis de ambiente ao iniciar o sistema. Isso garante que instâncias que estão subutilizadas possam ser removidas.
+\item A \textit{thread} de Subcarga também monitora periodicamente o uso de recursos do sistema e armazena no banco de dados quando o limite é atingido. Caso a instância seja a com menor uso de recursos entre todas em subcarga, a \textit{thread} inicia a realocação de todos os tipos de eventos cadastrados na instância. Caso todos os tipos de eventos forem realocados, a instância requisita sua remoção ao serviço de gerenciamento dinâmico de recursos na nuvem. O intervalo de tempo entre uma verificação e a próxima e o limite de subcarga podem ser definidos por variáveis de ambiente ao iniciar o sistema. Isso garante que instâncias que estão subutilizadas possam ser removidas.
   
 \end{itemize}
 
 A sobrecarga, fraca ou forte, é atingida quando a porcentagem de uso de CPU ou de memória são superiores ao valor de porcentagem estabelecido como limite. A subcarga é atingida quando a porcentagem de uso de CPU e de memória são inferiores ao valor estabelecido como limite. 
 
 
-\subsection{Método de Realocação}
+\section{Método de Realocação}
 
 Quando uma instância está em subcarga ou em sobrecarga forte, ela inicia o método de realocação de tipos de eventos. A duração da realocação depende do contexto e estado do tipo de evento realocado, de acordo com os operadores utilizados, como visto nas seções \ref{sec:CEPstate} e \ref{sec:CEPcontext}.
 
-Como exemplo, considere um cenário no qual há uma instância \textit{A} quer realocar um tipo de evento \textit{T} e uma instância \textit{B} que não está em sobrecarga e que poderia, portanto, receber \textit{T}. A realocação, nesse caso, se dá da seguinte forma: 
+Como exemplo, considere um cenário no qual há uma instância \textit{A} que precisa realocar um tipo de evento \textit{T} e uma instância \textit{B} que não está em sobrecarga e que poderia, portanto, receber \textit{T}. A realocação, nesse caso, se dá da seguinte forma: 
 \begin{enumerate}
     \item  A instância \textit{A} sinaliza, armazenando um pedido de realocação no SGBD Chave-valor, que quer realocar o tipo de evento \textit{T}, iniciando o processo de realocação.
     \item A instância \textit{B} verifica quais tipos de eventos estão prontos para realocação e sinaliza, armazenando uma confirmação de aceitação de realocação no SGBD Chave-valor, que irá alocar o tipo de evento \textit{T} da instância \textit{A}. 
     \item A instância \textit{A} verfica no SGBD que a instância \textit{B} se prontificou a aceitar a realocação do tipo de evento \textit{T}.%reconhece\todo{o que significa "reconhecer" aqui? Ela manda uma mensagem para B?} que o tipo de evento \textit{T} será realocado para a instância \textit{B}.
-    \item A instância \textit{B} inicia a detecção do tipo de evento \textit{T}, se subscrevendo para receber seus tipos de eventos de entrada, porém sem enviar os eventos detectados para o \textit{broker}, já que a instância \textit{A} ainda está os enviando e isso causaria detecção duplicada.
+    \item A instância \textit{B} inicia a detecção do tipo de evento \textit{T}, se inscrevendo para receber seus tipos de eventos de entrada, porém sem enviar os eventos detectados para o \textit{broker}, já que a instância \textit{A} ainda está os enviando e isso causaria detecção duplicada.
     \item Ambas instâncias esperam um período de tempo para que o estado do tipo de evento \textit{T} seja reconstruído na instância \textit{B}. Esse período é determinado pela janela de eventos utilizada na definição de \textit{T}. Caso seja uma janela temporal, o tempo da janela é esperado. Caso seja uma janela por número de eventos, a espera continua até que o número de eventos de entrada que chegaram na instância \textit{B} seja igual ou maior ao número especificado na definição.
     \item A instância \textit{B} avisa a instância \textit{A} de que o estado foi reconstruído.
     \item A instância \textit{A} confirma que a instância \textit{B} pode começar a enviar eventos do tipo \textit{T} realocado, pára de enviar eventos desse tipo e inicia o processo de remoção da detecção dele.
@@ -141,27 +142,27 @@ Além desses passos, algumas limitações são impostas no processo para o funci
 %\todo[inline]{Parece-me que o parágrafo acima não tem a ver com o método de realocação particularmente, ele se refere ao funcionamento geral do CEP Worker. Sugiro que você o coloque antes da seção 4.1, porque o leitor precisa saber como os workers recebem os dados pra processar para poder entender direito o funcionamento das 3 threads.}
 
 
-\subsection{Algoritmos de Distribuição de Carga}
+\section{Algoritmos de Distribuição de Carga}
 \label{sec:loadDistribution}
 
-Duas estratégias distintas podem ser usadas por uma instância de \texttt{CEP Worker} para escolher tipos de eventos para realocação em outras instâncias num caso de sobrecarga:
+Duas estratégias distintas podem ser usadas por uma instância de \texttt{CEP Worker} para escolher tipos de eventos para realocação em outras instâncias num caso de sobrecarga: 
 \begin{itemize}
    
     \item Considerar na escolha os tipos de estados usados na detecção dos tipos de eventos alocados na instância sobrecarregada, como feito por \cite{6906776}%, para realocar o processamento de certos tipos de eventos de \texttt{CEP Worker}s. 
     
-    Essa estratégia (descrita no Algoritmo \ref{alg:relocation_resource_usage}) separa os tipos de eventos entre aqueles 
-    que não necessitam de estado para detecção, aqueles cuja estado é baseado em janela temporal e aqueles cujo estado depende do fluxo de eventos de entrada. Os tipos de eventos que utilizam nenhum estado ou que usam menos estado são os primeiros a serem selecionados para realocação. O ranqueamento é baseado no tempo que se leva para construir o estado de cada tipo de evento, de acordo com seus eventos de entrada. Tipos de evento baseados em janelas temporais são avaliados a partir do intervalo de tempo de suas janelas. Tipos de eventos baseados em janelas de eventos são avaliados a partir da medição do seu fluxo de eventos de entrada, mais especificamente do menor fluxo entre os eventos de entrada. Isso garante que as realocações de tipos de evento possam ocorrer mais rapidamente.% e distribuindo a carga de processamento com mais agilidade\todo{o que é agilidade nesse contexto? não é a mesma coisa que a rapidez mencionada antes?}.
+    %Essa estratégia (descrita no Algoritmo \ref{alg:relocation_resource_usage}) separa os tipos de eventos entre aqueles 
+    %que não necessitam de estado para detecção, aqueles cuja estado é baseado em janela temporal e aqueles cujo estado depende do fluxo de eventos de entrada. Os tipos de eventos que utilizam nenhum estado ou que usam menos estado são os primeiros a serem selecionados para realocação. O ranqueamento é baseado no tempo que se leva para construir o estado de cada tipo de evento, de acordo com seus eventos de entrada. Tipos de evento baseados em janelas temporais são avaliados a partir do intervalo de tempo de suas janelas. Tipos de eventos baseados em janelas de eventos são avaliados a partir da medição do seu fluxo de eventos de entrada, mais especificamente do menor fluxo entre os eventos de entrada. Isso garante que as realocações de tipos de evento possam ocorrer mais rapidamente.% e distribuindo a carga de processamento com mais agilidade\todo{o que é agilidade nesse contexto? não é a mesma coisa que a rapidez mencionada antes?}.
     
      \item Considerar na escolha a similaridade entre tipos de eventos de entrada dos tipos de eventos alocados na instância sobrecarregada, como proposto por \cite{Isoyama:2012:SCE:2335484.2335498}
      
-     Nessa segunda estratégia (descrita no Algoritmo \ref{alg:relocation_similarity}), os tipos de eventos sendo detectados cujos tipos de evento de entrada diferem mais dos de outros tipos de eventos processados na instância são selecionados primeiro para realocação. Quando todos os tipos de evento processados utilizam os mesmos tipos de evento de entrada, os tipos de eventos para realocação são selecionados de acordo com o Algoritmo~\ref{alg:relocation_resource_usage}.
+     %Nessa segunda estratégia (descrita no Algoritmo \ref{alg:relocation_similarity}), os tipos de eventos sendo detectados cujos tipos de evento de entrada diferem mais dos de outros tipos de eventos processados na instância são selecionados primeiro para realocação. Quando todos os tipos de evento processados utilizam os mesmos tipos de evento de entrada, os tipos de eventos para realocação são selecionados de acordo com o Algoritmo~\ref{alg:relocation_resource_usage}.
 
 \end{itemize}
 
 %\todo[inline]{Sempre se realoca apenas um tipo de evento por vez, certo? Acho que isso precisa ser mencionado aqui, porque senão ficará a dúvida sobre como os algoritmos escolhem a quantidade de exemplos a realocar.}
 %\todo[inline]{Na legenda dos algoritmos, está aparecendo "Algorithm X". Você precisa configurar algo no ambiente Algorithm do Latex para aparecer em português. }
 
-
+A partir dessas duas estratégias foram criados dois algoritmos de balanceamento de carga para a seleção de tipos de eventos a serem realocados no sistema \texttt{CEP Handler}:
 
 %\todo[inline]{No algoritmo 1, vc tem as variáveis rankDeTempo e rankDeFluxo e que são inicializadas como listas vazias e depois não são modificadas!  O algoritmo tem que inserir os ranks dos tipos de eventos da instância explicitamente nessas listas, para ficar claro o que é usado como rank. Como as listas guardam um conjunto de ranks, seria melhor que o nome delas fosse ranksDeTempo e ranksDeFluxo. Tem que ficar claro que cada posição da lista tem dois campos (sendo um deles chamado "rank"), porque você usa ".rank" na linha 5. Além disso, menorRank é um método? Se for, então é melhor colocar "()" no final, para deixar claro que é uma chamada. O algoritmo tem um parâmetro instância, mas que mal está sendo usado explicitamente (apareceu só em instância.taxaDeConsumoDeEventosDeEntrada). O Algoritmo 2, comparado a este primeiro, está bem melhor detalhado. - o rank dos tipos de eventos só é alterado no cadastramento ou remoção de tipos de evento e não na busca por qual tipo deve ser realocado.}
 
@@ -175,51 +176,73 @@ Duas estratégias distintas podem ser usadas por uma instância de \texttt{CEP W
 
 % - TRADUZIR PARA PORTUGUES
 
+\subsection{Algoritmo de Balanceamento de Carga por Uso de Estado}
 \begin{algorithm}[h!]
-\caption{BuscaTiposPorSimilaridadeDeEntrada(instância)}
-\label{alg:relocation_similarity}
-\begin{algorithmic}[1]
-\STATE indiceInvertidoDeEntrada $\leftarrow$ \{\} \COMMENT{\textit{isto é um dicionario de tipoDeEventoDeEntrada por tiposDeEventoQueOTemComoEntrada}}  
-\STATE RankDoTipoDeEvento $\leftarrow$ \{\} \COMMENT{\textit{isto é um dicionário de nivelDeUsoDeTipoDeEventoDeEntrada por objetoDeBuscaPorTiposPorTamanhoDoFluxoDeEventos}}  
-\FOR{cada tipoDeEvento $\in$ instância.tiposDeEventos} 
-\FOR{cada tipoDeEntrada $\in$ tipoDeEvento.tiposDeEventosDeEntrada} 
-\STATE indiceInvertidoDeEntrada[tipoDeEntrada].inclui(tipoDeEvento)
-\ENDFOR
-\ENDFOR
-\FOR{cada tDeEvento $\in$ instância.tiposDeEventos} 
-\STATE menorNivelDeUso $\leftarrow$ Inteiro.Máximo
-\FOR{cada tDeEntrada $\in$ tDeEvento.tiposDeEventosDeEntrada}
-\IF{indiceInvertidoDeEntrada[tDeEntrada].tamanho < menorNivelDeUso}
-\STATE {menorNivelDeUso $\leftarrow$ indiceInvertidoDeEntrada[tDeEntrada].tamanho }
-\ENDIF
-\ENDFOR
-\STATE RankDoTipoDeEvento[menorNivelDeUso].inclui(tDeEvento);
-\ENDFOR
-\RETURN tipoDeEventoParaRealocar $\leftarrow$ RankDoTipoDeEvento.menorRank.BuscaPorTiposPorTamanhoDoFluxoDeEventos
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[tb]
-\caption{BuscaTiposPorTamanhoDoFluxoDeEventos(instância)}
+\caption{BuscaTiposPorUsodeEstado(instância,listaDeTiposDeEventos)}
 \label{alg:relocation_resource_usage}
 \begin{algorithmic}[1]
-\STATE rankDeTempo $\leftarrow$ instância.tiposDeEventosComJanelaDeTempo \COMMENT{\textit{lista de pares (tipoDeEvento, intervaloDeJanelaDeTempo)} - Esta lista é atualizada no cadastro ou remoção de tipos de eventos.}
-\STATE rankDeFluxo $\leftarrow$ instância.tiposDeEventosComJanelaDeEventos \COMMENT{\textit{lista de pares (tipoDeEvento, (maiorTamanhoJanelaDeEventosDeEntrada/instância.taxaDeConsumoDeEventosDeEntrada))} - Esta lista é atualizada no cadastro ou remoção de tipos de eventos.}
-\STATE tipoDeEventoTempo $\leftarrow$ rankDeTempo.menorRank
-\STATE tipoDeEventoFluxo $\leftarrow$ rankDeFluxo.menorRank
-\IF{tipoDeEventoTempo.menorRank <= tipoDeEventoFluxo.menorRank}
+\STATE rankDeTempo $\leftarrow$ PegaTiposDeEventosComJanelaDeTempo(listaDeTiposDeEventos) \COMMENT{\textit{lista de pares (tipoDeEvento, intervaloDeJanelaDeTempo)} }
+\STATE rankDeTamanho $\leftarrow$ PegaTiposDeEventosComJanelaDeEventos(listaDeTiposDeEventos) \COMMENT{\textit{lista de pares (tipoDeEvento, (maiorTamanhoJanelaDeEventosDeEntrada/instância.taxaDeConsumoDeEventosDeEntrada))}  }
+\STATE tipoDeEventoTempo,rankTipoDeEventoTempo $\leftarrow$ PegaParMenorRank(rankDeTempo)
+\STATE tipoDeEventoTamanho,rankTipoDeEventoTamanho $\leftarrow$ PegaParMenorRank(rankDeTamanho)
+\IF{rankTipoDeEventoTempo <= rankTipoDeEventoFluxo}
 \STATE tipoDeEventoParaRealocar $\leftarrow$ tipoDeEventoTempo
 \ELSE
-\STATE tipoDeEventoParaRealocar $\leftarrow$ tipoDeEventoFluxo
+\STATE tipoDeEventoParaRealocar $\leftarrow$ tipoDeEventoTamanho
 \ENDIF
 \RETURN tipoDeEventoParaRealocar
 \end{algorithmic}
 \end{algorithm}
 
+O algoritmo de balanceamento de carga \ref{alg:relocation_resource_usage}, cria duas estruturas de dicionário ordenadas: um ranking de tipos de eventos que utilizam janelas temporais e um ranking de tipos de eventos que utilizam janelas de número de eventos. Estas estruturas são listas de pares entre o identificador do tipo de evento e um outro valor. 
+
+No ranking de tipos de eventos que utilizam janelas temporais o outro valor é o intervalo de tempo da janela de agregação utilizada. A janela de tempo é coletada da definição do tipo de evento. Os tipos que eventos que não utilizam janelas de agregação são adicionados ao ranking de tipos de eventos com janela temporal, com valor da janela em zero.
+
+No ranking de tipos de eventos que utilizam janelas de tamanho de eventos o outro valor é uma divisão entre o tamanho da janela de eventos dividido pela taxa de consumo de eventos de entrada. A taxa de consumo de cada evento de entrada é calculada pela divisão do número de eventos de cada tipo entrando no sistema por intervalo de tempo. A taxa de consumo de eventos de entrada é recalculada a cada novo cadastro de tipos de evento para todos os tipos de evento com janelas de número de eventos. 
+
+A cada novo cadastro ou remoção do processamento de algum tipo de evento todos os valores da estrutura de ranking de tipos de eventos que utilizam janelas de tamanho são atualizados. A estrutura utilizada para o ranking de tipos de eventos que utilizam janelas temporais é reordenada para cada inserção  ou remoção de tipo de evento, porém o valor associado a cada tipo é constante.  O valor colocado como rank nas duas estruturas ordenadas para cada tipo de evento é semelhante ao tempo necessário para a construção do estado interno da janela de agregação. Quando a função de selecionar o próximo tipo de evento a ser realocado é chamada, ela compara qual das duas listas ordenadas oferece o menor tempo de realocação e retorna o tipo de evento, entre as duas estruturas, que possui o menor valor de rank.
+
+
+\subsection{Algoritmo de Balanceamento de Carga por Similaridade de Entrada}
+\begin{algorithm}[h!]
+\caption{BuscaTiposPorSimilaridadeDeEntrada(instância,listaDeTiposDeEvento)}
+\label{alg:relocation_similarity}
+\begin{algorithmic}[1]
+\STATE indiceInvertidoDeEntrada $\leftarrow$ \{\} \COMMENT{\textit{isto é um dicionário de tipoDeEventoDeEntrada por tiposDeEventoQueOTemComoEntrada}}  
+\STATE TiposDeEventoPorRank $\leftarrow$ \{\} \COMMENT{\textit{isto é um dicionário de rankDosTiposDeEventos por listaDeTiposDeEventos}}  
+\FOR{cada tipoDeEvento $\in$ instância.tiposDeEventos} 
+\FOR{cada tipoDeEntrada $\in$ tipoDeEvento.tiposDeEventosDeEntrada} 
+\STATE indiceInvertidoDeEntrada[tipoDeEntrada].inclui(tipoDeEvento)
+\ENDFOR
+\ENDFOR
+\FOR{cada tDeEvento $\in$ listaDeTiposDeEvento} 
+\STATE menorNivelDeUso $\leftarrow$ Inteiro.Máximo
+\FOR{cada tDeEntrada $\in$ tDeEvento.tiposDeEventosDeEntrada}
+\IF{NúmeroDeElementos(indiceInvertidoDeEntrada[tDeEntrada]) < menorNivelDeUso}
+\STATE {menorNivelDeUso $\leftarrow$ NúmeroDeElementos(indiceInvertidoDeEntrada[tDeEntrada]) }
+\ENDIF
+\ENDFOR
+\STATE TiposDeEventoPorRank[menorNivelDeUso].inclui(tDeEvento);
+\ENDFOR
+\STATE menorRank $\leftarrow$ PegarMenorRank(TiposDeEventoPorRank)
+\RETURN tipoDeEventoParaRealocar $\leftarrow$ BuscaPorTiposPorUsoDeEstado(instancia, TiposDeEventoPorRank[menorRank])
+\end{algorithmic}
+\end{algorithm}
+
+
+O algoritmo de balanceamento de carga \ref{alg:relocation_similarity}, utiliza duas estruturas principais para organizar a seleção dos tipos de eventos. Um índice invertido de tipos de eventos, que armazena uma lista de tipos de eventos por cada tipo de evento de entrada que é utilizado por esses tipos de eventos e uma estrutura de tipos de evento por rank, que utiliza um valor numérico como chave e possui uma lista de tipos de eventos como valor por cada chave. 
+
+O algoritmo utiliza os metadados dos tipos de eventos, de qual tipo de evento usa qual outro tipo de evento como entrada, para popular a estrutura do índice invertido de tipos de evento. Depois que esta estrutura está devidamente populada, para cada tipo de evento \textit{T} é selecionado qual tipo de evento de entrada \textit{P} de \textit{T} é o menos utilizado por outros tipos de eventos, utilizando o tamanho da lista de tipos de eventos associada ao tipo de evento de entrada \textit{P} no índice invertido de tipos de evento. A partir da seleção de \textit{P} e da quantidade de vezes que \textit{P} é usado por todos os tipos de eventos, esse valor de rank é utilizado como chave na estrutura de tipos de evento por rank. O tipo de evento é adicionado a lista valor associada ao seu rank. 
+
+Para selecionar qual tipo de evento de ve ser realocado é buscado o menor rank dentre aqueles presentes como chave na estrutura de tipos de evento por rank e a selecção entre os tipos de evento que estão associados ao mesmo rank é feita utilizando o algoritmo \ref{alg:relocation_resource_usage}.
 
 
 
 
+%- Esta lista é atualizada no cadastro ou remoção de tipos de eventos.
+
+
+%- Esta lista é atualizada no cadastro ou remoção de tipos de eventos.
 
 
 \begin{comment}
@@ -338,19 +361,19 @@ Duas estratégias distintas podem ser usadas por uma instância de \texttt{CEP W
 
 \section{Nativo de Nuvem}
 
-A arquitetura descrita nesse capítulo pode ser considerada como nativa de nuvem pois cumpre os principais requisitos não funcionais deste tipo de sistema. Os principais requisitos de sistemas nativos de nuvem citados no Capítulo \ref{cap:conceitos} são: 
+A arquitetura descrita nesse capítulo pode ser considerada como nativa de nuvem pois cumpre os principais requisitos não funcionais deste tipo de sistema. Os principais requisitos de sistemas nativos de nuvem citados no Capítulo \ref{cap:conceitos} são: auto-escalabilidade e tolerância a falhas.
 
-\subsection{Auto-escalabilidade}  
+\subsection{Auto-Escalabilidade}  
 
-Dos seis microsserviços que compõe o sistema, quatro não armazenam estado durante seu processamento e, como visto na Subseção \ref{sec:stateless}, podem ser replicados para aguentar um aumento na carga a ser processada sem problemas. O aumento ou diminuição do número de microsserviços sem estado é normalmente gerido pelo serviço orquestração de recursos escolhidos. Além disto, vários SGBDs chave valor oferecem vários mecanismos de escalabilidade horizontal para leitura rápida, como os mencionados na Subseção \ref{sec:stateful}. Na Subseção \ref{sub-sec:cep-worker-func} foi discutido os métodos de detecção de sobrecarga e requisição de novas instâncias para o serviço de orquestração dos recursos quando a sobrecarga forte é detectada. 
+Dos seis microsserviços que compõe o sistema, quatro não armazenam estado durante seu processamento e, como visto na Subseção \ref{sec:stateless}, podem ser replicados para aguentar um aumento na carga a ser processada sem problemas. O aumento ou diminuição do número de microsserviços sem estado é normalmente gerido pelo serviço de gerenciamento dinâmico de recursos na nuvem escolhidos. Além disto, vários SGBDs chave-valor oferecem vários mecanismos de escalabilidade horizontal para leitura rápida, como os mencionados na Subseção \ref{sec:stateful}. Na Subseção \ref{sub-sec:cep-worker-func} foram discutidos os métodos de detecção de sobrecarga e requisição de novas instâncias para o serviço de gerenciamento dinâmico de recursos quando a sobrecarga forte é detectada. 
 
 \subsection{Tolerância a Falhas} 
 
-Os microserviços que não armazenam estado, caso sofram falhas de execução, o próprio serviço de orquestração de recursos se responsabiliza por deletar a instância com falha e iniciar uma nova instância. Os outros dois serviços, o SBGD chave valor e o \texttt{CEP Worker} mantêm um estado em memória durante seu funcionamento. Os SBGDs Chave-valor atualmente mais utilizados pela comunidade normalmente oferecem métodos de armazenamento em disco em segundo plano a partir de comandos ou periodicamente. Caso ocorra uma falha na execução do SGBD, apesar do microsserviço perder sua instancia de processamento, ele pode ser re-instanciado e consultar os dados que estavam em disco. Normalmente a frequência de gravação em disco em segundo plano é de um minuto ou menos, podendo ser configurado pelo usuário. O \texttt{CEP Worker}, como visto na Subseção \ref{sub-sec:cep-worker-func}, tem implementado um mecanismo para verificar a cada novo início de instância, se ela foi previamente terminada por falhas ou não e consegue recadastrar os tipos de eventos que estavam previamente cadastrados na instância.
+Os microserviços que não armazenam estado, caso sofram falhas de execução, o próprio serviço de gerenciamento dinâmico de recursos na nuvem se responsabiliza por deletar a instância com falha e iniciar uma nova instância. Os outros dois serviços, o SBGD chave valor e o \texttt{CEP Worker} mantêm um estado em memória durante seu funcionamento. Os SBGDs Chave-valor atualmente mais utilizados pela comunidade normalmente oferecem métodos de armazenamento em disco em segundo plano a partir de comandos ou periodicamente. Caso ocorra uma falha na execução do SGBD, apesar do microsserviço perder sua instancia de processamento, ele pode ser re-instanciado e consultar os dados que estavam em disco. Normalmente a frequência de gravação em disco em segundo plano é de um minuto ou menos, podendo ser configurado pelo usuário. O \texttt{CEP Worker}, como visto na Subseção \ref{sub-sec:cep-worker-func}, tem implementado um mecanismo para verificar a cada novo início de instância, se ela foi previamente terminada por falhas ou não e consegue recadastrar os tipos de eventos que estavam previamente cadastrados na instância.
 
 \subsection{Conclusão}
 
-Logo, todos os microsserviços do \texttt{CEP Handler} possuem mecanismos para se recuperarem de falhas de execução e retornarem a um estado de processamento usual  e cumprem o requisito de auto-escalabilidade, ou por mecanismos internos ou por configuração do sistema de orquestração de recursos utilizado. Dessa forma é possível afirmar que o sistema \texttt{CEP Handler} é nativo de nuvem.
+Logo, todos os microsserviços do \texttt{CEP Handler} possuem mecanismos para se recuperarem de falhas de execução e retornarem a um estado de processamento usual  e cumprem o requisito de auto-escalabilidade, ou por mecanismos internos ou por configuração do serviço de gerenciamento dinâmico de recursos na nuvem utilizado. Dessa forma é possível afirmar que o sistema \texttt{CEP Handler} é nativo de nuvem.
 
 
 

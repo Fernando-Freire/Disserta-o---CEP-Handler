@@ -13,7 +13,7 @@
 %\section{Ferramentas selecionadas} 
 
 Neste trabalho, um protótipo da arquitetura para sistema de CEP distribuído apresentada no Capítulo~\ref{cap:arquitetura} foi implementado e avaliado. 
-A escolha das ferramentas para a implementação do protótipo levou em conta vários fatores que dependem da função de cada ferramenta no sistema. Mas um dos critérios de seleção que foi aplicado em todos os casos foi o de que todo o software utilizado na implementação deveria ser de \textit{software} livre, com uma licença que garantisse a visualização,  alteração e distribuição do código da ferramenta. O código desenvolvido pode ser encontrado no repositório online GitLab~\citep{CEPHandler}, a \autoref{fig:system_architecture_prto} representa a arquitetura do sistema com as ferramentas selecionadas.
+A escolha das ferramentas para a implementação do protótipo levou em conta vários fatores que dependem da função de cada ferramenta no sistema. Mas um dos critérios de seleção que foi aplicado foi o de que os \textit{softwares} utilizados na implementação deveriam ser de \textit{software} livre, com uma licença que garantisse a visualização,  alteração e distribuição do código da ferramenta. O código desenvolvido pode ser encontrado no repositório online GitLab~\citep{CEPHandler}. A \autoref{fig:system_architecture_prto} representa a arquitetura do sistema com as ferramentas selecionadas.
 As seções a seguir apresentam detalhes sobre a escolha das ferramentas e a implementação do protótipo.
 
 
@@ -27,7 +27,7 @@ As seções a seguir apresentam detalhes sobre a escolha das ferramentas e a imp
 %\todo[inline]{Fernando, você poderia criar uma nova versão da imagem da sua arquitetura com os nomes das ferramentas usadas em cada microsserviço, para dar uma visão geral da escolhas de implementação.  Essa imagem poderia ficar aqui, na introdução do capítulo 5.}
 
 \subsubsection{A Plataforma InterSCity}
-A plataforma de cidades inteligentes InterSCity, projetada e desenvolvida pelo Instituto Nacional de Ciência e Tecnologia da Internet do Futuro para Cidades Inteligentes~\citep{del2019design}, sediado no IME-USP, para o desenvolvimento e suporte a projetos de Cidades Inteligentes. O principal propósito da plataforma é prover serviços de alto nível e APIs RESTful para suporte no desenvolvimento de novos serviços para as cidades. A plataforma adota uma arquitetura de microsserviços para suportar a integração de uma grande quantidade de recursos e dados e prover serviços de qualidade para a cidade. Os sensores ou atuadores na cidade são considerados Recursos, que podem enviar diferentes tipos de dados. Cada Recurso está associado a uma ou mais Capacidades, que descrevem quais tipos de dados os sensores podem coletar ou quais ações os atuadores podem realizar. A seguir, são descritos os principais microsserviços da plataforma:
+A plataforma de cidades inteligentes InterSCity foi projetada e desenvolvida pelo Instituto Nacional de Ciência e Tecnologia da Internet do Futuro para Cidades Inteligentes~\citep{del2019design}, sediado no IME-USP, para o desenvolvimento e suporte a projetos de Cidades Inteligentes. O principal propósito da plataforma é prover serviços de alto nível e APIs RESTful para suporte no desenvolvimento de novos serviços para as cidades. A plataforma adota uma arquitetura de microsserviços para suportar a integração de uma grande quantidade de recursos e dados e prover serviços de qualidade para a cidade. Os sensores ou atuadores na cidade são considerados Recursos, que podem enviar diferentes tipos de dados. Cada Recurso está associado a uma ou mais Capacidades, que descrevem quais tipos de dados os sensores podem coletar ou quais ações os atuadores podem realizar. A seguir, são descritos os principais microsserviços da plataforma:
 
 %serve para unificar os vários serviços urbanos, de forma que possam interagir mais facilmente e que exista uma maior interação entre diversos setores da administração pública, entre entidades governamentais e serviços privados e entre todas as partes envolvidas\todo{Essa descrição da plataforma está muito baseada em "interação" entre serviços e órgãos, parece muito idealizada. Aqui, é melhor você apresentar uma definição mais tecnológica dela, como a que aparece em https://interscity.org/software/interscity-platform/ }. Ela consiste em um conjunto de microsserviços, no qual cada um tem uma função diferente relacionada ao manuseio de dados urbanos.
 
@@ -40,7 +40,7 @@ A plataforma de cidades inteligentes InterSCity, projetada e desenvolvida pelo I
 \end{itemize}
 
 A plataforma InterSCity possibilita o cadastro de novos Recursos e Capacidades por uma API RESTful, além da visualização dos dados já coletados. O microsserviço \texttt{Event Composer} da ferramenta \texttt{CEP Handler}, descrito na Seção \ref{sec:eventcomposer}, se conecta com o Resource Adaptor, para receber os dados em tempo real, e com o Resource Cataloger, para saber o esquema dos dados recebidos e convertê-los em eventos. Todos os dados enviados em tempo real para o sistema podem ser convertidos em eventos e ser utilizados na definição de outros eventos.
-Como o sistema de processamento de eventos desenvolvido neste trabalho foi implementado acoplado à plataforma do InterSCity, escolheu-se um nome em inglês para ele (\texttt{CEP Handler}), para manter o mesmo estilo de nomenclatura já usado nos microsserviços da plataforma.  
+Como o sistema de processamento de eventos desenvolvido neste trabalho foi implementado de forma integrada à plataforma do InterSCity, escolheu-se um nome em inglês para ele (\texttt{CEP Handler}), para manter o mesmo estilo de nomenclatura já usado nos microsserviços da plataforma.  
 
 
 \section{Ferramenta de Processamento de Eventos}
@@ -61,7 +61,7 @@ Foi escolhido o uso de Apache Avro para a representação de enventos neste trab
 %\todo[inline]{Ué, a seção termina sem explicar qual desses formatos é de fato usado no seu sistema. }
 
 \section{Microsserviços sem Estado}
-O \textit{CEP Cataloger}, Event Composer e Event Sender são microsserviços que só oferecem métodos que não guardam estado. A implementação dos três microsserviços foi feita usando Docker para o isolamento de ambiente de execução, de forma que poderiam ser escritas em qualquer linguagem de programação com suporte a clientes dos outros serviços. Pelo conhecimento prévio em Java, essa foi a linguagem escolhida para o desenvolvimento dos três microsserviços.
+O \textit{CEP Cataloger}, \textit{Event Composer} e \textit{Event Sender} são microsserviços que só oferecem métodos que não guardam estado. A implementação dos três microsserviços foi feita usando Docker para o isolamento de ambiente de execução, de forma que poderiam ser escritas em qualquer linguagem de programação com suporte a clientes dos outros serviços. Pelo conhecimento prévio em Java, essa foi a linguagem escolhida para o desenvolvimento dos três microsserviços.
 
 
 %utilizando a ferramenta de automação\todo{automação de que?} \cite{maven} para inserção de dependências e colocados dentro de imagens Docker\todo{Rever o final da frase, há um erro de concordância que está comprometendo a compreensão.}.
@@ -74,9 +74,9 @@ O \textit{CEP Cataloger}, Event Composer e Event Sender são microsserviços que
 
 
 %Para que os microsserviços fiquem em ambientes isolados, recomenda-se utilizar uma ferramenta que ofereça virtualização no nível do sistema operacional, normalmente conhecida como conteinerização. Há duas principais vantagens em se usar contêineres para implementar uma aplicação: o fato de a aplicação feita em contêiner ter suas dependências mantidas dentro do contêiner garante que ela poderá ser executada em qualquer outra máquina e, em contraste com Máquinas Virtuais que emulam o hardware, os contêineres somente virtualizam o sistema operacional, em geral utilizando menos recursos.
-\section{Orquestração de Contêineres}
+\section{Gerenciamento Dinâmico de Recursos}
 
-Para executar os contêineres em ambientes de nuvem, existem várias alternativas, entre elas: executá-los diretamente em máquinas virtuais, utilizar orquestradores de contêineres proprietários, como o \textit{Elastic Container Service} - \cite{awsecs} da AWS, ou utilizar orquestradores de \textit{software} livre.
+Para executar os contêineres em ambientes de nuvem, existem várias alternativas, entre elas: executá-los diretamente em máquinas virtuais, utilizar orquestradores de contêineres proprietários, como o \textit{Elastic Container Service} - \cite{awsecs} da AWS, ou utilizar orquestradores de recursos de \textit{software} livre.
 
 
 
@@ -118,6 +118,8 @@ No protótipo do sistema aqui apresentado, o RabbitMQ opera dentro de um contêi
 
 
 \section{Sistema Gerenciador de Banco de Dados}
+\label{sec:redis}
+
 Como sistema gerenciador de banco de dados, para guardar a definição dos eventos e seus metadados, foi escolhido o \cite{Redis}, um sistema \textit{NoSQL} baseado no modelo de dados chave-valor.
 O Redis foi escolhido por ser de \textit{software} livre, ter uma grande comunidade de usuários e apresentar uma das menores latências entre sistemas gerenciadores de bancos de dados~\citep{10.14778/2367502.2367512}.
 No protótipo do sistema \texttt{CEP Handler} desenvolvido, o Redis opera dentro de um único contêiner Docker, cuja imagem é disponibilizada oficialmente pelo repositório de imagens \textit{Docker Hub}.
@@ -136,3 +138,6 @@ No sistema \textit{CEP Handler}, associados a  uma chave UUID de tipo de evento 
 
 
 %\todo[inline]{Incluir no início da capítulo a URL do repositório da sua implementação.}
+%\section{Conclusão}
+
+%As ferramentas selecionadas para o implementação do protótipo foram escolhidas a partir dos seguintes critérios: uso de ferramenta que realizassem o propósito necessário para a implantação da arquitetura,uso de ferramentas de \textit{software} livre, uso de ferramentas para uma melhor integração com a Plataforma InterSCity e conhecimento prévio sobre o uso da ferramenta. O código está disponível no mesmo grupo de repositórios da plataforma InterSCity~\citep{CEPHandler}.
