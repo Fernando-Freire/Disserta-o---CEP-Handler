@@ -7,31 +7,44 @@
 
 \section{Conversa com Francisco}
 \begin{enumerate}
-\item Como determinar o consumo de cada operador?
+\item Como determinar o consumo de cada operador? - 
+analize do tamanho da janela de agregação
+
+
 \item definir explicitamente algoritmo para determinar como migrar o processamento de um operador para nós distintos
+ - definido
+ 
+ 
 \item Como fazer o deploy de uma EPN inteira ( todos os operadores de uma aplicação serão definidos de uma só vez ou dinamicamente)
+uma vez por vez. 
 %\item Algoritmo de migração de estados (bom)
 \item Listas quais são os eventos primitivos e derivados possíveis de se gerar a partir do simulador (com trânsito) com a ideia de ter mais de uma aplicação (EPN), consumindo eventos interconectados, por exemplo , para controlar semáforos, desvio de rotas.
-\item Algoritmos de contração /expansão de nós para a distribuição do processamento
-\item Considerar deixar de lado balanceamento de carga sobre um único operador.
+ - não faz mais parte do experimento
+\item Algoritmos de contração /expansão de nós para a distribuição do processamento - solucionado para realocação sequencial de tipos de evento
+\item Considerar deixar de lado balanceamento de carga sobre um único operador. - concordo
 \end{enumerate}
+FAZER: enfatizar realocação e cadastro de ets sequencial 
+FAZER:falar que só há suporte a alguns tipos de janelas.
+FAZER: colocar trabalhos de elasticidade nos trabalhos relacionados.
 
 \begin{enumerate}
-\item Sobre Escopo: achou ousado demais visar escalabilidade e disponibilidade (tolerancia a falhas)
-\item detectou 3 dimensão : esturtura do deployment distribuindo em nuvem
+\item Sobre Escopo: achou ousado demais visar escalabilidade e disponibilidade (tolerancia a falhas) - 
+auto-escalabilidade e tolerancia a falhas 
+\item detectou 3 dimensão : esturtura do deployment distribuindo em nuvem - feito, sistema nativo a nuvem. 
 \item sugeriu a escolha de 1 dos 3 aspectos para dar enfase
-\item Escalabilidade -> transferencia de estado é chave nessa questão. Francisco acha que essa discussão foi perdida quando a proposta foi apresentada. Faltou abordar isso com relação aos operadores de CEP
+\item Escalabilidade -> transferencia de estado é chave nessa questão. Francisco acha que essa discussão foi perdida quando a proposta foi apresentada. Faltou abordar isso com relação aos operadores de CEP- 
+diminui o numero de tipos de janelas com suporte no 
 \item Sugeriu procurar refêrencias sobre "elasticidade" em CEP, pois esses trabalhos tratam da questão do estado.
 \item abordagens para torelancia a falhas: 
 \begin{enumerate}
-\item replay dos eventos
-\item checkpoints
-\item replicação completa
+\item replay dos eventos - sugestoa futura
+\item checkpoints - não foi feito
+\item replicação completa - não foi feito
 \end{enumerate}
-\item Seria melhor restringir os operadores que serão suportados na ferramenta
-\item Sobre a aplicação de exemplo: Francisco observou que tem operadores com janelas de tempo enormes. No estudo de caso, faltou detalhar a regra exata associada a cada evento.
+\item Seria melhor restringir os operadores que serão suportados na ferramenta - check de certa forma. 
+\item Sobre a aplicação de exemplo: Francisco observou que tem operadores com janelas de tempo enormes. No estudo de caso, faltou detalhar a regra exata associada a cada evento. - todos os eventos tem a definição em EPL
 \item Francisco perguntou a que se refere o balanceamento de carga, preciso esclarecer o modelo, o grafo do deploy
-\item Deixar claro que um mesmo CEP-Worker pode processar mais de um operador
+\item Deixar claro que um mesmo CEP-Worker pode processar mais de um operador - esta claro
 \item Francisco sugeriu que poderia haver mais de um worker no mesmo nó
 \item Francisco sugeriu que um outro possivel foco do trabalho poderia ser na definição do reaproveitamento do processamento no deploy
 \end{enumerate}
@@ -61,6 +74,9 @@
 \item Ele disse que cada aplicação tem sua propria EPN
 \item Comentou que talvez seja melhor focar no deployment e em reaproveitar os operadores. 
 \end{enumerate}
+
+
+FAZER:mencionar mais smart cities
 
 \subsection{Fábio}
 \begin{enumerate}

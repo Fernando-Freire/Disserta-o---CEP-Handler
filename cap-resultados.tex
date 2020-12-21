@@ -56,6 +56,57 @@ O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bu
 É possível observar um crescimento do número de ocorrências até atingir um pico entre às 9h00 e 9h15, sendo que essa faixa de tempo coincide com o maior crescimento do número de dados entrando no sistema (mostrado na Figura~\ref{fig:load_and_instances-time-SU}). Uma possível explicação é que, ao longo da manhã, o número de ônibus ativos em cada linha aumenta. Quando esses ônibus iniciam sua circulação e começam a enviar suas posições para a SPTrans, eles estão localizados em terminais ou garagens, junto com outros ônibus da mesma linha. Depois das 9h15, há uma diminuição do número de ocorrências de aglomeração, pois a maioria dos ônibus está em circulação nas vias, longe de outros ônibus da sua própria linha. A partir das 10h00, a maioria das ocorrências de agrupamento de ônibus detectadas podem ser em terminais de ônibus, onde os veículos ficam estacionados entre uma viagem e outra. 
 
 
+\section{Tempo de Uso de Recursos}
+\label{sec:resource_usage_time}
+%Na execução de um experimento auto-escalável, coletar os dados da variação do custo computacional entre uma execução e outra é fundamental para avaliar as diferenças que podem minimizar este custo. Durante os experimentos executados, considerando principalmente o custo de manter máquinas virtuais em funcionamento, a única variação que pode ser detectada é a diferença do número de instâncias de \texttt{cep worker} que estão ativas a cada momento. O propósito da coleta destes dados foi o de avaliar uma possível distinção entre o número de instâncias ativas em relação ao uso de cada um dos algoritmos de balanceamento de carga, descritos em \autoref{cap:arquitetura}.
+
+%Em plataformas de nuvem, paga-se pelo uso dos recursos computacionais. A precificação leva em conta o tipo dos recursos alocados e o seu tempo de uso. 
+
+
+Nas execuções do experimento de avaliação do \texttt{CEP Handler} na AWS, usou-se um só tipo de máquina virtual, o t3a.medium. Todos os microsserviços do experimento, listados no Capítulo \ref{cap:experimento}, foram instanciados nesse tipo de máquina virtual. Exceto pelo \texttt{CEP Worker}, utilizou-se somente uma instância para cada microsserviço. Portanto, a variação da quantidade de uso de recursos depende exclusivamente da instanciação de \texttt{CEP Workers} feita em cada execução.
+
+A quantidade de máquinas virtuais alocadas dinamicamente para as instâncias de \texttt{CEP Workers} e os seus respectivos tempos de uso variaram de uma execução para outra, como mostrado na Seção~\ref{sec:auto_scalability}.
+Mas o tempo total de uso de recursos variou relativamente pouco nas execuções.
+A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, somado de todas as instâncias de \texttt{CEP Workers} para cada execução do experimento. As médias de tempo de uso de recursos dos dois algoritmos de balanceamento não apresentam uma diferença expressiva.
+%Os valores de média de tempo de uso de recursos para o uso de cada um dos algoritmos não resultou em uma diferença expressiva em tempo de uso de máquinas virtuais.
+
+%\begin{equation}
+%    t = \frac{x - \mu}{\frac{s}{\sqrt{n}}} \\
+%\end{equation}
+
+%A partir do uso do teste T de Student para verificar a similaridade das medidas coletadas é possível afirmar que as duas distribuições não apresentam uma diferença significativa com um intervalo de confiança de 99\%.
+
+\begin{table}[h!]
+\centering
+\caption{Tempo de uso de recursos em minutos de cada execução do experimento.}
+\begin{tabular}{rr}
+\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
+\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
+ 1.049,94 & 1.045,14  \\
+1.041,69  & 1.054,98 \\
+1.041,86  & 1.047,93 \\
+1.042,23  & 1.052,84  \\
+1.052,08  & 1.045,12  \\
+\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}} \\
+1.045,56  & 1.049,2  \\
+\multicolumn{1}{l}{\textbf{Desvio Padrão}} & \multicolumn{1}{l}{\textbf{Desvio Padrão}}  \\
+ 5,04 & 4,51                         
+\end{tabular}
+\label{Tab:time_and_avg}
+\end{table}
+
+
+Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga forte. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento. É importante lembrar que uma instância nova só é requisitada por sobrecarga forte quando o número de instância em sobrecarga forte é maior que o número de instâncias que não atingiram nenhum tipo de sobrecarga. Essa solução é adotada pois a realocação de efeitos é realizada de forma sequencial, sendo que uma instância não pode aceitar a realocação de tipos de eventos de duas instâncias distintas ao mesmo tempo, como descrito na Seção \ref{sec:cepworker}.
+
+Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. Como os intervalos de tempo em que cada instância ficou em sobrecarga forte foram maiores, usando o algoritmo de balanceamento de carga por Similaridade de Entrada, em algumas execuções haviam três instâncias de \texttt{CEP Worker} em sobrecarga ao mesmo tempo, levando a criação de três instâncias adicionais. No entanto, a diferença da média do tempo de uso somado de todas as instâncias foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
+
+
+
+
+%-----falar da aceitação sequencial de eventos e diminuição do tempo concomitante de intervalos de tempo em sobregcarga forte
+
+
+
 \section{Auto-Escalabilidade do Sistema}
 \label{sec:auto_scalability}
 %\todo[inline]{As figuras desta seção estão erradas. As figura 7.3 e 7.4 são iguais. E as figuras 7.5 e 7.6 também são iguais. Além disso, as 2 últimas não são do mesmo experimento das 2 anteriores.}
@@ -262,34 +313,6 @@ Como mostra a Figura~\ref{fig:workers_and_events_SU}, em todas as cinco repetiç
 %No sistema \texttt{CEP Handler}, conforme descrito em \autoref{cap:arquitetura}, assim que o número de \texttt{CEP Workers} que estão aptos a receber realocação de tipos de eventos é menor que o número de \texttt{CEP Workers} que estão em sobrecarga e precisam realocar seus próprios tipos de eventos, um novo \texttt{CEP Workers} é instanciado. Então, assumindo que somente os três primeiros \texttt{CEP Workers}, que já tinham boa parte de sua memória em uso pelo simples cadastro de tipos de eventos atingissem a sobrecarga, o número máximo de instancias de \texttt{CEP Workers} atingido seria seis\todo{Esta última frase está confusa e a afirmação que ela tenta fazer é especulativa. Sugiro que o parágrafo todo seja removido do texto.}.
 
 \newpage
-\section{Tempo de Uso de Recursos}
-\label{sec:resource_usage_time}
-%Na execução de um experimento auto-escalável, coletar os dados da variação do custo computacional entre uma execução e outra é fundamental para avaliar as diferenças que podem minimizar este custo. Durante os experimentos executados, considerando principalmente o custo de manter máquinas virtuais em funcionamento, a única variação que pode ser detectada é a diferença do número de instâncias de \texttt{cep worker} que estão ativas a cada momento. O propósito da coleta destes dados foi o de avaliar uma possível distinção entre o número de instâncias ativas em relação ao uso de cada um dos algoritmos de balanceamento de carga, descritos em \autoref{cap:arquitetura}.
-
-%Em plataformas de nuvem, paga-se pelo uso dos recursos computacionais. A precificação leva em conta o tipo dos recursos alocados e o seu tempo de uso. 
-
-
-Nas execuções do experimento de avaliação do \texttt{CEP Handler} na AWS, usou-se um só tipo de máquina virtual, o t3a.medium. Todos os microsserviços do experimento, listados no Capítulo \ref{cap:experimento}, foram instanciados nesse tipo de máquina virtual. Exceto pelo \texttt{CEP Worker}, utilizou-se somente uma instância para cada microsserviço. Portanto, a variação da quantidade de uso de recursos depende exclusivamente da instanciação de \texttt{CEP Workers} feita em cada execução.
-
-A quantidade de máquinas virtuais alocadas dinamicamente para as instâncias de \texttt{CEP Workers} e os seus respectivos tempos de uso variaram de uma execução para outra, como mostrado na Seção~\ref{sec:auto_scalability}.
-Mas o tempo total de uso de recursos variou relativamente pouco nas execuções.
-A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, somado de todas as instâncias de \texttt{CEP Workers} para cada execução do experimento. As médias de tempo de uso de recursos dos dois algoritmos de balanceamento não apresentam uma diferença expressiva.
-%Os valores de média de tempo de uso de recursos para o uso de cada um dos algoritmos não resultou em uma diferença expressiva em tempo de uso de máquinas virtuais.
-
-%\begin{equation}
-%    t = \frac{x - \mu}{\frac{s}{\sqrt{n}}} \\
-%\end{equation}
-
-%A partir do uso do teste T de Student para verificar a similaridade das medidas coletadas é possível afirmar que as duas distribuições não apresentam uma diferença significativa com um intervalo de confiança de 99\%.
-
-
-
-Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga forte. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento. É importante lembrar que uma instância nova só é requisitada por sobrecarga forte quando o número de instância em sobrecarga forte é maior que o número de instâncias que não atingiram nenhum tipo de sobrecarga. Essa solução é adotada pois a realocação de efeitos é realizada de forma sequencial, sendo que uma instância não pode aceitar a realocação de tipos de eventos de duas instâncias distintas ao mesmo tempo, como descrito na Seção \ref{sec:cepworker}.
-
-Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. Como os intervalos de tempo em que cada instância ficou em sobrecarga forte foram maiores, usando o algoritmo de balanceamento de carga por Similaridade de Entrada, em algumas execuções haviam três instâncias de \texttt{CEP Worker} em sobrecarga ao mesmo tempo, levando a criação de três instâncias adicionais. No entanto, a diferença da média do tempo de uso somado de todas as instâncias foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
-
-%-----falar da aceitação sequencial de eventos e diminuição do tempo concomitante de intervalos de tempo em sobregcarga forte
-
 
 
 %A média de tempo de uso de recursos das execuções usando o algoritmo de Similaridade de Entrada é maior que a média dos experimentos usando o algoritmo de Uso de Estado, no entanto os seus desvios padrão permitem dizer que as duas médias são similares.
@@ -299,24 +322,7 @@ Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entra
 
 
 
-\begin{table}[h!]
-\centering
-\caption{Tempo de uso de recursos em minutos de cada execução do experimento.}
-\begin{tabular}{rr}
-\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
-\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
- 1.049,94 & 1.045,14  \\
-1.041,69  & 1.054,98 \\
-1.041,86  & 1.047,93 \\
-1.042,23  & 1.052,84  \\
-1.052,08  & 1.045,12  \\
-\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}} \\
-1.045,56  & 1.049,2  \\
-\multicolumn{1}{l}{\textbf{Desvio Padrão}} & \multicolumn{1}{l}{\textbf{Desvio Padrão}}  \\
- 5,04 & 4,51                         
-\end{tabular}
-\label{Tab:time_and_avg}
-\end{table}
+
 
 %Na rede de processamento desenvolvida para o experimento, os tipos de eventos de detecção de agrupamento de ônibus de mesma linha (\textbf{busB}) foram definidos um por ônibus e utilizaram como fonte os tipos de evento de filtro de velocidade (\textbf{vi}), os quais foram definidos um por linha. Com isso, era possível agrupar todos os tipos de eventos de detecção de agrupamento de ônibus de uma mesma linha para a execução numa mesma instância de \texttt{CEP Worker}, minimizando a carga de entrada em cada instância no sistema. Como descrito no Capítulo \ref{cap:experimento}, dos 15.729 tipos de eventos criados, 14.121 eram de detecção de agrupamento de ônibus. Esse cenário, teoricamente, favoreceria o uso do algoritmo de balanceamento por Similaridade de Entrada. Contudo, isso não foi observado nos experimentos, já que os dois algoritmos resultaram em tempos médios de uso de recursos similares. \todo{Não se esqueça de corrigir a primeira parte deste parágrafo, que explica errado o que algoritmo faz. O alg não minimiza a carga de entrada de cada instância, ele tenta evitar a duplicação da transmissão de eventos para os nós. }
 %, com o desempenho do algoritmo de Similaridade de Entrada minimamente pior que o do algoritmo de Uso de Estado.
