@@ -1,19 +1,19 @@
-\chapter{Resultados}
+\chapter{Resultados}\index{Experiment Results}
 \label{cap:resultados}
 %\todo[inline]{Em todas as figuras em que aparecem os gráficos das 5 execuções, eu troquei o width=0.8\textwidth por width=\textwidth, porque os textos nelas estavam muito pequenos, impossíveis de ler sem zoom.}
 
 Neste capítulo, são apresentados os resultados dos experimentos de avaliação do \texttt{CEP Handler} descritos no Capítulo~\ref{cap:experimento}. Foram executados dez experimentos no total, cinco repetições para cada um dos dois algoritmos de balanceamento de carga apresentados na Seção~\ref{sec:loadDistribution}. 
 
-As seções a seguir discutem os dados detectados relevantes no contexto de monitoramento de tráfego de ônibus na cidade de São Paulo, bem como o custo computacional e as medidas de desempenho (tais como número total, vazão e latência de eventos detectados) por execução do experimento. 
+As seções a seguir discutem os dados detectados relevantes no contexto de monitoramento de tráfego de ônibus na cidade de São Paulo, bem como medidas de desempenho (tais como número total, vazão e latência de eventos detectados) por execução do experimento. 
 Ao final do capítulo, são apresentadas as conclusões dos resultados e uma discussão sobre os efeitos do uso de cada um dos algoritmos de balanceamento de carga. 
 
 \section{Dados Detectados}
 
-Como discutido no Capítulo \ref{cap:experimento}, os tipos de eventos do cenário do experimento foram escolhidos com o propósito de criar uma rede de processamento de eventos grande o suficiente para avaliar o funcionamento da auto-escalabilidade do \texttt{CEP Handler}, como é o caso da rede de detecção de problemas de tráfego de ônibus de São Paulo.
+Como discutido no Capítulo \ref{cap:experimento}, os tipos de eventos do cenário do experimento foram escolhidos com o propósito de criar uma rede de processamento de eventos grande o suficiente para avaliar o funcionamento da auto-escalabilidade do \texttt{CEP Handler}, como é o caso da rede de detecção de problemas de tráfego de ônibus do transporte público de São Paulo.
 Os tipos de eventos nas pontas da rede da Figura~\ref{fig:experiment_diagram}, especificamente a detecção de agrupamento de ônibus e a detecção de velocidade média em corredor de ônibus principal, servem o propósito de verificar se a frota de ônibus está circulando como o determinado pelo planejamento da SPTrans. 
 
 %As principais informações que foram retiradas a partir dos dados da SPTrans, se referiam a detecção de agrupamento de ônibus em tempo real e a detecção da velocidade média em cada corredor de ônibus na cidade. 
-Os gráficos das figuras \ref{fig:avg_speed_guara_1} e \ref{fig:histogram_Bus_Bunching} foram criados a partir dos dados das detecções desses tipos de eventos em uma das execuções do experimento. A Figura  \ref{fig:avg_speed_guara_1} mostra as velocidades médias detectadas no corredor de ônibus Guarapiranga. Os gráficos das velocidades médias dos outros 11 corredores de ônibus principais da cidade podem ser encontrados no Apêndice \ref{ape:graphics}. A Figura \ref{fig:histogram_Bus_Bunching} mostra o número de ocorrências de agrupamentos de ônibus dentro de intervalos de 15 minutos, ao longo de todo o período de circulação de ônibus coberto pelo experimento. De uma execução para outra do experimento, não houve variação significativa nos eventos detectados pelo sistema \texttt{CEP Handler}, como era esperado. 
+Os gráficos das figuras \ref{fig:avg_speed_guara_1} e \ref{fig:histogram_Bus_Bunching} foram criados a partir dos dados das detecções desses tipos de evento em uma das execuções do experimento. A Figura  \ref{fig:avg_speed_guara_1} mostra as velocidades médias detectadas no corredor de ônibus Guarapiranga. Os gráficos das velocidades médias dos outros 11 corredores de ônibus principais da cidade podem ser encontrados no Apêndice \ref{ape:graphics}. A Figura \ref{fig:histogram_Bus_Bunching} mostra o número de ocorrências de agrupamentos de ônibus dentro de intervalos de 15 minutos, ao longo de todo o período de circulação de ônibus coberto pelo experimento. De uma execução para outra do experimento, não houve variação significativa nos eventos detectados pelo sistema \texttt{CEP Handler}, como era esperado. 
 % Kelly: reescrito acima
 %A partir das detecções desses tipos de eventos, foi possível criar um histograma com o número de ocorrências de agrupamentos de ônibus dentro de intervalos de quinze minutos, mostrado Figura \ref{fig:histogram_Bus_Bunching} e das velocidades médias de cada um dos doze corredores de ônibus, um dos quais está representado na figura  \ref{fig:avg_speed_guara_1}. Estes e os gráficos da velocidade média dos outros corredores de ônibus podem ser encontradas no Apêndice \ref{ape:graphics}. 
 
@@ -54,56 +54,6 @@ O gráfico mostra uma discrepância entre as velocidades detectadas nos minutos 
 
 O histograma dos eventos de agrupamento de ônibus (Figura~\ref{fig:histogram_Bus_Bunching}) apresenta o número de ocorrências desse tipo a cada intervalo de quinze minutos, utilizando o horário de coleta do dado. Os primeiros dados foram enviados ao sistema às 07h57. Por isso, o  intervalo inicial do histograma, que vai das 7h45 às 8h00, contém um número de ocorrências bem menor do que o dos intervalos seguintes.
 É possível observar um crescimento do número de ocorrências até atingir um pico entre às 9h00 e 9h15, sendo que essa faixa de tempo coincide com o maior crescimento do número de dados entrando no sistema (mostrado na Figura~\ref{fig:load_and_instances-time-SU}). Uma possível explicação é que, ao longo da manhã, o número de ônibus ativos em cada linha aumenta. Quando esses ônibus iniciam sua circulação e começam a enviar suas posições para a SPTrans, eles estão localizados em terminais ou garagens, junto com outros ônibus da mesma linha. Depois das 9h15, há uma diminuição do número de ocorrências de aglomeração, pois a maioria dos ônibus está em circulação nas vias, longe de outros ônibus da sua própria linha. A partir das 10h00, a maioria das ocorrências de agrupamento de ônibus detectadas podem ser em terminais de ônibus, onde os veículos ficam estacionados entre uma viagem e outra. 
-
-
-\section{Tempo de Uso de Recursos}
-\label{sec:resource_usage_time}
-%Na execução de um experimento auto-escalável, coletar os dados da variação do custo computacional entre uma execução e outra é fundamental para avaliar as diferenças que podem minimizar este custo. Durante os experimentos executados, considerando principalmente o custo de manter máquinas virtuais em funcionamento, a única variação que pode ser detectada é a diferença do número de instâncias de \texttt{cep worker} que estão ativas a cada momento. O propósito da coleta destes dados foi o de avaliar uma possível distinção entre o número de instâncias ativas em relação ao uso de cada um dos algoritmos de balanceamento de carga, descritos em \autoref{cap:arquitetura}.
-
-%Em plataformas de nuvem, paga-se pelo uso dos recursos computacionais. A precificação leva em conta o tipo dos recursos alocados e o seu tempo de uso. 
-
-
-Nas execuções do experimento de avaliação do \texttt{CEP Handler} na AWS, usou-se um só tipo de máquina virtual, o t3a.medium. Todos os microsserviços do experimento, listados no Capítulo \ref{cap:experimento}, foram instanciados nesse tipo de máquina virtual. Exceto pelo \texttt{CEP Worker}, utilizou-se somente uma instância para cada microsserviço. Portanto, a variação da quantidade de uso de recursos depende exclusivamente da instanciação de \texttt{CEP Workers} feita em cada execução.
-
-A quantidade de máquinas virtuais alocadas dinamicamente para as instâncias de \texttt{CEP Workers} e os seus respectivos tempos de uso variaram de uma execução para outra, como mostrado na Seção~\ref{sec:auto_scalability}.
-Mas o tempo total de uso de recursos variou relativamente pouco nas execuções.
-A tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, somado de todas as instâncias de \texttt{CEP Workers} para cada execução do experimento. As médias de tempo de uso de recursos dos dois algoritmos de balanceamento não apresentam uma diferença expressiva.
-%Os valores de média de tempo de uso de recursos para o uso de cada um dos algoritmos não resultou em uma diferença expressiva em tempo de uso de máquinas virtuais.
-
-%\begin{equation}
-%    t = \frac{x - \mu}{\frac{s}{\sqrt{n}}} \\
-%\end{equation}
-
-%A partir do uso do teste T de Student para verificar a similaridade das medidas coletadas é possível afirmar que as duas distribuições não apresentam uma diferença significativa com um intervalo de confiança de 99\%.
-
-\begin{table}[h!]
-\centering
-\caption{Tempo de uso de recursos em minutos de cada execução do experimento.}
-\begin{tabular}{rr}
-\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
-\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
- 1.049,94 & 1.045,14  \\
-1.041,69  & 1.054,98 \\
-1.041,86  & 1.047,93 \\
-1.042,23  & 1.052,84  \\
-1.052,08  & 1.045,12  \\
-\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}} \\
-1.045,56  & 1.049,2  \\
-\multicolumn{1}{l}{\textbf{Desvio Padrão}} & \multicolumn{1}{l}{\textbf{Desvio Padrão}}  \\
- 5,04 & 4,51                         
-\end{tabular}
-\label{Tab:time_and_avg}
-\end{table}
-
-
-Como discutido na Seção \ref{sec:resource_usage_time}, uma possível explicação é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga forte. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento. É importante lembrar que uma instância nova só é requisitada por sobrecarga forte quando o número de instância em sobrecarga forte é maior que o número de instâncias que não atingiram nenhum tipo de sobrecarga. Essa solução é adotada pois a realocação de efeitos é realizada de forma sequencial, sendo que uma instância não pode aceitar a realocação de tipos de eventos de duas instâncias distintas ao mesmo tempo, como descrito na Seção \ref{sec:cepworker}.
-
-Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscava selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas. As execuções do experimento com esse algoritmo não buscavam necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. Como os intervalos de tempo em que cada instância ficou em sobrecarga forte foram maiores, usando o algoritmo de balanceamento de carga por Similaridade de Entrada, em algumas execuções haviam três instâncias de \texttt{CEP Worker} em sobrecarga ao mesmo tempo, levando a criação de três instâncias adicionais. No entanto, a diferença da média do tempo de uso somado de todas as instâncias foi similar entre o uso de um algoritmo de balanceamento de carga e o outro.
-
-
-
-
-%-----falar da aceitação sequencial de eventos e diminuição do tempo concomitante de intervalos de tempo em sobregcarga forte
 
 
 
@@ -335,6 +285,55 @@ Como mostra a Figura~\ref{fig:workers_and_events_SU}, em todas as cinco repetiç
 
 %------------------------------------------------------
 
+\section{Tempo de Uso de Recursos}
+\label{sec:resource_usage_time}
+%Na execução de um experimento auto-escalável, coletar os dados da variação do custo computacional entre uma execução e outra é fundamental para avaliar as diferenças que podem minimizar este custo. Durante os experimentos executados, considerando principalmente o custo de manter máquinas virtuais em funcionamento, a única variação que pode ser detectada é a diferença do número de instâncias de \texttt{cep worker} que estão ativas a cada momento. O propósito da coleta destes dados foi o de avaliar uma possível distinção entre o número de instâncias ativas em relação ao uso de cada um dos algoritmos de balanceamento de carga, descritos em \autoref{cap:arquitetura}.
+
+%Em plataformas de nuvem, paga-se pelo uso dos recursos computacionais. A precificação leva em conta o tipo dos recursos alocados e o seu tempo de uso. 
+
+
+Nas execuções do experimento de avaliação do desempenho do \texttt{CEP Handler} na AWS, usou-se um só tipo de máquina virtual, o t3a.medium. Todos os microsserviços do experimento, listados no Capítulo \ref{cap:experimento}, foram instanciados nesse tipo de máquina virtual. Exceto pelo \texttt{CEP Worker}, utilizou-se somente uma instância para cada microsserviço. Portanto, a variação da quantidade de uso de recursos depende exclusivamente da instanciação de \texttt{CEP Workers} feita em cada execução.
+
+A quantidade de máquinas virtuais alocadas dinamicamente para as instâncias de \texttt{CEP Workers} e os seus respectivos tempos de uso variaram de uma execução para outra, como mostrado na Seção~\ref{sec:auto_scalability}.
+Mas o tempo total de uso de recursos variou relativamente pouco nas execuções.
+A Tabela \ref{Tab:time_and_avg} mostra o tempo de uso de recursos, em minutos, somado de todas as instâncias de \texttt{CEP Workers} para cada execução do experimento. 
+%Os valores de média de tempo de uso de recursos para o uso de cada um dos algoritmos não resultou em uma diferença expressiva em tempo de uso de máquinas virtuais.
+
+%\begin{equation}
+%    t = \frac{x - \mu}{\frac{s}{\sqrt{n}}} \\
+%\end{equation}
+
+%A partir do uso do teste T de Student para verificar a similaridade das medidas coletadas é possível afirmar que as duas distribuições não apresentam uma diferença significativa com um intervalo de confiança de 99\%.
+
+\begin{table}[h!]
+\centering
+\caption{Tempo de uso de recursos em minutos de cada execução do experimento.}
+\begin{tabular}{rr}
+\multicolumn{1}{l}{\textbf{Balanceamento de Carga por}} & \multicolumn{1}{l}{\textbf{Balanceamento de Carga por}}  \\
+\multicolumn{1}{l}{\textbf{Uso de Estado}} & \multicolumn{1}{l}{\textbf{Similaridade de Entrada}}  \\
+ 1.049,94 & 1.045,14  \\
+1.041,69  & 1.054,98 \\
+1.041,86  & 1.047,93 \\
+1.042,23  & 1.052,84  \\
+1.052,08  & 1.045,12  \\
+\multicolumn{1}{l}{\textbf{Média}}& \multicolumn{1}{l}{\textbf{Média}} \\
+1.045,56  & 1.049,2  \\
+\multicolumn{1}{l}{\textbf{Desvio Padrão}} & \multicolumn{1}{l}{\textbf{Desvio Padrão}}  \\
+ 5,04 & 4,51                         
+\end{tabular}
+\label{Tab:time_and_avg}
+\end{table}
+
+As médias de tempo de uso de recursos dos dois algoritmos de balanceamento não apresentaram uma diferença expressiva.
+Uma possível explicação para isso é que a alta velocidade de realocação dos tipos de eventos é um fator importante para minimizar o intervalo de tempo que cada instância se mantêm em sobrecarga forte. Como todas as execuções do experimento que utilizaram o algoritmo de balanceamento de carga por Uso de Estado chegaram a um máximo de cinco instâncias ativas ao mesmo tempo, de acordo com o mecanismo de requisição de novas instâncias descrito na Seção \ref{sec:cepworker}, em nenhum momento três das cinco instâncias estavam em sobrecarga forte ao mesmo tempo, ou seja, o uso do algoritmo propiciou um máximo de duas instâncias em sobrecarga forte em qualquer momento ao longo do experimento. É importante lembrar que uma instância nova só é requisitada por sobrecarga forte quando o número de instâncias em sobrecarga forte é maior que o número de instâncias que não atingiram nenhum tipo de sobrecarga. Essa solução é adotada pois a realocação de efeitos é realizada de forma sequencial, sendo que uma instância não pode aceitar a realocação de tipos de eventos de duas instâncias distintas ao mesmo tempo, como descrito na Seção \ref{sec:cepworker}.
+
+Em comparação, o algoritmo de balanceamento de carga por Similaridade de Entrada buscou selecionar os tipos de eventos para realocação de modo a reduzir a duplicação de envio de eventos para instâncias distintas. As execuções do experimento com esse algoritmo não buscaram necessariamente selecionar os tipos de eventos que seriam mais rapidamente realocados e levaram a um máximo de seis instâncias de \texttt{CEP Worker} ativas em alguns casos. Como os intervalos de tempo em que cada instância ficou em sobrecarga forte foram maiores, usando o algoritmo de balanceamento de carga por Similaridade de Entrada, em algumas execuções haviam três instâncias de \texttt{CEP Worker} em sobrecarga ao mesmo tempo, levando a criação de três instâncias adicionais. No entanto, a média do tempo de uso de recursos somado de todas as instâncias foi similar para os dois algoritmos de balanceamento.
+
+
+
+
+%-----falar da aceitação sequencial de eventos e diminuição do tempo concomitante de intervalos de tempo em sobregcarga forte
+
 
 
 \section{Número de Eventos Detectados}
@@ -371,7 +370,7 @@ A Tabela \ref{Tab:events_total_and_avg} mostra o número de eventos detectados p
 
 A principal causa das diferenças no número de eventos detectados fica mais clara ao olhar para os resultados separados por categoria de tipo de evento para cada execução do experimento. As tabelas \ref{Tab:events_SU_and_avg} e \ref{Tab:events_IS_and_avg} mostram que não há diferença no número de eventos coletados para tipos de evento de cálculo de velocidade instantânea e de filtro de velocidade. Isso sugere que as diferenças no número de eventos detectados mostradas na Tabela \ref{Tab:events_total_and_avg} não são devido a problemas de conexão. 
 
-A diferença só é expressa nos eventos obtidos a partir de tipos de eventos que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de eventos faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de eventos em diferentes execuções.
+A diferença só é expressa nos eventos obtidos a partir de tipos de evento que utilizam janelas temporais. O uso de janelas temporais para os operadores de agregação nesses tipos de evento faz com que o número total de eventos gerados por eles seja impactado pela variação de latência dos seus eventos de entrada. Como a distribuição das latências ao longo do tempo muda de uma execução do experimento para outra (como será mostrado na Seção~\ref{sec:latency}), isso causa as discrepâncias no número de eventos gerados por esses tipos de evento em diferentes execuções.
 %\todo[inline]{Essa explicação dada na parte final do parágrafo acima não parece correta. Não é a "distribuição de latências desigual ao longo da execução" de um experimento que causa a diferença de qtde de detecções em duas execuções diferentes. O que causa a diferença na qtde é a diferença das distribuições das latências das execuções, certo? }
 
 
@@ -537,7 +536,7 @@ As figuras que mostram a variação de vazão de todas as execuções do experim
 
 Em um sistema que lida com dados em tempo real, a latência da transmissão de eventos pelo sistema é a principal métrica de análise do desempenho. Para medir a latência no \texttt{CEP Handler}, foi usado o método descrito na Seção  \ref{sec:experiment_architecture}. Uma marca temporal foi gerada no momento em que o evento primário foi enviado do microsserviço do experimento para ser consumido pelas instâncias de \texttt{CEP Workers}. Outra marca temporal foi gerada quando o evento foi armazenado no banco de dados chave-valor, depois de sua detecção pelo sistema. A latência foi tomada como a diferença entre esses dois valores. O tempo utilizado para os intervalos no eixo x dos gráficos de latência vêm da marca temporal de quando o evento foi armazenado, depois da detecção. 
 
-Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} mostram as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior. No Apêndice \ref{ape:graphics} podem ser encontrados disgramas de caixa que representam a variação de latência ao longo do tempo da execução de cada experimento, separados por categorias de tipos de eventos.
+Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} mostram as latências das execuções de uma categoria de tipos de evento, separadas por algoritmo de balanceamento de carga. Diagramas de caixa foram usados para representar a variação de latência das execuções. Cada caixa mostra o primeiro quartil, a mediana e o terceiro quartil das latências de uma execução.  As linhas que se estendem a partir de uma caixa indicam a variabilidade fora do quartil superior e do quartil inferior. A Apêndice \ref{ape:graphics} tem os diagramas de caixa que representam a variação de latência ao longo do tempo da execução de todos os experimentos, separados por categorias de tipos de evento.
 
 
 % - \todo{Só para te avisar: expliquei aqui como ler os diagramas de caixa.}
@@ -547,10 +546,18 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 %\todo[inline]{Eu continuo achando que não podemos afirmar que as latências foram similares, como vc fez no parag acima. De qualquer forma, não há a necessidade de afirmar isso, certo? Para mim, já seria suficiente dizer que a latência da grande maioria dos eventos detectados ( > 75\%) fica abaixo de 100ms, como os gráficos mostram. Tentei incorporar isso ao parágrafo abaixo, veja se está de acordo.}
 %\todo{Essa última frase está estranha. Olhando os gráficos, parece que o algoritmo por Uso de Estado tem latências ligeiramente maiores. }.
 
-  Como mostram os diagramas de caixa, o sistema mostrou um bom desempenho em relação à latência para todos os tipos de eventos da rede de processamento. A grande maioria das latências fica abaixo de cem milissegundos, mesmo para os eventos que estão no final da rede de processamento e que dependem da detecção de toda uma cadeia de eventos. 
+  Como mostram os diagramas de caixa, o sistema apresentou um bom desempenho em relação à latência para todos os tipos de eventos da rede de processamento. 
+  O terceiro quartil das latências medidas durante todas as execuções ficou sempre abaixo de cem milissegundos, para todas as categorias de tipos de eventos e considerando o uso de ambos os algoritmos de balanceamento de carga.
   
-  Essas latências atendem de forma satisfatória os requisitos de processamento em tempo real dos dados da aplicação considerada no experimento -- o monitoramento de tráfego de ônibus de uma grande cidade. Essa rapidez na detecção e notificação dos eventos habilita a administração pública e as empresas que cuidam da gestão do transporte por ônibus a tomar ações para a resolução de problemas de tráfego em tempo oportuno. 
-  
+
+
+\begin{figure}[h!]
+\centering
+ \includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_vf.png}
+ \caption{Latência para velocidade instantânea nas execuções do experimento para cada algoritmo de balanceamento de carga.}
+ \label{fig:boxplot_vf_agg_1}
+\end{figure}
+
 %o objetivo proposto para a detecção em tempo real neste trabalho, que é a detecção de acontecimentos fora do padrão em cidades inteligentes para a notificação da administração pública e empresas interessadas. 
 
 %Nessa aplicação, para eventos que estão no final da rede de processamento de eventos e que dependem da detecção de toda uma cadeia de eventos, uma latência de menos de 100 milissegundos  é pequena o suficiente para notificar os interessados e disparar suas respectivas respostas . % citar aqui trabalhos relacionados que apresentam latencias similares - trabalhos relacionados não mencionam latencia.
@@ -565,12 +572,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 %Os dados de cada um dos tipos de eventos com definições similares para linhas ou corredores distintos foram agrupados no mesmo gráfico, sendo que os dois gráficos das figuras \ref{fig:boxplot_vf_is_1} e \ref{fig:boxplot_vf_su_1} representam as latências do tipo de evento de cálculo de velocidade instantânea.
  %\afterpage{\clearpage}
 
-\begin{figure}[p]
-\centering
- \includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_vf.png}
- \caption{Latência para velocidade instantânea nas execuções do experimento para cada algoritmo de balanceamento de carga.}
- \label{fig:boxplot_vf_agg_1}
-\end{figure}
+
 
 %\afterpage{\clearpage}
 
@@ -598,7 +600,7 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 \begin{figure}[p]
 
 \centering
-\includegraphics[width=0.7\textwidth]{figuras/graphics/boxplot_agg_BusB.png}
+\includegraphics[width=0.6\textwidth]{figuras/graphics/boxplot_agg_BusB.png}
 \caption{Latência para detecção de agrupamento de ônibus nas execuções do experimento para cada algoritmo de balanceamento de carga.}
 \label{fig:boxplot_BusB_agg}
 
@@ -613,13 +615,70 @@ Cada uma das figuras de \ref{fig:boxplot_vf_agg_1} a \ref{fig:boxplot_BusB_agg} 
 %As figuras \textbf{XXXXX} mostram uma comparação das medianas totais de cada experimento, para ambos os algoritmos de balanceamento de carga. Como é possível observar, não há uma diferença significativa entre os valores de latência das execuções. Todas obtiveram um desempenho similar no experimento.
 
 
-\newpage
+
+\begin{figure}[p]
+\centering
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vf.png}
+\caption{Tipos de evento \textbf{vf}}
+\label{fig:BoxPlot_vf_7-dez-is-r}
+\end{subfigure}%
+%\end{figure}
+
+%\begin{figure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vi.png}
+\caption{Tipos de evento \textbf{vi}}
+\label{fig:BoxPlot_vi_IS_7-dez-is-r}
+\end{subfigure}%
+%\end{figure}
+\centering
+%\begin{figure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_vel.png}
+\caption{Tipos de evento \textbf{vel}}
+\label{fig:BoxPlot_vel_IS_7-dez-is-r}
+\end{subfigure}%
+%\end{figure}
+
+%\begin{figure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_corr.png}
+\caption{Tipos de evento \textbf{corr}}
+\label{fig:BoxPlot_corr_IS_7-dez-is-r}
+\end{subfigure}%
+%\end{figure}
+%\begin{figure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figuras/graphics/boxplot_7-dez-is_busb.png}
+\caption{Tipos de evento \textbf{BusB}}
+\label{fig:BoxPlot_BusB_IS_7-dez-is-r}
+\end{subfigure}%
+\label{fig:BoxPlot_IS_7-dez-is-r}
+\caption{Diagramas de caixa das latências por intervalos de cinco minutos ao longo da execução 2 do experimento utilizando o algoritmo de balanceamento de carga por Similaridade de Entrada.}
+\end{figure}
+
+A Figura \ref{fig:BoxPlot_IS_7-dez-is-r} representa, para cada uma das categorias de eventos, a variação da latência ao longo da execução 2 utilizando o Algoritmo de balanceamento de carga por Similaridade de Entrada. A divisão de agregação dos quartis de latência é feita de cinco a cinco minutos. Os gráficos representado a variação de latência por categoria de evento ao longo das outras execuções podem ser encontradas no Apêndice \ref{ape:graphics}. Na figura \ref{fig:BoxPlot_IS_7-dez-is-r} é possível visualizar que o terceiro quartil da latência aumenta ao longo do experimento até atingir um patamar estável, seguindo o aumento de carga de entrada, apresentado nas Figuras \ref{fig:load_and_instances-time-SU}. As categorias de tipo de evento \textbf{corr}, \textbf{BusB} e \textbf{vel} apresentam um crescimento maior no início do experimento e atingem um patamar um pouco mais elevado. Isso pode ser explicado por utilizarem os tipos de eventos da categorias \textbf{vi} como entrada, o qual utiliza os tipos \textbf{vf} como entrada. Logo os dados do evento de entrada para os tipos de evento das categorias \textbf{vel} e \textbf{BusB} ja foram transimitidos pelo \textit{broker} duas vezes. Contudo o terceiro quartil da latencias de todas as categorias dos tipos de eventos não ultrapassou 160 milisegundos. 
+
+
+
+
 \section{Conclusão}
 
 
-A análise dos resultados dos experimentos em relação a latência, vazão, número de eventos detectados e tempo de uso de recursos indica que os dois algoritmos de balanceamento de carga obtiveram resultados próximos e permitiram o sistema satisfazer o requisito de auto-escalabilidade. 
+A análise dos resultados do experimento em relação a latência, vazão, número de eventos detectados e tempo de uso de recursos indica que os dois algoritmos de balanceamento de carga obtiveram resultados próximos e permitiram o sistema satisfazer o requisito de auto-escalabilidade. 
 
-Os tipos de eventos utilizados no experimento foram escolhidos para a detecção de um número suficiente de respostas, para a obtenção de mais dados de latência de forma que ainda detectassem ocorrências importantes para a administração da frota de ônibus municipal. O terceiro quartil das latências medidas durante todas as execuções ficou sempre abaixo de cem milissegundos, para todas as categorias de tipos de eventos e considerando o uso de ambos os algoritmos de balanceamento de carga. Para servir os serviços urbanos de transporte, como os do cenário experimental utilizado neste trabalho, essa latência não impacta significativamente o intervalo de tempo entre a  ocorrência de um problema nas vias de circulação urbanas e a chegada das autoridades para resolução do problema detectado. 
+%Os tipos de eventos utilizados no experimento foram escolhidos para a detecção de um número suficiente de respostas, para a obtenção de mais dados de latência de forma que ainda detectassem ocorrências importantes para a administração da frota de ônibus municipal\todo{esse comentário parece estar no lugar errado, porque ele fala sobre o desenho do experimento, não dos resultados}. 
+
+A grande maioria das latências medidas no experimento ficou abaixo de cem milissegundos, mesmo para os eventos que estão no final da rede de processamento e que dependem da detecção de toda uma cadeia de eventos. 
+Essas latências atendem de forma satisfatória os requisitos de processamento em tempo real dos dados da aplicação considerada no experimento -- o monitoramento de tráfego de ônibus de uma grande cidade. Essa rapidez na detecção e notificação dos eventos habilita a administração pública e as empresas que cuidam da gestão do transporte por ônibus a tomar ações para a resolução de problemas de tráfego em tempo oportuno. 
+  
+%Para servir os serviços urbanos de transporte, como os do cenário experimental utilizado neste trabalho, essa latência não impacta significativamente o intervalo de tempo entre a  ocorrência de um problema nas vias de circulação urbanas e a chegada das autoridades para resolução do problema detectado\todo{mas que história é essa da chegada de autoridades??? }. 
 
 
 A vazão e o número de eventos detectados pelo experimento são dependentes da latência no caso de tipos de eventos com janela temporal, como discutido na Seção \ref{sec:vazao}, pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados%\todo{Explicação estranha. As suas janelas são deslizantes, então um mesmo evento pode entrar nas agregações de vários intervalos. Que tal trocar por: ", pois para agrupar os eventos em janelas, os horários de chegada dos eventos no \texttt{CEP Worker} são usados"}

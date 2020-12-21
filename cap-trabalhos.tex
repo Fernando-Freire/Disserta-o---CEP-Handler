@@ -11,7 +11,7 @@
 
 Neste capítulo, são apresentados trabalhos relacionados a distribuição de processamento de eventos complexos e abordagens adotadas para a execução de processamento de eventos complexos nativo de nuvem. Ao final do capítulo, são feitas considerações sobre as principais características e limitações identificadas nesses trabalhos. 
 
-\section{Distribuição de Processamento de Eventos}
+\section{Distribuição de Processamento de Eventos}\index{Event Processing Distribution}
 
 Vários trabalhos se propuseram a pesquisar como melhorar a escalabilidade em CEP, estudando o balanceamento de carga do processamento de eventos. 
 Diferentes estratégias são adotadas para a distribuição de tipos de evento, tais como a distribuição de acordo com a similaridade das dependências dos tipos de evento, a distribuição da detecção de um único tipo de evento e a distribuição dos tipos de evento baseada no uso de recursos computacionais. A seguir, cada uma dessas estratégias é apresentada e discutida.
@@ -92,7 +92,7 @@ o Apache Storm não permite a remoção de nós em tempo de execução, dificult
 
 
 
-\section{CEP em Nuvem e Borda}
+\section{CEP em Nuvem e Borda}\index{CEP on Cloud and Fog}
 %\todo[inline]{Fernando, depois de consultar a frequência de aparição desses termos no Google, decidi substituir o ``nativo à nuvem'' por ``nativo de nuvem''. ``nativo à nuvem'' não é usado em nenhum lugar. Os termos que aparecem são ``nativo de nuvem'', ``nativo da nuvem'' ou ``nativo em nuvem'', sendo o primeiro o mais comum. Ele até aparece num título de livro -- DevOps nativo de nuvem com Kubernetes
 %Como construir, implantar e escalar aplicações modernas na nuvem (\url{https://novatec.com.br/livros/devops-com-kubernetes/})}
 
@@ -108,7 +108,7 @@ São poucos os trabalhos que citam CEP na pesquisa de sistemas nativos de nuvem~
 Além disso, várias pesquisas~\citep{7463825,7490807,9179545,8473459}
 enfocam a execução distribuída de CEP em dispositivos de Internet da Coisas (IoT, do inglês \textit{Internet of Things}), onde somente eventos de alta importância são enviados para um centro de processamento. \cite{9018282} apresentaram a implementação de uma abordagem desse tipo, na qual é proposta uma arquitetura de três camadas (borda, névoa e nuvem) para o processamento de dados em cidades inteligentes e só os eventos mais relevantes são enviados da borda para a névoa e da névoa para a nuvem. 
 
-O uso de CEP em dispositivos IoT, não só para sensoreamento mas também para processamento de eventos, é uma abordagem com vantagens e desvantagens. As principais vantagens são a redução do tráfego de mensagens a partir dos dispositivos e o envio de notificações mais rápido para as localidades mais próximas à detecção. Algumas das desvantagens são a perda inerente de informação a ser armazenada e a menor tolerância a falhas nos casos em que um dispositivo processa dados de vários sensores. Caso ocorra uma falha nesse dispositivo, seu reparo ou reposição depende de intervenção manual e os dados dos sensores associados a ele são perdidos, descartados ou sobrecarregam o processamento de outros dispositivos. Utilizando processamento em nuvem com gerenciamento dinâmico de recursos, a instanciação de um novo ambiente de processamento pode ser feita automaticamente, diminuindo o tempo em que parte do sistema está indisponível. Além disso, com a adoção e maior uso de tecnologias de internet sem fio, como 5G, é esperado que o preço da transmissão de dados seja reduzido~\citep{maeng2020demand,8480631,9163457}.
+O uso de CEP em dispositivos IoT, não só para sensoreamento mas também para processamento de eventos, é uma abordagem com vantagens e desvantagens. As principais vantagens são a redução do tráfego de mensagens a partir dos dispositivos e o envio de notificações mais rápido para as localidades mais próximas à detecção. Algumas das desvantagens são a perda inerente de informação a ser armazenada e a menor tolerância a falhas nos casos em que um dispositivo processa dados de vários sensores. Caso ocorra uma falha nesse dispositivo, seu reparo ou reposição depende de intervenção manual e os dados dos sensores associados a ele são perdidos, descartados ou sobrecarregam o processamento de outros dispositivos. Utilizando processamento em nuvem com gerenciamento dinâmico de recursos, a instanciação de um novo ambiente de processamento pode ser feita automaticamente, diminuindo o tempo em que parte do sistema está indisponível. Além disso, com a adoção e maior uso de tecnologias de internet sem fio, como 5G, é esperado que o preço da transmissão de dados seja reduzido~\citep{maeng2020demand,8480631}. 
 
 
 %Apesar desse tipo de abordagem reduzir bastante o tráfego de dados, realizando a detecção de eventos de forma mais distribuída, ela dificulta o cálculo de agregações em tempo real de todos os dados coletados. 

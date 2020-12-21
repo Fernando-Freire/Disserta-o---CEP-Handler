@@ -1,12 +1,12 @@
 %% ------------------------------------------------------------------------- %%
-\chapter{Arquitetura para a Distribuição do Processamento de Eventos Complexos}
+\chapter{Arquitetura para a Distribuição do Processamento de Eventos Complexos}\index{Proposed Architecture}
 \label{cap:arquitetura}
 
 Com o objetivo de criar um sistema auto-escalável para o processamento de dados de cidades inteligentes em tempo real, este trabalho de mestrado propõe uma arquitetura de microsserviços para a execução e distribuição do processamento de eventos complexos.
 
 As seções a seguir descrevem os componentes da arquitetura e os mecanismos de distribuição.
 
-\section{Arquitetura CEP Handler}
+\section{Arquitetura CEP Handler}\index{CEP Handler}
  %Estes dados são transformados em eventos, que podem ser usados como entrada para tipos de eventos definidos pelo usuário. Para um usuário ser notificado da ocorrência de um evento, ele pode cadastrar um \textit{webhooks}, uma URL para ser chamada por API REST, o sistema enviará o evento em formato JSON para o usuário por método POST
 Essa arquitetura, chamada \texttt{CEP Handler}, consiste em quatro microsserviços -- \texttt{CEP Cataloger}, \texttt{Event Composer}, \texttt{Event Sender} e \texttt{CEP Worker} -- e utiliza mais dois microsserviços prontos para realizar sua funções: um sistema gerenciador de bancos de dados chave-valor e um sistema de mensageria. Todos esses microsserviços operam sob um serviço de gerenciamento dinâmico de recursos na nuvem. 
 A Figura \ref{fig:system_architecture} mostra os componentes da arquitetura \texttt{CEP Handler}. A arquitetura foi desenhada com o intuito de estender a plataforma InterSCity de cidades inteligentes, recebendo dados em tempo real dela. 
@@ -124,7 +124,7 @@ Caso esteja em sobrecarga forte, a instância escolhe o tipo de evento que será
 A sobrecarga, fraca ou forte, é atingida quando a porcentagem de uso de CPU ou de memória RAM são superiores ao valor de porcentagem estabelecido como limite. A subcarga é atingida quando a porcentagem de uso de CPU e de memória são inferiores ao valor estabelecido como limite. 
 
 
-\section{Método de Realocação}
+\section{Método de Realocação}\index{Relocation Method}
 
 Quando uma instância está em subcarga ou em sobrecarga forte, ela inicia o método de realocação de tipos de eventos. A duração da realocação depende do contexto e estado do tipo de evento realocado, de acordo com os operadores utilizados, como visto nas seções \ref{sec:CEPstate} e \ref{sec:CEPcontext}.
 
@@ -153,7 +153,7 @@ Além desses passos, algumas limitações são impostas no processo para o funci
 %\todo[inline]{Parece-me que o parágrafo acima não tem a ver com o método de realocação particularmente, ele se refere ao funcionamento geral do CEP Worker. Sugiro que você o coloque antes da seção 4.1, porque o leitor precisa saber como os workers recebem os dados pra processar para poder entender direito o funcionamento das 3 threads.}
 
 
-\section{Algoritmos de Distribuição de Carga}
+\section{Algoritmos de Distribuição de Carga}\index{Load Balancing Algorithms}
 \label{sec:loadDistribution}
 
 Duas estratégias distintas podem ser usadas por uma instância de \texttt{CEP Worker} para escolher tipos de eventos para realocação em outras instâncias num caso de sobrecarga: 
@@ -237,13 +237,13 @@ A cada novo cadastro ou remoção do processamento de algum tipo de evento, todo
 \end{algorithm}
 
 
-O Algoritmo \ref{alg:relocation_similarity} (Balanceamento de Carga por Similaridade de Entrada) utiliza duas estruturas principais para organizar a seleção dos tipos de evento. A primeira (o indiceInvertidoDeEntrada) é um índice invertido de tipos de eventos, que armazena, para cada tipo de evento, uma lista dos tipos de eventos que o tem como entrada. A segunda (TiposDeEventoPorRank), é um dicionário de tipos de evento por \textit{rank}, que utiliza um valor numérico (o \textit{rank}) como chave e possui uma lista de tipos de eventos como valor por cada chave. 
+O Algoritmo \ref{alg:relocation_similarity} (Balanceamento de Carga por Similaridade de Entrada) utiliza duas estruturas principais para organizar a seleção dos tipos de evento. A primeira (o indiceInvertidoDeEntrada) é um índice invertido de tipos de eventos, que armazena, para cada tipo de evento, uma lista dos tipos de evento que o têm como entrada. A segunda (TiposDeEventoPorRank), é um dicionário de tipos de evento por \textit{rank}, que utiliza um valor numérico (o \textit{rank}) como chave e possui uma lista de tipos de evento como valor por cada chave. 
 
-O algoritmo utiliza os metadados dos tipos de eventos para saber qual tipo de evento usa um dado outro de tipo de evento como entrada e popular a estrutura indiceInvertidoDeEntrada. Depois que essa estrutura está devidamente populada, para cada tipo de evento \textit{T}, o algoritmo seleciona o tipo de evento de entrada \textit{P} de \textit{T} menos utilizado por outros tipos de eventos, utilizando o tamanho da lista de tipos de eventos associada ao tipo de evento de entrada \textit{P} em indiceInvertidoDeEntrada. A partir da seleção de \textit{P} e da quantidade de vezes que \textit{P} é usado por todos os tipos de eventos cujo valor é utilizado como o \textit{rank} de \textit{T} em TiposDeEventoPorRank.%, esse valor de \textit{rank}\todo{mas qual é valor de rank? note que a frase anterior no deixa claro. O rank é a qtde de vezes que P é usada como entrada por outros tipos de eventos?} é utilizado como chave em TiposDeEventoPorRank. O tipo de evento é adicionado a lista valor associada ao seu \textit{rank}. 
+O algoritmo utiliza os metadados dos tipos de evento para saber qual tipo de evento usa um dado outro tipo de evento como entrada e popular a estrutura indiceInvertidoDeEntrada. Depois que essa estrutura está devidamente populada, para cada tipo de evento \textit{T}, o algoritmo seleciona o tipo de evento de entrada \textit{P} de \textit{T} menos utilizado por outros tipos de eventos, utilizando o tamanho da lista de tipos de eventos associada ao tipo de evento de entrada \textit{P} em indiceInvertidoDeEntrada. A partir da seleção de \textit{P} é selecionado o valor \textit{a} da quantidade de vezes que \textit{P} é usado como entrada por todos os tipos de eventos. O valor \textit{a} é utilizado como o \textit{rank} de \textit{T} em TiposDeEventoPorRank.%\todo{A frase ainda continua sem sentido, parece que está faltando um pedaço nela.}.%, esse valor de \textit{rank}\todo{mas qual é valor de rank? note que a frase anterior no deixa claro. O rank é a qtde de vezes que P é usada como entrada por outros tipos de eventos?} é utilizado como chave em TiposDeEventoPorRank. O tipo de evento é adicionado a lista valor associada ao seu \textit{rank}. 
 
 Para selecionar qual tipo de evento deve ser realocado, busca-se o menor \textit{rank} dentre aqueles presentes como chave em TiposDeEventoPorRank e a seleção entre os tipos de evento que estão associados ao mesmo \textit{rank} é feita utilizando o algoritmo \ref{alg:relocation_resource_usage}.
 
-\todo[inline]{Embora a explicação textual sobre o algoritmo 2 me pareceu correta, achei que ainda não fica claro no texto qual é o raciocínio por trás do seu funcionamento. Acho que vale a pena destacar que ele selecionará primeiro para realocação os tipos que têm menos entradas em comum com os demais tipos na instância. Também vale destacar que, quando realoca-se em outra instância um tipo que tem entradas em comum com outros da instância antiga, haverá eventos sendo transmitidos para as duas instâncias ao mesmo tempo. O algoritmo 2 tenta evitar esse tipo de situação }
+%\todo[inline]{Embora a explicação textual sobre o algoritmo 2 me pareceu correta, achei que ainda não fica claro no texto qual é o raciocínio por trás do seu funcionamento. Acho que vale a pena destacar que ele selecionará primeiro para realocação os tipos que têm menos entradas em comum com os demais tipos na instância. Também vale destacar que, quando realoca-se em outra instância um tipo que tem entradas em comum com outros da instância antiga, haverá eventos sendo transmitidos para as duas instâncias ao mesmo tempo. O algoritmo 2 tenta evitar esse tipo de situação - FERNANDO : essa descrição está no inicio da seção 4.3. Eu tinha comentado ela mas voltei  }
 
 
 %- Esta lista é atualizada no cadastro ou remoção de tipos de eventos.
