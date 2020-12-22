@@ -152,7 +152,7 @@ Com base em trabalhos relacionados, foram  criados dois algoritmos para o balanc
 %Um experimento foi realizado para avaliar o desempenho do sistema implementado em relação a sua auto-escalabilidade em situação de sobrecarga. 
 %\todo[inline]{O que está no parágrafo abaixo, eu copiei do resumo e colei aqui, para você complementar com mais detalhes. Você precisa apresentar um pouco mais de detalhes sobre o experimento, dizer que ele é uma rede para detecção de problemas comuns no tráfego de ônibus de grandes cidades, falar quais métricas de desempenho foram consideradas (latência, vazão, tempo de uso de recursos, etc.), sumariar os principais resultados observados e o que se concluiu deles. O capítulo de introdução precisa dar uma visão completa do que foi feito no trabalho e de seus principais resultados. Você já tem tudo isso escrito no cap. de Conclusões. Basta pegar de lá e abstrair/resumir um pouco para colocar aqui. }
  
-Um protótipo da arquitetura \texttt{CEP Handler} foi implementado, utilizando somente ferramentas de software livre, de forma integrada à plataforma de cidades inteligentes InterSCity~\citep{del2019design}, do Instituto Nacional de Ciência e Tecnologia (INCT) da Internet do Futuro para Cidades Inteligentes~\citep{Interscitysite}\footnote{O INCT da Internet do Futuro para Cidades Inteligentes é financiado por CNPq (proc. 465446/2014-0), Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Código de Financiamento 001 e FAPESP (procs. 14/50937-1 e 15/24485-9).}. 
+Um protótipo da arquitetura \texttt{CEP Handler} foi implementado, utilizando somente ferramentas de software livre, integrado à plataforma de cidades inteligentes InterSCity~\citep{del2019design}, do Instituto Nacional de Ciência e Tecnologia (INCT) da Internet do Futuro para Cidades Inteligentes~\citep{Interscitysite}. O INCT da Internet do Futuro para Cidades Inteligentes é financiado por CNPq (proc. 465446/2014-0), Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Código de Financiamento 001 e FAPESP (procs. 14/50937-1 e 15/24485-9). 
 
 
 
@@ -187,7 +187,7 @@ carga implementados.
 %% ------------------------------------------------------------------------- %%
 \section{Contribuições}
 \label{sec:contribucoes}
-As contribuições deste trabalho são as seguintes:
+As principais contribuições deste trabalho são as seguintes:
 
 \begin{itemize}
   \item[1.] Criação de uma arquitetura de microsserviços coreografada para a distribuição de processamento de eventos complexos nativa de nuvem, ou seja, que possui um mecanismo de tolerância a falhas no ambiente de execução e é auto-escalável horizontalmente. %\todo{olha o horizontal que não foi explicado antes aqui de novo - coloquei la no gerenciamento dinamico de recursos}
@@ -228,7 +228,7 @@ As contribuições deste trabalho são as seguintes:
 %\todo[inline]{Fernando, a frase ``Dessa forma, espera-se que aplicações desenvolvidas sobre a plataforma do InterSCity possam se beneficiar da eficiência no processamento dos dados fornecida pelas ferramentas de Big Data, sem o ônus de ter de lidar com elas diretamente'' não tem nada a ver com o seu trabalho. Isso veio do trabalho da Fernanda e só faz sentido no dela. Substitua por outra coisa. Além disso, no final, você deveria mencionar a avaliação das técnicas de balanceamento.}
 
 %% ------------------------------------------------------------------------- %%
-
+\newpage
 \section{Organização do Trabalho}
 \label{sec:organizacao_trabalho}
 

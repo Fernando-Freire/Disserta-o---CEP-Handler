@@ -432,7 +432,7 @@ O uso de estado na detecção de eventos está fortemente ligado ao contexto esc
 \subsection{Principais Ferramentas}
 \label{sec:mainsoftwares}
 
-Existem várias implementações de sistemas de processamento de eventos complexos disponíveis. As ferramentas mais populares na atualidade são: a WSO2 Siddhi CEP ~\citep{WSO2}, a TIBCO~\citep{TIBCO},  a Esper~\citep{ESPER}, a Red Hat Drools Fusion~\citep{DroolsFusion}, a Informatica RulePoint~\citep{Informatica} e a Apache Flink~\citep{Flink}, sendo que a principal diferença entre elas é o tipo de linguagem utilizado para a definição dos eventos. Segundo \cite{Margara:2011:PFI:2002259.2002307}, as linguagens para CEP podem ser classificadas como linguagens orientadas a fluxos ou linguagens orientadas a regras. 
+Existem várias implementações de sistemas de processamento de eventos complexos disponíveis. As ferramentas mais populares na atualidade são: a WSO2 Siddhi CEP ~\citep{WSO2}, a TIBCO~\citep{TIBCO},  a Esper~\citep{Esper}, a Red Hat Drools Fusion~\citep{DroolsFusion}, a Informatica RulePoint~\citep{Informatica} e a Apache Flink~\citep{Flink}, sendo que a principal diferença entre elas é o tipo de linguagem utilizado para a definição dos eventos. Segundo \cite{Margara:2011:PFI:2002259.2002307}, as linguagens para CEP podem ser classificadas como linguagens orientadas a fluxos ou linguagens orientadas a regras. 
 
 Eventos definidos em linguagens orientadas a regras, também chamadas de regras Evento-Condição-Ação (ECA), devem necessariamente conter três informações:
 
@@ -486,7 +486,7 @@ WHERE lat < -23. 558050 AND lon < -46. 730460 AND
 
 Processamento de Fluxos de Dados Contínuos (do termo inglês \textit{Stream Processing}) é uma outra caracterização de ferramentas para processar dados em tempo real, mas que não têm o conceito de eventos definido dentro delas. No processamento de fluxos de dados contínuos, os dados são processados de acordo com \textit{workflows} especificados pelo usuário, onde é possível utilizar filtros, junções, agregações e outros tipos de operadores nos dados. Normalmente, as ferramentas de processamento de fluxos têm um grande foco em  paralelizar o processamento e usam técnicas avançadas para fazer isso em grande escala. Mas, diferentemente das ferramentas de CEP, não costumam fornecer linguagens específicas para a definição dos dados a serem detectados \citep{Margara:2011:PFI:2002259.2002307}.
 
-\subsection{Distribuição de Processamento das Ferramentas de \textit{software} livre}
+\subsection{Distribuição de Processamento das Ferramentas de \textit{Software} Livre}
 \label{sub-sec:opensourcetoolsdistribution}
 
 As ferramentas de CEP de \textit{software} livre -- Apache Flink, Drools Fusion, Esper e Siddhi -- possuem organização, arquitetura e origens distintas. A Apache Flink é uma ferramenta criada para processar fluxos de dados contínuos em tempo real em ambientes distribuídos. Sua capacidade de processar eventos vem do fato de a ferramenta disponibilizar o uso de todos os operadores de CEP. Porém, isso só pode ser feito utilizando os operadores de CEP como funções das linguagems de programação suportadas (Java e Scala)%\todo{Aqui, dá para explicar melhor. Para um leitor que não conhece o Flink, não está claro o que significa "usar a API no código". Que código?}
@@ -568,7 +568,7 @@ Para fazer a interface entre o desenvolvedor de contêineres e os recursos dispo
 %\todo[inline]{Inserir este artigo em alguma parte do capítulo \url{https://www.infoq.com/articles/distributed-stream-processor-container/}}
 
 
-\subsection{Sistemas nativos de nuvem}
+\subsection{Sistemas Nativos de Nuvem}
 \label{sec:cloud-native-systems}
 Sistemas nativos de nuvem podem ser definidos como sistemas que cumprem os requisitos de auto-escalabilidade, ou seja, são capazes de regular seu próprio uso de recursos computacionais, e tolerância a falhas no ambiente de execução, ou seja, são capazes de se recuperar de quaisquer falhas a um estado de funcionamento normal~\citep{garrison2017cloud,gilbert2018cloud}. Esses dois requisitos são fundamentais para o aproveitamento do ambiente de nuvem. A tolerância a falhas é necessária pois nenhuma nuvem garante um ambiente de execução sem falhas de processamento ou comunicação a qualquer momento, logo os sistemas devem ser construídos com mecanismos de recuperação para esses tipos de falhas. A auto-escalabilidade é necessária para a modulação do uso de recursos computacionais a somente o necessário para o correto funcionamento do sistema, reduzindo custos operacionais. Como a maioria dos ambientes de nuvem cobram por quantidade e tempo de uso de cada recurso, uma economia de recursos computacionais normalmente significa uma economia financeira.
 

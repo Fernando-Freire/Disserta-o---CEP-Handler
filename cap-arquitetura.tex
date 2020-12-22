@@ -58,7 +58,7 @@ Para o armazenamento de metadados dos tipos de eventos, como nome, definição e
 O \texttt{Event Sender} é responsável por fazer requisições para os \textit{webhooks} cadastrados. 
 Ele se inscreve com o \textit{broker} %\todo{que broker? Você não falou sobre brokers antes no texto. Você precisa explicar o que um sistema desse tipo faz e como ele está sendo usado no seu sistema.} 
 para receber os tipos de eventos que têm \textit{webhooks} associados e envia uma chamada REST do tipo POST para o endereço, contendo os atributos recebidos em cada evento do tipo associado. Periodicamente, ele consulta o banco de dados chave valor e atualiza a lista de \textit{webhooks} associados.
-%\todo[inline]{Fernando, observe que nas explicações acima você menciona "o broker" e o "banco de dados" como seja já tivesse falado sobre a existência deles no seu sistema, mas não falou. Como eles voltam a aparecer nas explicações na sequência do texto, você precisa falar de que se tratam ainda no início do capítulo.}
+%%\todo[inline]{Fernando, observe que nas explicações acima você menciona "o broker" e o "banco de dados" como seja já tivesse falado sobre a existência deles no seu sistema, mas não falou. Como eles voltam a aparecer nas explicações na sequência do texto, você precisa falar de que se tratam ainda no início do capítulo.}
 
 \subsection{Microsserviço CEP Worker} \label{sec:cepworker}
 
@@ -146,8 +146,6 @@ Além desses passos, algumas limitações são impostas no processo para o funci
 \item Como são \textit{threads} separados que cuidam da aceitação de realocação e da realocação dos tipos de eventos para outras instâncias,  cada início de processo de realocação verifica se o tipo de evento a ser aceito para alocação não está atualmente sendo processado na instância que iniciou o processo de aceitação de realocação.
 
 \item O processo de realocação de tipos de eventos ou de aceitação de realocação de tipos de eventos é sequencial, pois só um \textit{thread} administra o processo de aceitação de realocação.
-
-\todo[inline]{Vamos conversar por video na segunda a tarde sobre os dois itens acima, porque o texto deles não ficou claro pra mim.}
 
 \end{itemize}
 %\todo[inline]{Parece-me que o parágrafo acima não tem a ver com o método de realocação particularmente, ele se refere ao funcionamento geral do CEP Worker. Sugiro que você o coloque antes da seção 4.1, porque o leitor precisa saber como os workers recebem os dados pra processar para poder entender direito o funcionamento das 3 threads.}
