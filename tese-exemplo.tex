@@ -130,7 +130,8 @@ framexrightmargin=10pt
 \thispagestyle{empty}
 \begin{center}
     \vspace*{2.3cm}
-    \textbf{\Large{Processamento de Eventos Complexos\\ Nativo de Nuvem para Cidades Inteligentes}}\\
+    %\textbf{\Large{Processamento de Eventos Complexos\\ Nativo de Nuvem para Cidades Inteligentes}}\\
+      \textbf{\Large{Processamento de eventos complexos\\ nativo de nuvem para cidades inteligentes}}\\
     
     \vspace*{1.2cm}
     \Large{Fernando Freire Scattone}
@@ -152,11 +153,11 @@ framexrightmargin=10pt
     Orientadora: Profa. Dra. Kelly Rosa Braghetto\\
 
    	\vskip 1cm
-    \normalsize{Este trabalho recebeu auxílio
-    financeiro da CAPES como parte do INCT da Internet do futuro para cidades inteligentes (InterSCity) }
+    \normalsize{Durante o desenvolvimento deste trabalho o autor recebeu auxílio financeiro da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior - Brasil (CAPES) - Código de Financiamento 001.}
+    %Ele também é parte do INCT da Internet do Futuro para Cidades Inteligentes financiado pelo CNPq proc. 465446/2014-0, Coordenação de Aperfeiçoamento de Pessoal de Nível Superior -- Brasil (CAPES) -- Código de Financiamento 001, FAPESP proc. 14/50937-1 e FAPESP proc. 15/24485-9.
     
     \vskip 0.5cm
-    \normalsize{São Paulo, dezembro de 2020}
+    \normalsize{São Paulo, 22 de dezembro de 2020}
 \end{center}
 
 % ---------------------------------------------------------------------------- %
@@ -167,13 +168,14 @@ framexrightmargin=10pt
 %   Coloque um '%' em todas as linhas
 %   desta página antes de compilar a versão
 %   final, corrigida, do trabalho
-%
+
 %
 \newpage
 \thispagestyle{empty}
     \begin{center}
         \vspace*{2.3 cm}
-        \textbf{\Large{Processamento de Eventos Complexos\\ Nativo de Nuvem para Cidades Inteligentes}}\\
+%       \textbf{\Large{Processamento de Eventos Complexos\\ Nativo de Nuvem para Cidades Inteligentes}}\\
+        \textbf{\Large{Processamento de eventos complexos\\ nativo de nuvem para cidades inteligentes}}\\
         \vspace*{2 cm}
     \end{center}
 
@@ -265,13 +267,15 @@ framexrightmargin=10pt
 % Resumo
 \chapter*{Resumo}
 
-\noindent SCATTONE, F. F. \textbf{Processamento de Eventos Complexos Nativo de Nuvem para Cidades Inteligentes}. 2020. Dissertação %(Mestrado)
+ % \textbf{\Large{Processamento de eventos complexos\\ nativo de nuvem para cidades inteligentes}}\\
+
+\noindent SCATTONE, F. F. \textbf{Processamento de eventos complexos nativo de nuvem para cidades inteligentes}. 2020. Dissertação %(Mestrado)
 - Instituto de Matemática e Estatística, Universidade de São Paulo, São Paulo, 2020.\\
 Ao longo dos últimos anos, o conceito de Cidades Inteligentes vem ganhando popularidade, sendo promovido com os propósitos de aumentar a sustentabilidade e melhorar a qualidade de vida para os residentes de centros urbanos. Processamento de Eventos Complexos (CEP - \emph{Complex Event Processing}) é uma das técnicas mais usadas para processar dados em tempo real em grande volume e velocidade, como os provenientes de Cidades Inteligentes. CEP considera cada novo dado coletado como um evento e permite definir novos tipos de eventos a partir da identificação de padrões de ocorrência específicos de outros eventos. Escalabilidade e tolerância a falhas no ambiente de execução são requisitos não funcionais para o processamento de fluxos de dados que sofrem grande variação de volume ao longo do tempo, como em Cidades Inteligentes. O cumprimento desses requisitos é essencial para manter o sistema em funcionamento com a latência de detecção de eventos em patamares aceitáveis para sistemas de tempo real. O uso de plataformas de nuvem é conveniente para realizar o processamento de eventos de forma distribuída e escalável, pois permite o gerenciamento dinâmico de recursos computacionais. 
 As soluções atuais de \textit{software} livre de CEP não oferecem suporte nativo para a execução em ambientes de nuvem, ou mesmo distribuídos.
-Este trabalho apresenta uma arquitetura de microsserviços para CEP distribuído nativa de nuvem, que gerencia dinamicamente os recursos computacionais usados na execução. Nela, o processamento de eventos complexos é dividido entre múltiplas instâncias de um mesmo microsserviço. O estilo arquitetural de coreografia foi usado, no qual a distribuição do processamento é coordenada entre as instâncias e não há um serviço central que comanda todo o sistema. Isso resulta em uma maior tolerância a falhas, pois uma falha em uma única instância não afeta a detecção de eventos nas outras. Um protótipo da arquitetura de microsserviços foi implementado, utilizando somente ferramentas de \textit{software} livre, de forma integrada à plataforma de cidades inteligentes InterSCity, do Instituto Nacional de Ciência e Tecnologia da Internet do Futuro para Cidades Inteligentes. Para avaliar o desempenho do sistema, um cenário experimental de cidades inteligentes foi criado: a detecção de problemas de tráfego a partir de dados reais de posições de ônibus do transporte público da cidade de São Paulo. Quatro métricas foram analisadas: latência, vazão, número total de eventos detectados e tempo de uso de recursos computacionais. Os resultados do experimento mostraram que o sistema escala automaticamente, aumentando o número de instâncias conforme sua carga de entrada aumenta. 
+Este trabalho apresenta uma arquitetura de microsserviços para CEP distribuído nativa de nuvem, que gerencia dinamicamente os recursos computacionais usados na execução. Nela, o processamento de eventos complexos é dividido entre múltiplas instâncias de um mesmo microsserviço. O estilo arquitetural de coreografia foi usado, no qual a distribuição do processamento é coordenada entre as instâncias e não há um serviço central que comanda todo o sistema. Isso resulta em uma maior tolerância a falhas, pois uma falha em uma única instância não afeta a detecção de eventos nas outras. Um protótipo da arquitetura de microsserviços foi implementado, utilizando somente ferramentas de \textit{software} livre, de forma integrada à plataforma de cidades inteligentes InterSCity. Para avaliar o desempenho do sistema, um cenário experimental de cidades inteligentes foi criado: a detecção de problemas de tráfego a partir de dados reais de posições de ônibus do transporte público da cidade de São Paulo. Quatro métricas foram analisadas: latência, vazão, número total de eventos detectados e tempo de uso de recursos computacionais. Os resultados do experimento mostraram que o sistema escala automaticamente, aumentando o número de instâncias conforme sua carga de entrada aumenta. 
 Além disso, as latências normalmente ficaram abaixo de
-cem milissegundos, satisfazendo os requisitos de processamento em tempo real do cenário considerado.
+cem milissegundos, satisfazendo os requisitos de processamento em tempo real do cenário considerado.\\
 
 %O número de eventos detectados variou entre uma execução e outra, o que pode ser atribuído a variação na latência. 
 % A média do tempo de uso do ambiente de execução não apresentou diferença significativa entre o uso de um algoritmo de balanceamento de carga ou outro.
@@ -302,13 +306,13 @@ cem milissegundos, satisfazendo os requisitos de processamento em tempo real do 
 % ---------------------------------------------------------------------------- %
 % Abstract
 \chapter*{Abstract}
-\noindent SCATTONE, F. F. \textbf{Cloud-Native Complex Event Processing for Smart Cities}. 
-2020. 80 f.
+\noindent SCATTONE, F. F. \textbf{Cloud-native complex event processing for smart cities}. 
+2020. 
 Dissertation (Masters) - Instituto de Matemática e Estatística,
 Universidade de São Paulo, São Paulo, 2020.
 \\
 
-Over the last few years, Smart City concepts have gained popularity because of their purposes of increasing sustainability and improving quality of life for large cities' residents. Complex Event Processing is one of the most used techniques to process real-time data, with large volume and velocity, such as the data coming from Smart Cities. In CEP each new piece of data is treated as an event and can be defined by an event type. New event types can be registered by defining a query using CEP operators to detect specific patterns on incoming events from other event types. In order to process real-time data for Smart Cities, scalability and fault tolerance are the main requirements to be fulfilled. Satisfying these requirements is essential to maintain a functioning system with acceptable latency levels for Smart Cities situation detection. Using cloud providers is a convenient method to distribute and scale complex event processing since cloud providers can dynamically manage computational resource usage. Current open-source CEP implementations do not offer official cloud-native execution support, or even official distributed execution support.  This work presents a cloud-native microservice architecture for distributed CEP. Event processing is distributed across several instances of the same microservice, which can be dynamically created or destroyed based on resource usage. These instances use a choreography style of communication among each other, where there are no central nodes controlling all other instances. Instead, they must agree on any multi-instance action. This style of communication ensures greater fault tolerance since failures in one instance do not affect event processing in all other instances. A prototype of this architecture was developed, using open source tools, integrated with the InterSCity Smart City Platform, from INCT Future Internet for Smart Cities. 
+Over the last few years, Smart City concepts have gained popularity because of their purposes of increasing sustainability and improving quality of life for large cities' residents. Complex Event Processing is one of the most used techniques to process real-time data, with large volume and velocity, such as the data coming from Smart Cities. In CEP each new piece of data is treated as an event and can be defined by an event type. New event types can be registered by defining a query using CEP operators to detect specific patterns on incoming events from other event types. In order to process real-time data for Smart Cities, scalability and fault tolerance are the main requirements to be fulfilled. Satisfying these requirements is essential to maintain a functioning system with acceptable latency levels for Smart Cities situation detection. Using cloud providers is a convenient method to distribute and scale complex event processing since cloud providers can dynamically manage computational resource usage. Current open-source CEP implementations do not offer official cloud-native execution support, or even official distributed execution support.  This work presents a cloud-native microservice architecture for distributed CEP. Event processing is distributed across several instances of the same microservice, which can be dynamically created or destroyed based on resource usage. These instances use a choreography style of communication among each other, where there are no central nodes controlling all other instances. Instead, they must agree on any multi-instance action. This style of communication ensures greater fault tolerance since failures in one instance do not affect event processing in all other instances. A prototype of this architecture was developed, using open source tools, integrated with the InterSCity Smart City Platform. 
 To evaluate the performance of the system, an experimental scenario of Smart Cities was designed: the detection of traffic problems from real data of bus positions of public transport in São Paulo. Four metrics were analyzed: latency, throughput, number of events detected, and resource time usage. Results showed the system achieved self-scalability, creating new CEP nodes as the input load increased while maintaining acceptable levels of latency. Furthermore, latencies were typically below a hundred milliseconds, satisfying real-time processing requirements of the Smart City scenario. \\
 
 
@@ -321,16 +325,22 @@ To evaluate the performance of the system, an experimental scenario of Smart Cit
 % ---------------------------------------------------------------------------- %
 \chapter{Lista de Abreviaturas}
 \begin{tabular}{ll}
-         API		 & Interface de Programação de Aplicação (\emph{Application programming interface}) \\
+         API		 & Interface de Programação de Aplicação (\emph{Application Programming Interface}) \\
+         AWS         & \textit{Amazon Web Services} \\
+         CAP         & \textit{Consistency, Availability, Partition tolerance}\\
          CAPES       & Coordenação de Aperfeiçoamento de Pessoal de Nível Superior\\
          CEP         & Processamento de Eventos Complexos (\emph{Complex Event Processing})\\
          CNPq        & Conselho Nacional de Desenvolvimento Científico e Tecnológico\\
+         ECA         & Evento-condição-ação\\
          EPA         & Processador de Eventos (\emph{Event Processing Agent})\\
+         EPL         & \textit{Event Processing Language}\\
          FAPESP      & Fundação de Amparo à Pesquisa do Estado de São Paulo\\
          INCT        & Instituto Nacional de Ciência e Tecnologia\\ 
-         IoT         & Internet das Coisas (\emph{Internet Of Things})\\
+         IoT         & Internet das Coisas (\emph{Internet of Things})\\
+         JSON        & \textit{JavaScript Object Notation} \\
          SGBD        & Sistema Gerenciador de Banco de Dados \\
          SPTrans   & São Paulo Transporte S/A \\
+         SQL         & \textit{Structured Query Language}\\
          UUID        & Identificador Único Universal (\emph{Universally Unique Identifier})
          
 \end{tabular}

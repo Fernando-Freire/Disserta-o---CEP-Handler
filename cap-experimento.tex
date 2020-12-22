@@ -6,7 +6,7 @@ O desempenho do sistema de processamento de eventos desenvolvido neste trabalho 
 
 \section{Caracterização dos Dados de Posição de Ônibus}
 
-Os experimentos usam como entrada dados das posições de ônibus do sistema de transporte público de São Paulo coletados durante três horas contínuas. Os dados foram obtidos por meio da API do sistema \cite{Olhovivo} da São Paulo Transporte S/A (SPTrans), empresa que faz a gestão do sistema de transporte público por ônibus na cidade.
+Os experimentos usam como entrada dados das posições de ônibus do sistema de transporte público de São Paulo coletados durante três horas contínuas. Os dados foram obtidos por meio da API do sistema Olhovivo\footnote{\url{http://olhovivo.sptrans.com.br}} da São Paulo Transporte S/A (SPTrans), empresa que faz a gestão do sistema de transporte público por ônibus na cidade.
 %\todo[inline]{Cabe falar com que frequência os GPSs dos ônibus reportam sua posição, para dar ideia do volume de dados envolvido no problema.}
 
 Os dados foram coletados no dia quatro de novembro de 2019, segunda-feira, das 7h57 até às 11h02. Eles se referem a 2.360 linhas de ônibus e 26.624 veículos. O intervalo de tempo médio entre dois envios de dados em cada ônibus é de quinze a vinte segundos.
@@ -60,8 +60,8 @@ A Figura~\ref{fig:experiment_diagram} mostra o diagrama da rede de processamento
 Cada tipo de evento teve seu identificador
 %, que normalmente seria gerado pelo \texttt{CEP Cataloger}, 
 e seu nome criados a partir de prefixos específicos para cada categoria, concatenados ao identificador de linha, ônibus ou corredor.
-A definição dos tipos de evento foi feita na linguagem EPL do ESPER. 
-%A linguagem EPL do ESPER, utilizada nas definições dos eventos, é bastante similar à linguagem SQL, porém uma diferença significativa é a existência das janelas de agregação deslizantes, como descrito na Seção \ref{sec:CEPcontext}. 
+A definição dos tipos de evento foi feita na linguagem EPL do Esper. 
+%A linguagem EPL do Esper, utilizada nas definições dos eventos, é bastante similar à linguagem SQL, porém uma diferença significativa é a existência das janelas de agregação deslizantes, como descrito na Seção \ref{sec:CEPcontext}. 
 Para o experimento, foram utilizados dois tipos de janelas:
 
 
@@ -74,8 +74,8 @@ As definições de janelas de eventos deslizantes e janelas de tempo deslizantes
 \begin{itemize}    
     \item \textbf{Velocidade Instantânea de Ônibus (vf)} -- nível: um por linha de ônibus
     \begin{itemize}
-        \item  Id do tipo de evento: vf+\texttt{cl}%(identificador da linha)
-        \item Nome do tipo de evento: velf+\texttt{cl}%(identificador da linha)
+        \item  Id do tipo de evento: \texttt{vf+cl}%(identificador da linha)
+        \item Nome do tipo de evento: \texttt{velf+cl}%(identificador da linha)
     \end{itemize}
    
     
@@ -97,8 +97,8 @@ FROM bus" + cl + "#length(2) group by p
     \item \textbf{Velocidade Instantânea de Ônibus Filtrada (vi)}  -- nível: um por linha de ônibus
     
     \begin{itemize}
-        \item Id do tipo de evento: vi+\texttt{cl} %(identificador da linha)
-        \item Nome do tipo de evento: veli+\texttt{cl}%(Identificador da linha)
+        \item Id do tipo de evento: \texttt{vi+cl} %(identificador da linha)
+        \item Nome do tipo de evento: \texttt{veli+cl}%(Identificador da linha)
     \end{itemize}
     Cada tipo de evento nessa categoria filtra os eventos de \textbf{vf}, selecionando aqueles que apresentam velocidades entre 0 km/h e 100 km/h. Essa categoria é importante para filtrar possíveis eventos com dados de posição irregulares vindos da SPtrans. 
     
@@ -114,8 +114,8 @@ WHERE v > 0 AND v < 100
     \item \textbf{Velocidade Média de Ônibus (vel)} -- nível: um por linha de ônibus que passa em corredores
     
     \begin{itemize}
-        \item Id do tipo de evento: vel+\texttt{cl}+(nome do corredor) %(identificador da linha)+(identificador do corredor)
-        \item Nome do tipo de evento: speedbus+(nome do corredor)
+        \item Id do tipo de evento: \texttt{vel+cl}+(nome do corredor) %(identificador da linha)+(identificador do corredor)
+        \item Nome do tipo de evento: \texttt{speedbus}+(nome do corredor)
     \end{itemize}
  
     Cada tipo de evento nessa categoria calcula a velocidade média de cada ônibus de uma linha, considerando as velocidades instantâneas do ônibus acumuladas nos últimos 5 minutos. 
@@ -141,8 +141,8 @@ FROM veli" + cl + "#ext_timed(ta,300) group by p
 \item \textbf{Velocidade Média em Corredor (corr)} -- nível: um por corredor principal da cidade
 
 \begin{itemize}
-    \item Id do tipo de evento: corr+(identificador do corredor)
-    \item Nome do tipo de evento: corridor+(identificador do corredor)
+    \item Id do tipo de evento: \texttt{corr}+(identificador do corredor)
+    \item Nome do tipo de evento: \texttt{corridor}+(identificador do corredor)
 \end{itemize}
 
 
@@ -162,14 +162,14 @@ No experimento, para facilitar a definição em EPL dos tipos de evento de \text
 \item \textbf{Aglomeração em Linha de Ônibus (BusB)} -- nível: um por ônibus
 
 \begin{itemize}
-    \item Id do tipo de evento: BusB+\texttt{p}+\texttt{cl}
-    \item Nome do tipo de Evento: BB+\texttt{p}+\texttt{cl}
+    \item Id do tipo de evento: \texttt{BusB}+\texttt{p}+\texttt{cl}
+    \item Nome do tipo de Evento: \texttt{BB}+\texttt{p}+\texttt{cl}
 \end{itemize}
 
 Nessa categoria, um tipo de evento é criado para cada ônibus em circulação, para detectar se existem ônibus da mesma linha circulando muito próximos um do outro. 
 Esse é um problema comum em engenharia de transporte público, algo que ocorre com frequência na cidade, e que leva a um tempo desigual de espera entre ônibus da mesma linha. 
 
-A definição em EPL dos tipos de eventos da categoria \textbf{busB} fica: 
+A definição em EPL dos tipos de eventos da categoria \textbf{BusB} fica: 
   
 \begin{verbatim}
 SELECT o.p as op, b.p as bp, o.cl as ocl,b.cl as bcl,o.py as py,
@@ -179,7 +179,7 @@ FROM veli" + cl + "(p != " + c + ")#ext_timed(ta,30) as o,
 veli" + cl + "(p = " + c + ")#ext_timed(ta,30) as b 
 WHERE distance(o.py, o.px, b.py, b.px) < 0.5 AND o.p > b.p
 \end{verbatim}
-Os tipos de evento de \textbf{busB} utilizam como entrada os eventos do tipo \textbf{vi}, com duas fontes separadas -- uma só para eventos do ônibus selecionado (\texttt{p = c}) e uma para todos os outros ônibus da mesma linha (\texttt{p != c}) -- e disparam toda vez que dois eventos, um de cada fonte, apresentam uma distância de menos de 500 metros entre si dentro de um intervalo de 30 segundos. A condição \texttt{o.p > b.p} foi adicionada pois, como um tipo de evento de \textbf{busB} é criado para cada ônibus, na ocorrência de um agrupamento de ônibus seriam detectados eventos para ambos os ônibus participantes do agrupamento. Com essa condição, somente o tipo de evento do ônibus com o identificador de maior número é disparado.
+Os tipos de evento de \textbf{BusB} utilizam como entrada os eventos do tipo \textbf{vi}, com duas fontes separadas -- uma só para eventos do ônibus selecionado (\texttt{p = c}) e uma para todos os outros ônibus da mesma linha (\texttt{p != c}) -- e disparam toda vez que dois eventos, um de cada fonte, apresentam uma distância de menos de 500 metros entre si dentro de um intervalo de 30 segundos. A condição \texttt{o.p > b.p} foi adicionada pois, como um tipo de evento de \textbf{BusB} é criado para cada ônibus, na ocorrência de um agrupamento de ônibus seriam detectados eventos para ambos os ônibus participantes do agrupamento. Com essa condição, somente o tipo de evento do ônibus com o identificador de maior número é disparado.
 
 \end{itemize}
 
@@ -202,7 +202,7 @@ Para os experimentos, foram usados dados de apenas 708 linhas de ônibus (30\% d
 
 \section{Arquitetura dos Experimentos}
 \label{sec:experiment_architecture}
-Para simular um ambiente de execução do sistema \texttt{CEP Handler} de forma automatizada, foi projetado um microsserviço adicional, o \texttt{Experiment-Repository} (\cite{Experiment-Repository}), cuja função é o envio dos eventos primários e a coleta e armazenamento de todos os eventos detectados. A arquitetura do ambiente dos experimentos é representada na Figura \ref{fig:experiment_arch_diagram}.
+Para simular um ambiente de execução do sistema \texttt{CEP Handler} de forma automatizada, foi projetado um microsserviço adicional, o \texttt{Experiment-Repository}\footnote{\url{https://gitlab.com/fernandofreire/experiment-microservice.}}, cuja função é o envio dos eventos primários e a coleta e armazenamento de todos os eventos detectados. A arquitetura do ambiente dos experimentos é representada na Figura \ref{fig:experiment_arch_diagram}.
 O banco de dados chave-valor que é consultado pelo \texttt{CEP Worker} para o cadastro e verificação dos metadados dos tipos de eventos é instanciado já com todos os metadados dos tipos de eventos da rede de processamento dos experimentos pré-registrados.
 
 O microsserviço de experimento carrega todos os dados dos eventos primários de um arquivo para a memória RAM antes do início do experimento e depois os ordena pela marca temporal \textit{ta} (do horário em que a posição do ônibus foi capturada no sistema da SPTrans), para enviá-los um por vez ao \texttt{CEP Handler}. Um evento primário $E_t$ só é enviado pelo \texttt{Experiment-Repository} ao \texttt{CEP Handler} quando o intervalo de tempo transcorrido desde o envio do evento anterior $E_{t-1}$ for igual ao intervalo entre os tempos $E_t.ta$ e $E_{t-1}.ta$. 
@@ -222,7 +222,7 @@ Além disso, no envio dos eventos primários, é adicionado um atributo novo, ch
 \section{Execução} 
 A execução dos experimentos foi feita na plataforma de nuvem Amazon Web Services (AWS), com créditos concedidos ao projeto CNPq/AWS Nº 032/2019, intitulado ``Computação em nuvem para big-data em cidades inteligentes''.
 %Ela foi escolhida pois o projeto InterSCity recebeu um aporte de créditos para a implantação na nuvem da plataforma de cidades inteligentes utilizando os recursos da AWS. 
-A ferramenta eksctl \citep{EKSCTL} foi usada para fazer a interface entre o orquestrador de contêineres Kubernetes, utilizado pelo \texttt{CEP Handler}, e os recursos providos pela AWS.
+A ferramenta eksctl\footnote{\url{https://eksctl.io/}} foi usada para fazer a interface entre o orquestrador de contêineres Kubernetes, utilizado pelo \texttt{CEP Handler}, e os recursos providos pela AWS.
 
 Cada um dos microsserviços foi alocado em uma máquina virtual do tipo t3a.medium da AWS, com 2 vCPU, 4 GB de memória RAM e até 5 Gbps de desempenho na rede \citep{AWSTypes}. Esse tipo de máquina virtual foi escolhido por representar uma máquina virtual comum, que poderia ser encontrada em qualquer provedor de nuvem.
 

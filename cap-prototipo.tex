@@ -13,7 +13,7 @@
 %\section{Ferramentas selecionadas} 
 
 Neste trabalho, um protótipo da arquitetura para sistema de CEP distribuído apresentada no Capítulo~\ref{cap:arquitetura} foi implementado e avaliado. 
-A escolha das ferramentas para a implementação do protótipo levou em conta vários fatores que dependem da função de cada ferramenta no sistema. Mas um dos critérios de seleção aplicado foi o de que os \textit{softwares} utilizados na implementação deveriam ser livres, com uma licença que garantisse a visualização,  alteração e distribuição do código da ferramenta. O código desenvolvido pode ser encontrado no repositório online GitLab~\citep{CEPHandler}. 
+A escolha das ferramentas para a implementação do protótipo levou em conta vários fatores que dependem da função de cada ferramenta no sistema. Mas um dos critérios de seleção aplicado foi o de que os \textit{softwares} utilizados na implementação deveriam ser livres, com uma licença que garantisse a visualização,  alteração e distribuição do código da ferramenta. O código desenvolvido pode ser encontrado no repositório online GitLab\footnote{\url{https://gitlab.com/interscity/interscity-platform}}
 
 A \autoref{fig:system_architecture_prto} representa a arquitetura do sistema com as ferramentas selecionadas.
 As seções a seguir apresentam detalhes sobre a escolha das ferramentas e a implementação do protótipo.
@@ -22,7 +22,7 @@ As seções a seguir apresentam detalhes sobre a escolha das ferramentas e a imp
 \begin{figure}[hb!]
       \centering
       \includegraphics[width=0.7\textwidth]{figuras/graphics/prot_dia.pdf}
-      \caption{Protótipo da arquitetura do \texttt{CEP Handler}}
+      \caption{Protótipo da arquitetura do \texttt{CEP Handler}.}
       \label{fig:system_architecture_prto}
 \end{figure}
 
@@ -46,19 +46,19 @@ Como o sistema de processamento de eventos desenvolvido neste trabalho foi imple
 
 
 \section{Ferramenta de Processamento de Eventos}
-Para o processamento de eventos nos nós do sistema distribuído (ou seja, nas instâncias de \texttt{CEP Worker}), foi escolhida a ferramenta mais utilizada pela comunidade de CEP e que possui a interface mais conhecida -- a \cite{Esper}. As vastas documentação e comunidade de apoio dessa ferramenta facilitaram o seu uso na implementação do sistema \texttt{CEP Handler}. % e a comparação de seu desempenho com o de outros trabalhos relacionados, visto que muitos deles também utilizaram ESPER como ferramenta de CEP\todo{Hum... nas discussões dos resultados dos seus experimentos, nenhuma comparação foi feita com os resultados dos trabalhos relacionados. Talvez seja melhor remover esse trecho.}.
-A ESPER permite representar eventos em alguns formatos diferentes, porém somente três deles apresentam ocupam o mínimo de memória durante o processamento~\citep{EsperEventRepresentation}: %bom desempenho \todo{mas bom desempenho quanto a quê? Espaço ocupado, facilidade de processamento?} 
+Para o processamento de eventos nos nós do sistema distribuído (ou seja, nas instâncias de \texttt{CEP Worker}), foi escolhida a ferramenta mais utilizada pela comunidade de CEP e que possui a interface mais conhecida -- a Esper\footnote{\url{https://www.espertech.com/esper/}}. As vastas documentação e comunidade de apoio dessa ferramenta facilitaram o seu uso na implementação do sistema \texttt{CEP Handler}. % e a comparação de seu desempenho com o de outros trabalhos relacionados, visto que muitos deles também utilizaram Esper como ferramenta de CEP\todo{Hum... nas discussões dos resultados dos seus experimentos, nenhuma comparação foi feita com os resultados dos trabalhos relacionados. Talvez seja melhor remover esse trecho.}.
+A Esper permite representar eventos em alguns formatos diferentes, porém somente três deles apresentam ocupam o mínimo de memória durante o processamento~\citep{EsperEventRepresentation}: %bom desempenho \todo{mas bom desempenho quanto a quê? Espaço ocupado, facilidade de processamento?} 
 
 \begin{itemize}
 \item \textbf{Java Object Array}: possibilita trabalhar com eventos representados por vetores de objetos, em que cada campo do objeto representa um campo do evento. Essa abordagem permite trabalhar com qualquer evento, mesmo quando não se sabe quais medidas ou campos ele contém, mas tem a desvantagem de ser uma representação específica da linguagem Java.
 \item \textbf{Classe Java - POJO}: possibilita representar cada evento como uma definição de classe em um arquivo Java. Esse formato só pode ser utilizado para tratar eventos em um contexto no qual os campos já são previamente conhecidos, o que não condiz com a proposta deste trabalho, ou utilizando geração automática de código Java, o que tornaria necessário recompilar o \texttt{CEP Worker} e instanciá-lo novamente toda vez que um novo evento fosse cadastrado em uma instância dele ativa, forçando o sistema a parar o processamento para isso.
-\item \textbf{Apache Avro}: Apache \cite{Avro} é um protocolo de seriação de dados implementado em várias linguagens. Ele apresenta um uso de memória interno tão pequeno quanto um vetor de objetos Java, com a vantagem de poder ser lido por outros softwares em outras linguagens. Feito inicialmente para o Apache \cite{hadoop}, atualmente ele é aceito em vários sistemas de processamento em tempo real além do ESPER, como o Apache \cite{spark}, o que diminui o custo de integração com outros serviços no futuro.
+\item \textbf{Apache Avro}: Apache Avro\footnote{\url{https://avro.apache.org}} é um protocolo de seriação de dados implementado em várias linguagens. Ele apresenta um uso de memória interno tão pequeno quanto um vetor de objetos Java, com a vantagem de poder ser lido por outros softwares em outras linguagens. Feito inicialmente para o Apache Hadoop\footnote{\url{https://hadoop.apache.org}}, atualmente ele é aceito em vários sistemas de processamento em tempo real além do Esper, como o Apache Spark\footnote{\url{https://spark.apache.org}}, o que diminui o custo de integração com outros serviços no futuro.
 \end{itemize}
 
 Optou-se pelo uso do Apache Avro para a representação de eventos neste trabalho, por ele ser independente do Java, deixando, dessa forma,  o sistema mais desacoplado de qualquer linguagem de programação. 
-Durante o desenvolvimento deste trabalho, foi adicionada à ferramenta ESPER suporte à representação de eventos com o formato JSON. A representação de eventos por JSON tem um uso de memória tão pequeno quanto o dos outros formatos apresentados aqui, mas não foi  considerada pois o sistema e os experimentos já estavam desenvolvidos para o uso do formato Avro quando ela ficou disponível. 
+Durante o desenvolvimento deste trabalho, foi adicionada à ferramenta Esper suporte à representação de eventos com o formato JSON (\textit{JavaScript Object Notation}). A representação de eventos por JSON tem um uso de memória tão pequeno quanto o dos outros formatos apresentados aqui, mas não foi  considerada pois o sistema e os experimentos já estavam desenvolvidos para o uso do formato Avro quando ela ficou disponível no Esper. 
 
-Um fator limitante no desenvolvimento do protótipo foi o suporte aos tipos de janelas de agregação. Como discutido na Seção \ref{sec:loadDistribution}, para o balanceamento da carga entre as instâncias de processamento, é necessário determinar o tamanho das janelas de dados a partir da definição dos tipos de eventos. De todos os tipos de janelas de dados oferecidas pelo ESPER~\citep{ESPERDataWindows}, só foi implementado o suporte a quatro: \texttt{ext\_timed}, \texttt{ext\_time\_batch}, \texttt{length} e \texttt{length\_batch}. Os dois primeiro foram selecionados por serem exemplos de janelas temporais nos quais o tempo utilizado é externo e não necessita da coordenação dos relógios internos dos nós de processamento de eventos. Os dois últimos foram selecionados como exemplos de janelas de agregação por número de eventos, por serem um dos tipos mais comuns de janelas de dados utilizados. %O tempo necessário para a realocação de tipos de eventos que usam janelas de agregação dos tipos \texttt{length} e \texttt{length\_batch} pode ser determinado a partir da divisão do tamanho da janela pelo fluxo de eventos por segundo para cada tipo de evento de entrada.
+Um fator limitante no desenvolvimento do protótipo foi o suporte aos tipos de janelas de agregação. Como discutido na Seção \ref{sec:loadDistribution}, para o balanceamento da carga entre as instâncias de processamento, é necessário determinar o tamanho das janelas de dados a partir da definição dos tipos de eventos. De todos os tipos de janelas de dados oferecidas pelo Esper~\citep{ESPERDataWindows}, só foi implementado o suporte a quatro: \texttt{ext\_timed}, \texttt{ext\_time\_batch}, \texttt{length} e \texttt{length\_batch}. Os dois primeiro foram selecionados por serem exemplos de janelas temporais nos quais o tempo utilizado é externo e não necessita da coordenação dos relógios internos dos nós de processamento de eventos. Os dois últimos foram selecionados como exemplos de janelas de agregação por número de eventos, por serem um dos tipos mais comuns de janelas de dados utilizados. %O tempo necessário para a realocação de tipos de eventos que usam janelas de agregação dos tipos \texttt{length} e \texttt{length\_batch} pode ser determinado a partir da divisão do tamanho da janela pelo fluxo de eventos por segundo para cada tipo de evento de entrada.
 
 %\todo[inline]{Ué, a seção termina sem explicar qual desses formatos é de fato usado no seu sistema. }
 
@@ -78,16 +78,16 @@ O \texttt{CEP Cataloger}, \texttt{Event Composer} e \texttt{Event Sender} são m
 %Para que os microsserviços fiquem em ambientes isolados, recomenda-se utilizar uma ferramenta que ofereça virtualização no nível do sistema operacional, normalmente conhecida como conteinerização. Há duas principais vantagens em se usar contêineres para implementar uma aplicação: o fato de a aplicação feita em contêiner ter suas dependências mantidas dentro do contêiner garante que ela poderá ser executada em qualquer outra máquina e, em contraste com Máquinas Virtuais que emulam o hardware, os contêineres somente virtualizam o sistema operacional, em geral utilizando menos recursos.
 \section{Gerenciamento Dinâmico de Recursos}
 
-Para executar os contêineres em ambientes de nuvem, existem várias alternativas, entre elas: executá-los diretamente em máquinas virtuais, utilizar orquestradores de contêineres proprietários, como o \textit{Elastic Container Service} - \cite{awsecs} da AWS, ou utilizar orquestradores de recursos de \textit{software} livre.
+Para executar os contêineres em ambientes de nuvem, existem várias alternativas, entre elas: executá-los diretamente em máquinas virtuais, utilizar orquestradores de contêineres proprietários, como o \textit{Elastic Container Service} - ECS\footnote{\url{https://aws.amazon.com/pt/ecs/}} da AWS, ou utilizar orquestradores de recursos de \textit{software} livre.
 
 
 
 Entre os orquestradores de \textit{software} livre, três se destacam:
 
 \begin{itemize}
-    \item \textbf{Apache Mesos}~\citep{Mesos}: Desenvolvido inicialmente pela universidade de Berkeley, depois passou a ser mantido pela Apache Foundation. Foi desenvolvido com foco em coordenação de \textit{clusters} de computadores e depois passou a receber suporte a administração de contêineres. %\todo{explicação estranha. rever}.
-    \item \textbf{Docker Swarm}~\cite{Swarm}: Desenvolvido pela mesma empresa que mantém a ferramenta Docker, o Docker Swarm tem compatibilidade nativa com o sistema de isolamento de ambientes Docker.
-    \item \textbf{Kubernetes}~\citep{Kubernetes}: Desenvolvido pela Google com o codinome Borg internamente, teve seu código aberto em e passou a ser mantido pela \textit{Cloud Native Computing Foundation} - \cite{cnfc}. A CNCF é uma fundação voltada ao desenvolvimento de ferramentas para sistemas feitos nativamente para execução em nuvem.
+    \item \textbf{Apache Mesos}\footnote{\url{https://mesos.apache.org}}: Desenvolvido inicialmente pela universidade de Berkeley, depois passou a ser mantido pela Apache Foundation. Foi desenvolvido com foco em coordenação de \textit{clusters} de computadores e depois passou a receber suporte a administração de contêineres. %\todo{explicação estranha. rever}.
+    \item \textbf{Docker Swarm}\footnote{\url{https://docs.docker.com/engine/swarm/}}: Desenvolvido pela mesma empresa que mantém a ferramenta Docker, o Docker Swarm tem compatibilidade nativa com o sistema de isolamento de ambientes Docker.
+    \item \textbf{Kubernetes}\footnote{\url{https://kubernetes.io}}: Desenvolvido pela Google com o codinome Borg internamente, teve seu código aberto em e passou a ser mantido pela \textit{Cloud Native Computing Foundation} - CNFC\footnote{\url{https://cnfc.io}}. A CNCF é uma fundação voltada ao desenvolvimento de ferramentas para sistemas feitos nativamente para execução em nuvem.
 \end{itemize}  
     
 \cite{Truyen_2019} fizeram uma comparação dos três orquestradores de contêineres e concluíram que o Kubernetes oferece o maior número de opções de configuração entre os três. Além disso, é o único que possui suporte nativo pelas três maiores provedoras de computação em nuvem (AWS, GCP e Azure). Por esses motivos, o Kubernetes foi escolhido para a implementação do protótipo aqui apresentado.
@@ -95,8 +95,8 @@ Entre os orquestradores de \textit{software} livre, três se destacam:
 
 \section{Transmissão Assíncrona}
 
-Para a transmissão de eventos em tempo real, foi escolhido o \textit{broker} de mensagens RabbitMQ \citep{RabbitMq}. RabbitMQ é um dos \textit{brokers} mais usados atualmente, pois implementa vários protocolos de comunicação assíncrona~\citep{Dobbelaere:2017:KVR:3093742.3093908}. O principal fator para a escolha do RabbitMQ como \textit{broker} foi a compatibilidade com a plataforma InterSCity, cuja implementação já utiliza o RabbitMQ como mensageiro assíncrono. Já que o sistema proposto neste trabalho foi desenvolvido como uma extensão da plataforma InterSCity, é interessante utilizar em sua implementação as mesmas ferramentas usadas na plataforma, para permitir uma maior integração entre eles.
-No protótipo do sistema aqui apresentado, o RabbitMQ opera dentro de um contêiner Docker, cuja imagem é disponibilizada oficialmente pelo repositório de imagens Docker Hub~\cite{Dockerhub}. 
+Para a transmissão de eventos em tempo real, foi escolhido o \textit{broker} de mensagens RabbitMQ\footnote{\url{https://www.rabbitmq.com/}}. RabbitMQ é um dos \textit{brokers} mais usados atualmente, pois implementa vários protocolos de comunicação assíncrona~\citep{Dobbelaere:2017:KVR:3093742.3093908}. O principal fator para a escolha do RabbitMQ como \textit{broker} foi a compatibilidade com a plataforma InterSCity, cuja implementação já utiliza o RabbitMQ como mensageiro assíncrono. Já que o sistema proposto neste trabalho foi desenvolvido como uma extensão da plataforma InterSCity, é interessante utilizar em sua implementação as mesmas ferramentas usadas na plataforma, para permitir uma maior integração entre eles.
+No protótipo do sistema aqui apresentado, o RabbitMQ opera dentro de um contêiner Docker, cuja imagem é disponibilizada oficialmente pelo repositório de imagens Docker Hub\footnote{\url{https://hub.docker.com/}}. 
 
 
 
@@ -122,7 +122,7 @@ No protótipo do sistema aqui apresentado, o RabbitMQ opera dentro de um contêi
 \section{Sistema Gerenciador de Banco de Dados}
 \label{sec:redis}
 
-Como sistema gerenciador de banco de dados, para guardar a definição dos eventos e seus metadados, foi escolhido o \cite{Redis}, um sistema NoSQL baseado no modelo de dados chave-valor.
+Como sistema gerenciador de banco de dados, para guardar a definição dos eventos e seus metadados, foi escolhido o Redis\footnote{\url{https://redis.io/}}, um sistema NoSQL baseado no modelo de dados chave-valor.
 O Redis foi escolhido por ser um \textit{software} livre, ter uma grande comunidade de usuários e apresentar uma das menores latências entre sistemas gerenciadores de bancos de dados~\citep{10.14778/2367502.2367512}.
 No protótipo do sistema \texttt{CEP Handler} desenvolvido, o Redis opera dentro de um único contêiner Docker, cuja imagem é disponibilizada oficialmente pelo repositório de imagens \textit{Docker Hub}.
  
